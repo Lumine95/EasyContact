@@ -13,6 +13,7 @@ import com.android.library.view.CustomProgressDialog;
 import com.android.library.view.UIHelper;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by ZMM on 2018/10/23 15:36.
@@ -22,12 +23,13 @@ public abstract class BaseFragment extends Fragment {
     public BaseActivity mActivity;
     public Context mContext;
     private CustomProgressDialog loadingDialog;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //   View view = View.inflate(mActivity, getLayoutId(), null);
         View view = inflater.inflate(getLayoutId(), container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         initView(view, savedInstanceState);
         initData();
         return view;
@@ -65,5 +67,10 @@ public abstract class BaseFragment extends Fragment {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();  unbinder.unbind();
+        dismissLoadingDialog();
     }
 }

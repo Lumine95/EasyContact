@@ -1,4 +1,4 @@
-package com.easycontact.app;
+package com.easycontact.app.application;
 
 import android.app.Application;
 

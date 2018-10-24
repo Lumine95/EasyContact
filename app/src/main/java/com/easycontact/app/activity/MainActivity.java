@@ -1,4 +1,4 @@
-package com.easycontact.app;
+package com.easycontact.app.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.easycontact.app.R;
 import com.easycontact.app.base.BaseActivity;
 import com.easycontact.app.fragment.DataFragment;
 import com.easycontact.app.fragment.HomeFragment;
 import com.easycontact.app.fragment.MessageFragment;
 import com.easycontact.app.fragment.MineFragment;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +35,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
+        QMUIStatusBarHelper.translucent(this);
         return R.layout.activity_main;
     }
 

@@ -4,20 +4,38 @@
     package="com.easycontact.app">
 
     <application
-        android:name=".MyApplication"
+        android:name=".application.MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".activity.LoginActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--免打扰设置-->
+        <activity
+            android:name=".activity.NoDisturbActivity"
+            android:screenOrientation="portrait" />
+        <!--主页-->
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait" />
+        <!--忘记密码-->
+        <activity
+            android:name=".activity.ForgetPwdActivity"
+            android:screenOrientation="portrait" />
+        <!--注册-->
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

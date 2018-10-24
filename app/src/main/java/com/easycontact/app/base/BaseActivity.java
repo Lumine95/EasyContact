@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.android.library.view.CustomProgressDialog;
 import com.android.library.view.UIHelper;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -22,9 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        QMUIStatusBarHelper.translucent(this);
         setContentView(getLayoutId());
-
         unbinder = ButterKnife.bind(this);
         initView();
         initData();
