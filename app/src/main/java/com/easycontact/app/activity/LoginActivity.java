@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.easycontact.app.R;
 import com.easycontact.app.base.BaseActivity;
+import com.easycontact.app.base.BasePresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,12 +29,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
-
+    public BasePresenter initPresenter() {
+        return null;
     }
 
     @Override
-    public void initData() {
+    public void initView() {
 
     }
 
@@ -43,10 +44,21 @@ public class LoginActivity extends BaseActivity {
             case R.id.btn_login:
                 break;
             case R.id.tv_register:
+                startActivity(new Intent(this, RegisterActivity.class));
                 break;
             case R.id.tv_forget_pwd:
                 startActivity(new Intent(this, ForgetPwdActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onFinish() {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
     }
 }

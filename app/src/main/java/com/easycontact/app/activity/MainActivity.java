@@ -9,10 +9,11 @@ import android.widget.LinearLayout;
 
 import com.easycontact.app.R;
 import com.easycontact.app.base.BaseActivity;
-import com.easycontact.app.fragment.DataFragment;
-import com.easycontact.app.fragment.HomeFragment;
-import com.easycontact.app.fragment.MessageFragment;
-import com.easycontact.app.fragment.MineFragment;
+import com.easycontact.app.base.BasePresenter;
+import com.easycontact.app.ui.fragment.DataFragment;
+import com.easycontact.app.ui.fragment.HomeFragment;
+import com.easycontact.app.ui.fragment.MessageFragment;
+import com.easycontact.app.ui.fragment.MineFragment;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import butterknife.BindView;
@@ -40,13 +41,14 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
-        setBottomButton(llHomeBtn);
-        switchContentFragment(homeFragment == null ? homeFragment = new HomeFragment() : homeFragment);
+    public BasePresenter initPresenter() {
+        return null;
     }
 
     @Override
-    public void initData() {
+    public void initView() {
+        setBottomButton(llHomeBtn);
+        switchContentFragment(homeFragment == null ? homeFragment = new HomeFragment() : homeFragment);
     }
 
     @OnClick({R.id.ll_home_btn, R.id.ll_message_btn, R.id.ll_data_btn, R.id.ll_mine_btn})
@@ -102,5 +104,15 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
+    }
+
+    @Override
+    public void onFinish() {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
     }
 }

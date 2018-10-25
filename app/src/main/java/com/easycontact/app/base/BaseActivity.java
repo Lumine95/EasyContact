@@ -13,8 +13,9 @@ import butterknife.Unbinder;
 /**
  * Created by ZMM on 2018/10/23 14:07.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements BaseView {
 
+    public P presenter;
     private Unbinder unbinder;
     private CustomProgressDialog loadingDialog;
 
@@ -22,22 +23,28 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
+        presenter = initPresenter();
         unbinder = ButterKnife.bind(this);
         initView();
-        initData();
     }
 
     protected abstract int getLayoutId();
 
+    public abstract P initPresenter();
+
     public abstract void initView();
 
-    public abstract void initData();
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+        dismissLoadingDialog();
         // EventBus.getDefault().unregister(this);
+        if (presenter != null) {
+            presenter.detach();
+            presenter = null;
+        }
     }
 
     public void showLoadingDialog(String text) {

@@ -1,4 +1,4 @@
-package com.easycontact.app.fragment;
+package com.easycontact.app.ui.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +13,7 @@ import com.android.library.utils.DensityUtil;
 import com.easycontact.app.activity.NoDisturbActivity;
 import com.easycontact.app.R;
 import com.easycontact.app.base.BaseFragment;
+import com.easycontact.app.base.BasePresenter;
 import com.easycontact.app.view.TriangleDrawable;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
@@ -43,12 +44,12 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public void initView(View view, Bundle savedInstanceState) {
-
+    protected BasePresenter initPresenter() {
+        return null;
     }
 
     @Override
-    protected void initData() {
+    public void initView(View view, Bundle savedInstanceState) {
 
     }
 
@@ -99,5 +100,15 @@ public class HomeFragment extends BaseFragment {
         int offsetX = DensityUtil.dpToPx(mContext, 20) - ivAdd.getWidth() / 2;
         // int offsetY = (mTitleBar.getHeight() - ivAdd.getHeight()) / 2;
         popup.showAtAnchorView(ivAdd, YGravity.BELOW, XGravity.ALIGN_RIGHT, offsetX, 5);
+    }
+
+    @Override
+    public void onFinish(Object result, String message) {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable, String message) {
+
     }
 }

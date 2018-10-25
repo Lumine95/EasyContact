@@ -18,8 +18,9 @@ import butterknife.Unbinder;
 /**
  * Created by ZMM on 2018/10/23 15:36.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements BaseView {
 
+    public P presenter;
     public BaseActivity mActivity;
     public Context mContext;
     private CustomProgressDialog loadingDialog;
@@ -30,8 +31,8 @@ public abstract class BaseFragment extends Fragment {
         //   View view = View.inflate(mActivity, getLayoutId(), null);
         View view = inflater.inflate(getLayoutId(), container, false);
         unbinder = ButterKnife.bind(this, view);
+        presenter = initPresenter();
         initView(view, savedInstanceState);
-        initData();
         return view;
     }
 
@@ -49,10 +50,9 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract int getLayoutId();
 
+    protected abstract P initPresenter();
+
     protected abstract void initView(View view, Bundle savedInstanceState);
-
-    protected abstract void initData();
-
 
     protected void showLoadingDialog(String text) {
         if (loadingDialog == null) {
@@ -68,9 +68,15 @@ public abstract class BaseFragment extends Fragment {
             loadingDialog.dismiss();
         }
     }
+
     @Override
     public void onDestroyView() {
-        super.onDestroyView();  unbinder.unbind();
+        super.onDestroyView();
+        unbinder.unbind();
         dismissLoadingDialog();
+        if (presenter != null) {
+            presenter.detach();
+            presenter = null;
+        }
     }
 }
