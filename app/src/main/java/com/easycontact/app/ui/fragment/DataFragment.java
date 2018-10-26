@@ -27,12 +27,12 @@ public class DataFragment extends BaseFragment {
     }
 
     @Override
-    public void onFinish(Object result, String message) {
+    public void onFinish( ) {
 
     }
 
     @Override
-    public void onError(Throwable throwable, String message) {
+    public void onError(Throwable throwable ) {
 
     }
 }

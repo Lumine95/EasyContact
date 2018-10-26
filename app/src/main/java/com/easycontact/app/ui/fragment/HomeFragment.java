@@ -10,17 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
-import com.easycontact.app.activity.NoDisturbActivity;
 import com.easycontact.app.R;
+import com.easycontact.app.activity.DialActivity;
+import com.easycontact.app.activity.NoDisturbActivity;
 import com.easycontact.app.base.BaseFragment;
 import com.easycontact.app.base.BasePresenter;
 import com.easycontact.app.view.TriangleDrawable;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
 import com.zyyoona7.popup.YGravity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -62,19 +60,12 @@ public class HomeFragment extends BaseFragment {
                 showMenu();
                 break;
             case R.id.iv_dial:
+                startActivity(new Intent(mContext,DialActivity.class));
                 break;
         }
     }
 
     private void showMenu() {
-        List<String> data = new ArrayList<>();
-        data.add("免打扰设置");
-        data.add("订购套餐");
-        //   .setAnimationStyle(R.style.RightTop2PopAnim)
-//                .setBackgroundDimEnable(true)
-//                .setDimValue(0.5f)
-//                .setDimColor(Color.RED)
-//                .setDimView(mTitleBar)
         popup = EasyPopup.create()
                 .setContext(mContext)
                 .setContentView(R.layout.layout_right_pop)
@@ -83,12 +74,9 @@ public class HomeFragment extends BaseFragment {
                     View arrowView = view.findViewById(R.id.v_arrow);
                     arrowView.setBackground(new TriangleDrawable(TriangleDrawable.TOP, Color.parseColor("#FFFFFF")));
                     view.findViewById(R.id.tv_no_disturb);
-                    view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            startActivity(new Intent(mContext,NoDisturbActivity.class));
-                            popup.dismiss();
-                        }
+                    view.setOnClickListener(v -> {
+                        startActivity(new Intent(mContext, NoDisturbActivity.class));
+                        popup.dismiss();
                     });
                 })
                 .setFocusAndOutsideEnable(true)
@@ -103,12 +91,12 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public void onFinish(Object result, String message) {
+    public void onFinish() {
 
     }
 
     @Override
-    public void onError(Throwable throwable, String message) {
+    public void onError(Throwable throwable) {
 
     }
 }

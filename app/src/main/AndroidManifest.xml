@@ -36,6 +36,10 @@
         <activity
             android:name=".activity.RegisterActivity"
             android:screenOrientation="portrait" />
+        <!--拨号盘-->
+        <activity
+            android:name=".activity.DialActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

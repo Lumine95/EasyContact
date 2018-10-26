@@ -42,6 +42,7 @@ public class LoginActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
+                startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.tv_register:
                 startActivity(new Intent(this, RegisterActivity.class));

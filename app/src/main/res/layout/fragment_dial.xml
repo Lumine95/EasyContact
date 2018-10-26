@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_keyboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_size_20"
+        android:background="@mipmap/ic_keyboard_on" />
+
+
+    <!--键盘弹窗-->
+    <LinearLayout
+        android:id="@+id/dial_keyword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_size_5"
+            android:background="@drawable/shadow_top" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <com.easycontact.app.view.DigitsEditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_size_80"
+                android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginEnd="@dimen/margin_size_80"
+                android:background="@null"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="@color/color_3"
+                android:textSize="@dimen/text_size_22"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_size_20"
+                android:background="@drawable/shape_ripple"
+                android:src="@mipmap/ic_add_contact"
+                app:layout_constraintBottom_toBottomOf="@id/et_phone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/et_phone" />
+
+            <LinearLayout
+                android:id="@+id/ll_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_size_20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_phone">
+
+                <ImageView
+                    android:id="@+id/iv_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_one" />
+
+                <ImageView
+                    android:id="@+id/iv_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_two" />
+
+                <ImageView
+                    android:id="@+id/iv_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_three" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_size_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_one">
+
+                <ImageView
+                    android:id="@+id/iv_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_four" />
+
+                <ImageView
+                    android:id="@+id/iv_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_five" />
+
+                <ImageView
+                    android:id="@+id/iv_six"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_six" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_size_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_two">
+
+                <ImageView
+                    android:id="@+id/iv_seven"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_seven" />
+
+                <ImageView
+                    android:id="@+id/iv_eight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_eight" />
+
+                <ImageView
+                    android:id="@+id/iv_nine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_nine" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_size_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_three">
+
+                <ImageView
+                    android:id="@+id/iv_asterisk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_asterisk" />
+
+                <ImageView
+                    android:id="@+id/iv_zero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_zero" />
+
+                <ImageView
+                    android:id="@+id/iv_pound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:background="@drawable/shape_ripple"
+                    android:src="@mipmap/ic_pound" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginBottom="@dimen/margin_size_20"
+                android:background="@drawable/shape_ripple"
+                android:src="@mipmap/ic_call"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_four" />
+
+            <ImageView
+                android:id="@+id/iv_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginEnd="@dimen/margin_size_40"
+                android:layout_marginBottom="@dimen/margin_size_20"
+                android:background="@drawable/shape_ripple"
+                android:src="@mipmap/ic_collapse_keyboard"
+                app:layout_constraintBottom_toBottomOf="@id/iv_call"
+                app:layout_constraintEnd_toStartOf="@id/iv_call"
+                app:layout_constraintTop_toTopOf="@id/iv_call" />
+
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_size_40"
+                android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginBottom="@dimen/margin_size_20"
+                android:background="@drawable/shape_ripple"
+                android:src="@mipmap/ic_backspace"
+                app:layout_constraintBottom_toBottomOf="@id/iv_call"
+                app:layout_constraintStart_toEndOf="@id/iv_call"
+                app:layout_constraintTop_toTopOf="@id/iv_call" />
+
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+
+</RelativeLayout>
