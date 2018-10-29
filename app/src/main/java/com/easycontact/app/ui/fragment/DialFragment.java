@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.easycontact.app.R;
 import com.easycontact.app.base.BaseFragment;
 import com.easycontact.app.base.BasePresenter;
-import com.easycontact.app.view.BaseTitleBar;
+import com.easycontact.app.view.DigitsEditText;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -22,6 +22,9 @@ public class DialFragment extends BaseFragment {
     @BindView(R.id.iv_keyboard) ImageView ivKeyboard;
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.dial_keyword) LinearLayout dialKeyword;
+    @BindView(R.id.et_phone) DigitsEditText etPhone;
+
+    private StringBuffer phoneStr = new StringBuffer();
 
     @Override
     protected int getLayoutId() {
@@ -54,28 +57,52 @@ public class DialFragment extends BaseFragment {
             case R.id.iv_add:
                 break;
             case R.id.iv_one:
+                phoneStr.append(1);
+                refreshEditText();
                 break;
             case R.id.iv_two:
+                phoneStr.append(2);
+                refreshEditText();
                 break;
             case R.id.iv_three:
+                phoneStr.append(3);
+                refreshEditText();
                 break;
             case R.id.iv_four:
+                phoneStr.append(4);
+                refreshEditText();
                 break;
             case R.id.iv_five:
+                phoneStr.append(5);
+                refreshEditText();
                 break;
             case R.id.iv_six:
+                phoneStr.append(6);
+                refreshEditText();
                 break;
             case R.id.iv_seven:
+                phoneStr.append(7);
+                refreshEditText();
                 break;
             case R.id.iv_eight:
+                phoneStr.append(8);
+                refreshEditText();
                 break;
             case R.id.iv_nine:
+                phoneStr.append(9);
+                refreshEditText();
                 break;
             case R.id.iv_asterisk:
+                phoneStr.append("*");
+                refreshEditText();
                 break;
             case R.id.iv_zero:
+                phoneStr.append(0);
+                refreshEditText();
                 break;
             case R.id.iv_pound:
+                phoneStr.append("#");
+                refreshEditText();
                 break;
             case R.id.iv_call:
                 break;
@@ -86,8 +113,18 @@ public class DialFragment extends BaseFragment {
                 showDialKeyboard();
                 break;
             case R.id.iv_delete:
+                if (phoneStr.length() > 0 && etPhone.getSelectionStart() > 0) {
+
+                    phoneStr.deleteCharAt(etPhone.getSelectionStart() - 1);
+                    refreshEditText();
+                }
                 break;
         }
+    }
+
+    private void refreshEditText() {
+        etPhone.setText(phoneStr);
+        etPhone.setSelection(phoneStr.length());
     }
 
     private void collapseDialKeyboard() {

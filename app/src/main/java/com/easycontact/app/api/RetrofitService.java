@@ -8,16 +8,18 @@ import java.util.Map;
 import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Url;
+
 
 /**
  * Created by ZMM on 2018/1/17.
  */
 
 public interface RetrofitService {
-    String BASE_URL = "http://yigoutong.1bu2bu.com/index.php?s=/Api/";
+    String BASE_URL = "http://yigoutong.1bu2bu.com/";
 
-    @POST("Login/randomCode")
-    Observable<UserBean> getRandomCode(@Body Map map);
+    @POST()
+    Observable<UserBean> getRandomCode(@Url String url, @Body Map map);
 //
 //    @POST
 //    Observable<UserBean> registerUser(@Url String url, @Body Map map);

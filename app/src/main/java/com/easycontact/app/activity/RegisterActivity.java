@@ -26,7 +26,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
     @Override
     public void initView() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("mobile", "17600095930");
+        map.put("mobile", "18237056520");
         map.put("type", "1");
         map.put("deviceId", Build.SERIAL);
         presenter.getRandomCode(map);

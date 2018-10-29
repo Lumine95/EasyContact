@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.easycontact.app.api.Api;
+import com.easycontact.app.api.UrlUtil;
 import com.easycontact.app.base.BasePresenterImpl;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
     @SuppressLint("CheckResult")
     @Override
     public void getRandomCode(HashMap<String, Object> map) {
-        Api.getInstance().getRandomCode(map)
+        Api.getInstance().getRandomCode(UrlUtil.GET_RANDOM_CODE, map)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                 })
