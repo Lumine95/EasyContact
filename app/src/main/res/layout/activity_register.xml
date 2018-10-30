@@ -52,7 +52,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="40dp"
-            android:background="@mipmap/ic_get_code_bg"
+            android:background="@mipmap/ic_login_edit_text"
             app:layout_constraintTop_toBottomOf="@id/et_phone">
 
             <EditText
@@ -64,7 +64,7 @@
                 android:gravity="center_vertical"
                 android:hint="请输入短信验证码"
                 android:imeOptions="actionNext"
-                android:inputType="textPassword"
+                android:inputType="number"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:singleLine="true"
@@ -74,15 +74,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
+            <Button
                 android:id="@+id/btn_get_code"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/margin_size_7"
-                android:background="@color/transparent"
-                android:gravity="center_vertical"
+                android:background="@drawable/selector_code"
                 android:text="获取验证码"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13" />
@@ -173,6 +171,7 @@
             app:layout_constraintTop_toBottomOf="@id/btn_register" />
 
         <TextView
+            android:id="@+id/tv_exist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_size_80"
