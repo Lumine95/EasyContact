@@ -24,15 +24,15 @@
         </activity>
         <!--免打扰设置-->
         <activity
-            android:name="com.yigotone.app.activity.NoDisturbActivity"
+            android:name=".ui.activity.NoDisturbActivity"
             android:screenOrientation="portrait" />
         <!--主页-->
         <activity
-            android:name="com.yigotone.app.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:screenOrientation="portrait" />
         <!--忘记密码-->
         <activity
-            android:name="com.yigotone.app.activity.ForgetPwdActivity"
+            android:name=".ui.activity.ForgetPwdActivity"
             android:screenOrientation="portrait" />
         <!--注册-->
         <activity
@@ -40,7 +40,15 @@
             android:screenOrientation="portrait" />
         <!--拨号盘-->
         <activity
-            android:name="com.yigotone.app.activity.DialActivity"
+            android:name=".ui.activity.DialActivity"
+            android:screenOrientation="portrait" />
+        <!--订购套餐-->
+        <activity
+            android:name=".ui.packages.SubScribePackageActivity"
+            android:screenOrientation="portrait" />
+        <!--套餐详情-->
+        <activity
+            android:name=".ui.packages.PackageDetailActivity"
             android:screenOrientation="portrait" />
     </application>
 

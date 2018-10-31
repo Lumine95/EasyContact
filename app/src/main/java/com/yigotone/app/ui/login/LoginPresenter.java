@@ -33,13 +33,11 @@ public class LoginPresenter extends BasePresenterImpl<LoginContract.View> implem
                 .map(bean -> bean)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
-
                     if (bean.getStatus() == 0) {
-                        view.loginSuccess();
+                        view.loginSuccess(bean);
                     } else {
                         view.loginFail(bean.getErrorMsg());
                     }
                 }, throwable -> view.onError(throwable));
-
     }
 }

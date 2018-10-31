@@ -9,4 +9,5 @@ public class UrlUtil {
     public static String GET_RANDOM_CODE = BASE_URL + "Login/randomCode/";
     public static String REGISTER_NEW_USER = BASE_URL + "Login/register";
     public static String LOGIN = BASE_URL + "Login/login";
+    public static String GET_PACKAGE_LIST = BASE_URL + "Call/getCallSetmeal";
 }

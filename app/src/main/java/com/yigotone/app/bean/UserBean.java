@@ -13,6 +13,31 @@ public class UserBean {
 
     public static class DataBean {
         private String code;
+        private String uid;
+        private String token;
+        private String mobile;
+        private String mobileStatus;
+        private String talkTime;
+
+        public String getUid() {
+            return uid == null ? "" : uid;
+        }
+
+        public String getToken() {
+            return token == null ? "" : token;
+        }
+
+        public String getMobile() {
+            return mobile == null ? "" : mobile;
+        }
+
+        public String getMobileStatus() {
+            return mobileStatus == null ? "" : mobileStatus;
+        }
+
+        public String getTalkTime() {
+            return talkTime == null ? "" : talkTime;
+        }
 
         public String getCode() {
             return code == null ? "" : code;

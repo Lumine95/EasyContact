@@ -1,4 +1,4 @@
-package com.yigotone.app.ui.fragment;
+package com.yigotone.app.ui.home;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
 import com.yigotone.app.R;
-import com.yigotone.app.activity.DialActivity;
-import com.yigotone.app.activity.NoDisturbActivity;
 import com.yigotone.app.base.BaseFragment;
-import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.ui.activity.DialActivity;
+import com.yigotone.app.ui.activity.NoDisturbActivity;
+import com.yigotone.app.ui.packages.SubScribePackageActivity;
+import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.TriangleDrawable;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
@@ -26,7 +28,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/10/23 15:46.
  */
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment<HomeContract.Presenter> implements HomeContract.View {
     @BindView(R.id.tv_phone) TextView tvPhone;
     @BindView(R.id.btn_take_over) Button btnTakeOver;
     @BindView(R.id.tv_balance) TextView tvBalance;
@@ -42,13 +44,15 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected HomeContract.Presenter initPresenter() {
+        return new HomePresenter(this);
     }
+
 
     @Override
     public void initView(View view, Bundle savedInstanceState) {
-
+        tvPhone.setText(Utils.hidePhoneNumber(UserManager.getInstance().userData.getMobile()));
+        presenter.getPackageList();
     }
 
     @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial})
@@ -60,7 +64,7 @@ public class HomeFragment extends BaseFragment {
                 showMenu();
                 break;
             case R.id.iv_dial:
-                startActivity(new Intent(mContext,DialActivity.class));
+                startActivity(new Intent(mContext, DialActivity.class));
                 break;
         }
     }
@@ -73,9 +77,12 @@ public class HomeFragment extends BaseFragment {
                 .setOnViewListener((view, basePopup) -> {
                     View arrowView = view.findViewById(R.id.v_arrow);
                     arrowView.setBackground(new TriangleDrawable(TriangleDrawable.TOP, Color.parseColor("#FFFFFF")));
-                    view.findViewById(R.id.tv_no_disturb);
-                    view.setOnClickListener(v -> {
+                    view.findViewById(R.id.tv_no_disturb).setOnClickListener(v -> {
                         startActivity(new Intent(mContext, NoDisturbActivity.class));
+                        popup.dismiss();
+                    });
+                    view.findViewById(R.id.tv_subscribe).setOnClickListener(v -> {
+                        startActivity(new Intent(mContext, SubScribePackageActivity.class));
                         popup.dismiss();
                     });
                 })

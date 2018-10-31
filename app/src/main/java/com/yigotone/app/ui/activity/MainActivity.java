@@ -1,4 +1,4 @@
-package com.yigotone.app.activity;
+package com.yigotone.app.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.fragment.DataFragment;
-import com.yigotone.app.ui.fragment.HomeFragment;
+import com.yigotone.app.ui.home.HomeFragment;
 import com.yigotone.app.ui.fragment.MessageFragment;
 import com.yigotone.app.ui.fragment.MineFragment;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;

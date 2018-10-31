@@ -23,4 +23,14 @@ public class Utils {
         String regex = "^[a-zA-Z0-9]{8,16}$";
         return isDigit && isLetter && str.matches(regex);
     }
+
+    /**
+     * 隐藏手机号码中间部分
+     *
+     * @param phone
+     * @return
+     */
+    public static String hidePhoneNumber(String phone) {
+        return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+    }
 }

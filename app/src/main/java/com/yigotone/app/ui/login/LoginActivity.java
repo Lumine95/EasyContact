@@ -10,10 +10,12 @@ import android.widget.TextView;
 
 import com.android.library.utils.U;
 import com.yigotone.app.R;
-import com.yigotone.app.activity.ForgetPwdActivity;
-import com.yigotone.app.activity.MainActivity;
+import com.yigotone.app.ui.activity.ForgetPwdActivity;
+import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.base.BaseActivity;
+import com.yigotone.app.bean.UserBean;
 import com.yigotone.app.ui.register.RegisterActivity;
+import com.yigotone.app.user.UserManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,8 +43,8 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     @Override
     public void initView() {
-
-
+        etPhone.setText("18237056520");
+        etPwd.setText("qq123456");
     }
 
     @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_forget_pwd})
@@ -87,16 +89,16 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     }
 
     @Override
-    public void loginSuccess() {
+    public void loginSuccess(UserBean bean) {
         dismissLoadingDialog();
-        // TODO: 2018/10/30  save info.
+        UserManager.getInstance().save(this, bean.getData().get(0));
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override
     public void loginFail(String errorMsg) {
         dismissLoadingDialog();
-        U.showToast("登录失败");
         Log.e("loginFail ", errorMsg);
     }
 }
