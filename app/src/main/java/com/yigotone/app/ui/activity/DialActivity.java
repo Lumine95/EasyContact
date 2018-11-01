@@ -8,9 +8,8 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.adapter.CommonFragmentAdapter;
-import com.yigotone.app.ui.fragment.ContactFragment;
+import com.yigotone.app.ui.contact.ContactFragment;
 import com.yigotone.app.ui.fragment.DialFragment;
-import com.yigotone.app.ui.fragment.MessageFragment;
 import com.yigotone.app.view.BaseTitleBar;
 
 import java.util.ArrayList;

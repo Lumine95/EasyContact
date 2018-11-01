@@ -1,4 +1,4 @@
-package com.yigotone.app.ui.fragment;
+package com.yigotone.app.ui.contact;
 
 import android.database.Cursor;
 import android.os.Bundle;
