@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.home;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
+import com.android.library.utils.U;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.ui.activity.DialActivity;
@@ -64,7 +67,13 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                 showMenu();
                 break;
             case R.id.iv_dial:
-                startActivity(new Intent(mContext, DialActivity.class));
+                new RxPermissions(this).request(Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_CONTACTS).subscribe(granted -> {
+                    if (granted) {
+                        startActivity(new Intent(mContext, DialActivity.class));
+                    } else {
+                        U.showToast("没有获取到权限");
+                    }
+                });
                 break;
         }
     }

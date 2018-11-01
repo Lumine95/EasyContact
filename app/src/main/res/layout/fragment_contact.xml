@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_size_15"
+        android:layout_marginTop="@dimen/margin_size_10"
+        android:layout_marginEnd="@dimen/margin_size_15"
+        android:layout_marginBottom="@dimen/margin_size_10"
+        android:background="@mipmap/ic_search_box_bg"
+        android:drawableStart="@mipmap/ic_search"
+        android:drawablePadding="@dimen/margin_size_7"
+        android:gravity="center_vertical"
+        android:hint="搜索联系人"
+        android:imeOptions="actionSearch"
+        android:paddingStart="@dimen/margin_size_11"
+        android:paddingEnd="@dimen/margin_size_11"
+        android:singleLine="true"
+        android:textColor="@color/color_3"
+        android:textColorHint="@color/color_9"
+        android:textSize="@dimen/text_size_13"
+        app:layout_scrollFlags="scroll|enterAlways" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_contact" />
+</LinearLayout>

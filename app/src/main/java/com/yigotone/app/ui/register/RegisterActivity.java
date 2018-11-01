@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.register;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.UserBean;
+import com.yigotone.app.ui.setting.UserProtocolActivity;
 import com.yigotone.app.util.Utils;
 
 import java.util.HashMap;
@@ -87,6 +89,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
                 register();
                 break;
             case R.id.tv_protocol:
+                startActivity(new Intent(this, UserProtocolActivity.class));
                 break;
             case R.id.tv_exist:
                 finish();

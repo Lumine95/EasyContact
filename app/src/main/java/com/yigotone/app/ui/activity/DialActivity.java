@@ -8,6 +8,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.adapter.CommonFragmentAdapter;
+import com.yigotone.app.ui.fragment.ContactFragment;
 import com.yigotone.app.ui.fragment.DialFragment;
 import com.yigotone.app.ui.fragment.MessageFragment;
 import com.yigotone.app.view.BaseTitleBar;
@@ -45,7 +46,7 @@ public class DialActivity extends BaseActivity {
         titleList.add("拨号盘");
         titleList.add("联系人");
         fragmentList.add(new DialFragment());
-        fragmentList.add(new MessageFragment());
+        fragmentList.add(new ContactFragment());
 
         if (fragmentAdapter == null) {
             fragmentAdapter = new CommonFragmentAdapter(getSupportFragmentManager(), fragmentList, titleList);
