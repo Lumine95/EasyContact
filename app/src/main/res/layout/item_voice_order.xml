@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginStart="38dp"
+    android:layout_marginTop="@dimen/margin_size_20"
+    android:layout_marginEnd="38dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/ic_package_detail_bg"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_45"
+        android:text="@string/app_name"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_size_12"
+        android:text="@string/app_name"
+        android:textColor="#ffffffff"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="45dp"
+        android:layout_height="22dp"
+        android:layout_margin="@dimen/margin_size_12"
+        android:background="@drawable/shape_white_corner_rectangle"
+        android:text="@string/app_name"
+        android:textColor="#ff3ca3ed"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.android.library.view.LabelView
+        android:id="@+id/label_view"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:lv_background_color="#99D2FC"
+        app:lv_gravity="BOTTOM_RIGHT"
+        app:lv_padding="9dp"
+        app:lv_text="赠送"
+        app:lv_text_size="@dimen/text_size_11" />
+</android.support.constraint.ConstraintLayout>

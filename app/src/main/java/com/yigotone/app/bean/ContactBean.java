@@ -6,18 +6,18 @@ package com.yigotone.app.bean;
 public class ContactBean {
     private String name;
     private String phone;
-    private String sortKey;
+    private String letter;
     private int id;
 
-    public ContactBean(String name, String phone, String sortKey, int id) {
+    public ContactBean(String name, String phone, String letter, int id) {
         this.name = name;
         this.phone = phone;
-        this.sortKey = sortKey;
+        this.letter  = letter ;
         this.id = id;
     }
 
-    public String getSortKey() {
-        return sortKey == null ? "" : sortKey;
+    public String getLetter() {
+        return letter == null ? "" : letter;
     }
 
     public int getId() {

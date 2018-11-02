@@ -60,6 +60,22 @@
         <activity
             android:name=".ui.contact.ContactDetailActivity"
             android:screenOrientation="portrait" />
+        <!--设置-->
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:screenOrientation="portrait" />
+        <!--关于-->
+        <activity
+            android:name=".ui.setting.AboutUsActivity"
+            android:screenOrientation="portrait" />
+        <!--语音账户-->
+        <activity
+            android:name=".ui.setting.VoiceAccountActivity"
+            android:screenOrientation="portrait" />
+        <!--订单-->
+        <activity
+            android:name=".ui.order.OrderActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

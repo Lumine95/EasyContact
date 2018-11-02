@@ -25,6 +25,8 @@ public class DialFragment extends BaseFragment {
     @BindView(R.id.et_phone) DigitsEditText etPhone;
 
     private StringBuffer phoneStr = new StringBuffer();
+    private TranslateAnimation hideAnim;
+    private TranslateAnimation showAnim;
 
     @Override
     protected int getLayoutId() {
@@ -38,6 +40,18 @@ public class DialFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        initAnimation();
+    }
+
+    private void initAnimation() {
+        hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 1.0f);
+        showAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f);
     }
 
     @Override
@@ -128,21 +142,13 @@ public class DialFragment extends BaseFragment {
     }
 
     private void collapseDialKeyboard() {
-        TranslateAnimation hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 1.0f);
-        hideAnim.setDuration(360);
+        hideAnim.setDuration(260);
         dialKeyword.startAnimation(hideAnim);
         dialKeyword.setVisibility(View.GONE);
     }
 
     private void showDialKeyboard() {
-        TranslateAnimation showAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 1.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f);
-        showAnim.setDuration(360);
+        showAnim.setDuration(260);
         dialKeyword.startAnimation(showAnim);
         dialKeyword.setVisibility(View.VISIBLE);
     }

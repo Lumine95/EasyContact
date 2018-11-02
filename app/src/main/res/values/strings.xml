@@ -6,4 +6,9 @@
     <string name="pwd_tip">密码应由8-16位数字和字母组成（不能是纯数字)</string>
     <string name="protocol">注册即表示您已同意《易沟通APP用户协议》</string>
     <string name="already_have_account">已有账号？马上登录</string>
+
+    <string name="status_layout_manager_loading">正在加载</string>
+    <string name="status_layout_manager_empty">暂无数据</string>
+    <string name="status_layout_manager_error">网络错误</string>
+    <string name="status_layout_manager_retry">重新加载</string>
 </resources>

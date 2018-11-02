@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f6"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_size_28"
+            android:text="主叫分钟数剩余"
+            android:textColor="#ff999999"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="@dimen/margin_size_30">
+
+            <TextView
+                android:id="@+id/tv_minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="0"
+                android:textColor="@color/color_6DBFFA"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="2dp"
+                android:text="分钟"
+                android:textColor="@color/color_6DBFFA"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_size_10" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_size_75"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_size_14"
+            android:layout_marginTop="@dimen/margin_size_20"
+            android:text="@string/app_name"
+            android:textColor="#ff333333"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="分钟"
+            android:textColor="@color/color_6DBFFA"
+            android:textSize="@dimen/text_size_13"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_title" />
+
+        <TextView
+            android:id="@+id/tv_minute_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:text="0"
+            android:textColor="@color/color_6DBFFA"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toStartOf="@id/tv_tag"
+            app:layout_constraintTop_toTopOf="@id/tv_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_size_2"
+            android:text="剩余"
+            android:textColor="@color/color_9"
+            android:textSize="@dimen/text_size_13"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toStartOf="@id/tv_minute_num"
+            app:layout_constraintTop_toTopOf="@id/tv_title" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:layout_marginStart="@dimen/margin_size_15"
+            android:layout_marginTop="@dimen/margin_size_15"
+            android:layout_marginEnd="@dimen/margin_size_15"
+            android:max="100"
+            android:progress="24"
+            android:progressDrawable="@drawable/shape_progressbar_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+    </android.support.constraint.ConstraintLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_size_0.5" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_size_15"
+            android:text="@string/app_name"
+            android:textColor="#ff333333"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余"
+                android:textColor="@color/color_9"
+                android:textSize="@dimen/text_size_13" />
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_size_2"
+                android:text="0"
+                android:textColor="@color/color_6DBFFA"
+                android:textSize="@dimen/text_size_18" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_size_2"
+                android:text="天"
+                android:textColor="@color/color_6DBFFA"
+                android:textSize="@dimen/text_size_13" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

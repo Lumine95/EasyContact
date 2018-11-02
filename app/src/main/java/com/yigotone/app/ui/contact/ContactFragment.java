@@ -16,8 +16,11 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
+import com.yigotone.app.util.PinyinComparator;
+import com.yigotone.app.util.PinyinUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,10 +51,15 @@ public class ContactFragment extends BaseFragment {
         initRecyclerView();
         getPhoneContacts();
 
-        recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact,list) {
+        // 根据a-z进行排序源数据
+        PinyinComparator pinyinComparator = new PinyinComparator();
+        Collections.sort(list, pinyinComparator);
+
+
+        recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact, list) {
             @Override
             protected void convert(BaseViewHolder helper, ContactBean item) {
-                helper.setText(R.id.tv_name, item.getName() + "|" + item.getId() + "|" + item.getSortKey());
+                helper.setText(R.id.tv_name, item.getName() + "|" + item.getId() + "|" + item.getLetter());
                 helper.setText(R.id.tv_phone, item.getPhone());
 //                helper.itemView.setOnClickListener(v -> startActivity(new Intent(mContext, WebViewActivity.class)
 //                        .putExtra("title", item.getTitle())
@@ -72,16 +80,16 @@ public class ContactFragment extends BaseFragment {
             //读取通讯录的号码
             String number = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
             int Id = cursor.getInt(cursor.getColumnIndex(Phone.CONTACT_ID));
-            String SortKey = getSortKey(cursor.getString(1));
-            ContactBean bean = new ContactBean(name, number, SortKey, Id);
+            String letter = getLetter(name);
+            ContactBean bean = new ContactBean(name, number, letter, Id);
             list.add(bean);
         }
         cursor.close();
         //  return list;
     }
 
-    private String getSortKey(String sortKeyString) {
-        String key = sortKeyString.substring(0, 1).toUpperCase();
+    private String getLetter(String name) {
+        String key = PinyinUtils.getPingYin(name).substring(0, 1).toUpperCase();
         if (key.matches("[A-Z]")) {
             return key;
         } else
