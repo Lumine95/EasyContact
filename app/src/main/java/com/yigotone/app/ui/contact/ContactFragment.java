@@ -62,7 +62,7 @@ public class ContactFragment extends BaseFragment {
                 helper.setText(R.id.tv_name, item.getName() + "|" + item.getId() + "|" + item.getLetter());
                 helper.setText(R.id.tv_phone, item.getPhone());
 //                helper.itemView.setOnClickListener(v -> startActivity(new Intent(mContext, WebViewActivity.class)
-//                        .putExtra("title", item.getTitle())
+//                        .putExtra("title",    item.getTitle())
 //                        .putExtra("url", item.getLink())));
             }
         });
@@ -70,6 +70,8 @@ public class ContactFragment extends BaseFragment {
     }
 
     public void getPhoneContacts() {
+        // TODO: 2018/11/3  联系人详情多条电话
+
         Cursor cursor = mContext.getContentResolver().query(Phone.CONTENT_URI,
                 new String[]{"display_name", "sort_key", "contact_id",
                         "data1"}, null, null, null);
