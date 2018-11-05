@@ -1,12 +1,15 @@
 package com.yigotone.app.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.android.library.utils.DensityUtil;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
@@ -69,6 +72,7 @@ public class DialFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_add:
+                showDialog();
                 break;
             case R.id.iv_one:
                 phoneStr.append(1);
@@ -128,12 +132,23 @@ public class DialFragment extends BaseFragment {
                 break;
             case R.id.iv_delete:
                 if (phoneStr.length() > 0 && etPhone.getSelectionStart() > 0) {
-
                     phoneStr.deleteCharAt(etPhone.getSelectionStart() - 1);
                     refreshEditText();
                 }
                 break;
         }
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(mContext, R.layout.dialog_add_contact, null);
+        TextView tv_create = view.findViewById(R.id.tv_create);
+        TextView tv_exist = view.findViewById(R.id.tv_exist);
+        dialog.setCancelable(true);
+        dialog.setView(view);
+        dialog.show();
+        dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 266), LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     private void refreshEditText() {

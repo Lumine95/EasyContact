@@ -2,10 +2,12 @@ package com.yigotone.app.bean;
 
 import com.yigotone.app.view.contact.IndexableEntity;
 
+import java.io.Serializable;
+
 /**
  * Created by ZMM on 2018/11/1 16:35.
  */
-public class ContactBean implements IndexableEntity {
+public class ContactBean implements IndexableEntity, Serializable {
     private String name;
     private String phone;
     private String letter;

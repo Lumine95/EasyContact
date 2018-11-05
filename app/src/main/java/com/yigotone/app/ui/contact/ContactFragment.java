@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.contact;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.android.library.utils.U;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yigotone.app.R;
@@ -21,7 +21,6 @@ import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.adapter.ContactAdapter;
 import com.yigotone.app.util.PinyinComparator;
 import com.yigotone.app.util.PinyinUtils;
-import com.yigotone.app.view.contact.IndexableAdapter;
 import com.yigotone.app.view.contact.IndexableLayout;
 
 import java.util.ArrayList;
@@ -77,18 +76,10 @@ public class ContactFragment extends BaseFragment {
         mAdapter.setDatas(list);
         indexableLayout.setOverlayStyle_MaterialDesign(Color.RED);
         indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
-        mAdapter.setOnItemTitleClickListener(new IndexableAdapter.OnItemTitleClickListener() {
-            @Override
-            public void onItemClick(View v, int currentPosition, String indexTitle) {
-                U.showToast("选中:" + indexTitle + "  当前位置:" + currentPosition);
-            }
-        });
-
+        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> startActivity(new Intent(mContext, ContactDetailActivity.class).putExtra("data", entity)));
     }
 
     public void getPhoneContacts() {
-        // TODO: 2018/11/3  联系人详情多条电话
-
         Cursor cursor = mContext.getContentResolver().query(Phone.CONTENT_URI,
                 new String[]{"display_name", "sort_key", "contact_id",
                         "data1"}, null, null, null);
