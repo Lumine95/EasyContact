@@ -1,7 +1,6 @@
 package com.yigotone.app.ui.contact;
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,7 +74,7 @@ public class ContactFragment extends BaseFragment {
         ContactAdapter mAdapter = new ContactAdapter(mContext);
         indexableLayout.setAdapter(mAdapter);
         mAdapter.setDatas(list);
-        indexableLayout.setOverlayStyle_MaterialDesign(Color.RED);
+        indexableLayout.setOverlayStyle_Center();
         indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
         mAdapter.setOnItemTitleClickListener(new IndexableAdapter.OnItemTitleClickListener() {
             @Override
