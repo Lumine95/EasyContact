@@ -1,6 +1,7 @@
 package com.yigotone.app.ui.contact;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,18 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.android.library.utils.U;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
+import com.yigotone.app.ui.adapter.ContactAdapter;
 import com.yigotone.app.util.PinyinComparator;
 import com.yigotone.app.util.PinyinUtils;
+import com.yigotone.app.view.contact.IndexableAdapter;
+import com.yigotone.app.view.contact.IndexableLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +37,9 @@ import butterknife.Unbinder;
 public class ContactFragment extends BaseFragment {
     @BindView(R.id.et_search) EditText etSearch;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.indexableLayout) IndexableLayout indexableLayout;
     Unbinder unbinder;
-    List<ContactBean> list = new ArrayList<>();
+    ArrayList<ContactBean> list = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -55,7 +60,6 @@ public class ContactFragment extends BaseFragment {
         PinyinComparator pinyinComparator = new PinyinComparator();
         Collections.sort(list, pinyinComparator);
 
-
         recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact, list) {
             @Override
             protected void convert(BaseViewHolder helper, ContactBean item) {
@@ -64,6 +68,19 @@ public class ContactFragment extends BaseFragment {
 //                helper.itemView.setOnClickListener(v -> startActivity(new Intent(mContext, WebViewActivity.class)
 //                        .putExtra("title",    item.getTitle())
 //                        .putExtra("url", item.getLink())));
+            }
+        });
+
+        indexableLayout.setLayoutManager(new LinearLayoutManager(mContext));
+        ContactAdapter mAdapter = new ContactAdapter(mContext);
+        indexableLayout.setAdapter(mAdapter);
+        mAdapter.setDatas(list);
+        indexableLayout.setOverlayStyle_MaterialDesign(Color.RED);
+        indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
+        mAdapter.setOnItemTitleClickListener(new IndexableAdapter.OnItemTitleClickListener() {
+            @Override
+            public void onItemClick(View v, int currentPosition, String indexTitle) {
+                U.showToast("选中:" + indexTitle + "  当前位置:" + currentPosition);
             }
         });
 

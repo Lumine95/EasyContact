@@ -43,6 +43,7 @@
         <!--拨号盘-->
         <activity
             android:name=".ui.activity.DialActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <!--订购套餐-->
         <activity

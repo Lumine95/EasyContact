@@ -53,5 +53,8 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
     // Popup
     implementation 'com.github.zyyoona7:EasyPopup:1.1.2'
+    // PinYin
+    implementation 'com.github.promeg:tinypinyin:2.0.3'
+    implementation 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3'
 }
 

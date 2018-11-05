@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/et_search"
@@ -32,5 +31,18 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         tools:listitem="@layout/item_contact" />
-</LinearLayout>
+
+    <com.yigotone.app.view.contact.IndexableLayout
+        android:id="@+id/indexableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/et_search"
+        android:background="@android:color/white"
+        app:indexBar_selectedTextColor="@color/white"
+        app:indexBar_textColor="@color/color_3"
+        app:indexBar_textSize="11sp"
+        app:indexBar_textSpace="3dp" />
+
+</RelativeLayout>
