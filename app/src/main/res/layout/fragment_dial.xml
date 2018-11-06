@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="match_parent"
@@ -37,9 +37,9 @@
                 android:id="@+id/et_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_size_80"
                 android:layout_marginStart="@dimen/margin_size_80"
                 android:layout_marginTop="@dimen/margin_size_20"
-                android:layout_marginEnd="@dimen/margin_size_80"
                 android:background="@null"
                 android:cursorVisible="false"
                 android:maxLines="1"
@@ -53,10 +53,11 @@
 
             <ImageView
                 android:id="@+id/iv_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_size_20"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/margin_size_5"
                 android:background="@drawable/shape_ripple"
+                android:scaleType="centerInside"
                 android:src="@mipmap/ic_add_contact"
                 app:layout_constraintBottom_toBottomOf="@id/et_phone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -198,8 +199,8 @@
                 android:id="@+id/iv_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_size_20"
                 android:layout_marginBottom="@dimen/margin_size_20"
+                android:layout_marginTop="@dimen/margin_size_20"
                 android:background="@drawable/shape_ripple"
                 android:src="@mipmap/ic_call"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -209,12 +210,13 @@
 
             <ImageView
                 android:id="@+id/iv_collapse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_size_20"
-                android:layout_marginEnd="@dimen/margin_size_40"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginBottom="@dimen/margin_size_20"
+                android:layout_marginEnd="29dp"
+                android:layout_marginTop="@dimen/margin_size_20"
                 android:background="@drawable/shape_ripple"
+                android:scaleType="centerInside"
                 android:src="@mipmap/ic_collapse_keyboard"
                 app:layout_constraintBottom_toBottomOf="@id/iv_call"
                 app:layout_constraintEnd_toStartOf="@id/iv_call"
@@ -222,12 +224,13 @@
 
             <ImageView
                 android:id="@+id/iv_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_size_40"
-                android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginBottom="@dimen/margin_size_20"
+                android:layout_marginStart="29dp"
+                android:layout_marginTop="@dimen/margin_size_20"
                 android:background="@drawable/shape_ripple"
+                android:scaleType="centerInside"
                 android:src="@mipmap/ic_backspace"
                 app:layout_constraintBottom_toBottomOf="@id/iv_call"
                 app:layout_constraintStart_toEndOf="@id/iv_call"
