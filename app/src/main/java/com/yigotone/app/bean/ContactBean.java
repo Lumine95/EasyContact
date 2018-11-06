@@ -10,19 +10,13 @@ import java.io.Serializable;
 public class ContactBean implements IndexableEntity, Serializable {
     private String name;
     private String phone;
-    private String letter;
     private String pinyin;
     private int id;
 
-    public ContactBean(String name, String phone, String letter, int id) {
+    public ContactBean(String name, String phone, int id) {
         this.name = name;
         this.phone = phone;
-        this.letter = letter;
         this.id = id;
-    }
-
-    public String getLetter() {
-        return letter == null ? "" : letter;
     }
 
     public String getPinyin() {

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
@@ -38,8 +39,11 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.iv_dial) ImageView ivDial;
+    @BindView(R.id.iv_take_over) ImageView ivTakeOver;
+    @BindView(R.id.ll_take_over) LinearLayout llTakeOver;
 
     private EasyPopup popup;
+    private String mobileStatus;   //1未托管，2托管中
 
     @Override
     protected int getLayoutId() {
@@ -56,18 +60,27 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     public void initView(View view, Bundle savedInstanceState) {
         tvPhone.setText(Utils.hidePhoneNumber(UserManager.getInstance().userData.getMobile()));
         presenter.getPackageList();
+        mobileStatus = UserManager.getInstance().userData.getMobileStatus();
+        refreshTakeOverLayout();
     }
 
-    @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial})
+    private void refreshTakeOverLayout() {
+        btnTakeOver.setVisibility(mobileStatus.equals("1") ? View.VISIBLE : View.GONE);
+        llTakeOver.setVisibility(mobileStatus.equals("2") ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial, R.id.ll_take_over})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_take_over:
+            case R.id.ll_take_over:
+                takeOver();
                 break;
             case R.id.iv_add:
                 showMenu();
                 break;
             case R.id.iv_dial:
-                new RxPermissions(this).request(Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_CONTACTS).subscribe(granted -> {
+                new RxPermissions(this).request(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS).subscribe(granted -> {
                     if (granted) {
                         startActivity(new Intent(mContext, DialActivity.class));
                     } else {
@@ -76,6 +89,15 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                 });
                 break;
         }
+    }
+
+    private void takeOver() {
+//        if (开机状态) {
+//            showDialogTip();
+//            return;
+//        }
+        UserManager.getInstance().userData.setMobileStatus(mobileStatus = mobileStatus.equals("1") ? "2" : "1");
+        refreshTakeOverLayout();
     }
 
     private void showMenu() {

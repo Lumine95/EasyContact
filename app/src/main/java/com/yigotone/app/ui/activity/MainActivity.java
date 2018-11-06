@@ -1,23 +1,21 @@
 package com.yigotone.app.ui.activity;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.fragment.DataFragment;
-import com.yigotone.app.ui.home.HomeFragment;
 import com.yigotone.app.ui.fragment.MessageFragment;
 import com.yigotone.app.ui.fragment.MineFragment;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
+import com.yigotone.app.ui.home.HomeFragment;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
@@ -97,13 +95,6 @@ public class MainActivity extends BaseActivity {
             }
             mContent = to;
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
     @Override

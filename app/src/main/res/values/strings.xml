@@ -11,4 +11,11 @@
     <string name="status_layout_manager_empty">暂无数据</string>
     <string name="status_layout_manager_error">网络错误</string>
     <string name="status_layout_manager_retry">重新加载</string>
+    <string name="pay_success">支付成功</string>
+    <string name="back_home">回到首页</string>
+    <string name="check_my_order">查看我的订单</string>
+    <string name="pay_fail">支付失败</string>
+    <string name="cancel">取消</string>
+    <string name="retry">重试</string>
+    <string name="tip">提示</string>
 </resources>

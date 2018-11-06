@@ -145,6 +145,7 @@ public class DialFragment extends BaseFragment {
         View view = View.inflate(mContext, R.layout.dialog_add_contact, null);
         TextView tv_create = view.findViewById(R.id.tv_create);
         TextView tv_exist = view.findViewById(R.id.tv_exist);
+
         dialog.setCancelable(true);
         dialog.setView(view);
         dialog.show();

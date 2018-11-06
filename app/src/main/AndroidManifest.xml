@@ -43,8 +43,8 @@
         <!--拨号盘-->
         <activity
             android:name=".ui.activity.DialActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <!--订购套餐-->
         <activity
             android:name=".ui.packages.SubScribePackageActivity"
@@ -76,6 +76,10 @@
         <!--订单-->
         <activity
             android:name=".ui.order.OrderActivity"
+            android:screenOrientation="portrait" />
+        <!--支付结果-->
+        <activity
+            android:name=".ui.activity.PayResultActivity"
             android:screenOrientation="portrait" />
     </application>
 

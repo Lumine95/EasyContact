@@ -23,6 +23,10 @@ public class UserBean {
             return uid == null ? "" : uid;
         }
 
+        public void setMobileStatus(String mobileStatus) {
+            this.mobileStatus = mobileStatus;
+        }
+
         public String getToken() {
             return token == null ? "" : token;
         }
