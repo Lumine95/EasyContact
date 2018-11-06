@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_6DBFFA">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:includeFontPadding="false"
+        android:textColor="#ffffffff"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/app_name" />
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_11"
+        android:includeFontPadding="false"
+        android:text="正在呼叫…"
+        android:textColor="#ffffffff"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_name" />
+
+    <ImageView
+        android:id="@+id/iv_keyboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:src="@mipmap/ic_call_keyboard"
+        app:layout_constraintEnd_toStartOf="@+id/iv_speakerphone"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_status" />
+
+    <ImageView
+        android:id="@+id/iv_speakerphone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="110dp"
+        android:src="@drawable/selector_speakerphone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_keyboard"
+        app:layout_constraintTop_toBottomOf="@id/tv_status" />
+
+    <ImageView
+        android:id="@+id/iv_hang_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_size_70"
+        android:src="@mipmap/ic_hang_up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_hang_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_size_45"
+        android:drawablePadding="@dimen/margin_size_10"
+        android:drawableTop="@mipmap/ic_hang_up"
+        android:gravity="center"
+        android:text="@string/hang_up"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_answer"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_size_45"
+        android:layout_marginStart="@dimen/margin_size_50"
+        android:drawablePadding="@dimen/margin_size_10"
+        android:drawableTop="@mipmap/ic_answer"
+        android:gravity="center"
+        android:text="@string/answer"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_hang_up" />
+
+    <ImageView
+        android:id="@+id/iv_mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_size_15"
+        android:layout_marginTop="@dimen/margin_size_5"
+        android:src="@mipmap/ic_call_mini"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

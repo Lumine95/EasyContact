@@ -18,4 +18,6 @@
     <string name="cancel">取消</string>
     <string name="retry">重试</string>
     <string name="tip">提示</string>
+    <string name="answer">接听</string>
+    <string name="hang_up">挂断</string>
 </resources>

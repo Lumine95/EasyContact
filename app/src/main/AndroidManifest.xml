@@ -81,6 +81,10 @@
         <activity
             android:name=".ui.activity.PayResultActivity"
             android:screenOrientation="portrait" />
+        <!--通话-->
+        <activity
+            android:name=".ui.call.CallActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
