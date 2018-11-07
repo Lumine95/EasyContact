@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.android.library.utils.U;
 import com.yigotone.app.R;
-import com.yigotone.app.ui.activity.ForgetPwdActivity;
-import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.UserBean;
+import com.yigotone.app.ui.activity.ForgetPwdActivity;
+import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.register.RegisterActivity;
 import com.yigotone.app.user.UserManager;
 
