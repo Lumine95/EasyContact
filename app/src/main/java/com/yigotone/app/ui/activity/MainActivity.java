@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
@@ -34,7 +33,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        QMUIStatusBarHelper.translucent(this);
+        // QMUIStatusBarHelper.translucent(this);
         return R.layout.activity_main;
     }
 

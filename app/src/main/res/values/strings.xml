@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YiGoTone</string>
+    <string name="app_name">易沟通</string>
     <string name="no_disturb_warning">“启用免打扰”打开后，来电和短信将被设为静音，在首页号码处将出现月亮图标。</string>
     <string name="no_disturb_warning2">设置“免打扰时间段”，可在选择的时间段内设置免打扰功能，在 选择时间段内来电和短信将被设为静音，在首页号码处将出现月亮 图标。</string>
     <string name="password_tip">密码应由8-16位数字和字母组成（不能是纯数字)</string>
@@ -24,4 +24,5 @@
     <string name="edit">编辑</string>
     <string name="search_contact">搜索联系人</string>
     <string name="search_message">搜索消息</string>
+    <string name="delete">删除</string>
 </resources>
