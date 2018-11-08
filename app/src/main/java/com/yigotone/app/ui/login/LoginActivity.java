@@ -47,7 +47,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
         etPwd.setText("qq123456");
     }
 
-    @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_forget_pwd})
+    @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_forget_pwd, R.id.iv_logo})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -58,6 +58,9 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
                 break;
             case R.id.tv_forget_pwd:
                 startActivity(new Intent(this, ForgetPwdActivity.class));
+                break;
+            case R.id.iv_logo:
+                startActivity(new Intent(this, NewDeviceLoginActivity.class));
                 break;
         }
     }

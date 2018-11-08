@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/status_layout_background_color"
-    android:gravity="center"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/iv_status_error_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_error" />
 
@@ -17,21 +18,33 @@
         android:id="@+id/tv_status_error_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="35dp"
         android:gravity="center"
+        android:includeFontPadding="false"
         android:text="@string/status_layout_manager_error"
-        android:textColor="@color/status_layout_tip_text_color"
+        android:textColor="@color/color_6"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/bt_status_error_click"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_size_11"
+        android:includeFontPadding="false"
+        android:text="请检查您的网络，重新加载吧"
+        android:textColor="#ff999999"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/bt_status_error_click"
+        android:layout_width="90dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_size_30"
+        android:background="@drawable/shape_rectangle_frame"
         android:gravity="center"
-        android:padding="10dp"
+        android:includeFontPadding="false"
         android:text="@string/status_layout_manager_retry"
-        android:textColor="@color/status_layout_click_view_text_color"
-        android:textSize="13sp"
-        android:textStyle="bold" />
+        android:textColor="@color/color_3CA3ED"
+        android:textSize="13sp" />
 </LinearLayout>

@@ -1,8 +1,12 @@
 package com.yigotone.app.ui.login;
 
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
@@ -63,8 +67,25 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
             case R.id.tv_get_code:
                 break;
             case R.id.tv_tip:
+                showDialog();
                 break;
         }
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(this, R.layout.dialog_warning, null);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        TextView tv_content = view.findViewById(R.id.tv_content);
+        Button btn_ok = view.findViewById(R.id.btn_ok);
+        tv_title.setText("收不到验证码");
+        tv_content.setText("1 请确认手机号是否为当前使用的手机号\n2 请检查短信是否被安全软件拦截\n3 由于运营商网络原因，短信可能延迟到达");
+        btn_ok.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCancelable(true);
+        dialog.setView(view);
+        dialog.show();
+        dialog.getWindow().setLayout(DensityUtil.dip2px(this, 330), LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
 }
