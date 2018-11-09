@@ -25,6 +25,16 @@ android {
             outputFileName = "YiGoTone_" + defaultConfig.versionName + ".apk"
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {

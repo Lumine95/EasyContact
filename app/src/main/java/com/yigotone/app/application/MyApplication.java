@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.android.library.utils.U;
+import com.ebupt.ebauth.biz.EbAuthDelegate;
 
 /**
  * Created by ZMM on 2018/2/5.
@@ -17,6 +18,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mAppContext = getApplicationContext();
         U.init(this);
+        EbAuthDelegate.init(this);
     }
 
     public static Context getAppContext() {

@@ -2,6 +2,7 @@ package com.yigotone.app.ui.register;
 
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.base.BaseView;
+import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.UserBean;
 
 import java.util.Map;
@@ -13,7 +14,7 @@ public class RegisterContract {
     public interface View extends BaseView {
         void codeObtained(UserBean bean);
 
-        void onRegisterResult(UserBean bean);
+        void onRegisterResult(CodeBean bean);
     }
 
     public interface Presenter extends BasePresenter {

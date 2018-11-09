@@ -1,6 +1,7 @@
 package com.yigotone.app.api;
 
 
+import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.PackageBean;
 import com.yigotone.app.bean.UserBean;
 
@@ -23,7 +24,7 @@ public interface RetrofitService {
     Observable<UserBean> getRandomCode(@Url String url);
 
     @POST()
-    Observable<UserBean> register(@Url String url, @QueryMap Map<String, String> map);
+    Observable<CodeBean> register(@Url String url, @QueryMap Map<String, String> map);
 
     @POST()
     Observable<UserBean> login(@Url String url, @QueryMap Map<String, String> map);

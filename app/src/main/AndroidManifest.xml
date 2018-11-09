@@ -7,6 +7,24 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name="com.yigotone.app.application.MyApplication"
         android:icon="@mipmap/ic_launcher"
@@ -30,7 +48,8 @@
         <!--主页-->
         <activity
             android:name=".ui.activity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--忘记密码-->
         <activity
             android:name=".ui.activity.ForgetPwdActivity"
@@ -92,7 +111,19 @@
         <activity
             android:name=".ui.activity.MessageDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-    </application>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+
+
+        <meta-data
+            android:name="com.ebupt.ebjar.DOMAIN"
+            android:value="yibuTest.com" />
+        <meta-data
+            android:name="com.ebupt.ebauth.APPKEY"
+            android:value="aahyAYCRZWGnIAIy5XehnSHpOnydWZ5M" />
+        <meta-data
+            android:name="com.ebupt.ebauth.APPSECRET"
+            android:value="sVj4eQMCyzZupUFb5AWzvUmQmeu3iPTT" />
+      </application>
 
 </manifest>
