@@ -114,6 +114,13 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":locservice" />
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="AK_APPID" />
 
         <meta-data
             android:name="com.ebupt.ebjar.DOMAIN"

@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -13,7 +14,10 @@ import com.android.library.utils.DensityUtil;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.view.DigitsEditText;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -123,6 +127,9 @@ public class DialFragment extends BaseFragment {
                 refreshEditText();
                 break;
             case R.id.iv_call:
+                startActivity(new Intent(mContext, CallActivity.class)
+                        .putExtra("tag", 1)
+                        .putExtra("phoneNumber", Objects.requireNonNull(etPhone.getText()).toString().trim()));
                 break;
             case R.id.iv_collapse:
                 collapseDialKeyboard();

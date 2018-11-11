@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.register;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.widget.EditText;
 
 import com.android.library.utils.U;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
-import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.ebupt.ebauth.biz.auth.OnAuthcodeListener;
 import com.ebupt.ebjar.EbLoginDelegate;
 import com.yigotone.app.R;
@@ -17,6 +17,7 @@ import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.UserBean;
+import com.yigotone.app.ui.setting.UserProtocolActivity;
 import com.yigotone.app.util.Utils;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/10/24 17:34.
  */
-public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> implements RegisterContract.View {
+public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> implements RegisterContract.View, EbLoginDelegate.LoginCallback {
     @BindView(R.id.et_phone) EditText etPhone;
     @BindView(R.id.et_code) EditText etCode;
     @BindView(R.id.btn_get_code) Button btnGetCode;
@@ -66,29 +67,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
         dismissLoadingDialog();
         if (bean.getStatus() == 0) {
             U.showToast("注册成功");
-            // TODO: 2018/11/9  鉴权
-
-            EbLoginDelegate.SetJustAddress("aahyAYCRZWGnIAIy5XehnSHpOnydWZ5M", "https://datavoice.ebopencloud.com:19443");
-            EbAuthDelegate.AuthloginByVfc("18237056520", etCode.getText().toString(), new OnAuthLoginListener() {
-                @Override
-                public void ebAuthOk(String authcode, String deadline) {
-                    Log.i("", "ebAuthOk");
-                    // DataUtils.saveDeadline(phonenumber, deadline, DeployActivity.this);
-//                    ToastUtil.show(DeployActivity.this, getResources().getString(R.string.vfc_auth_ok));
-////                            /鉴权成功，判断是否在有效期内 执行SDK登录(此登录需企业输入自定义密码（需每个产品保持统一）)
-//                    if (AuthUtils.isDeadlineAvailable(deadline)) {
-//                        EbLoginDelegate.login(phonenumber, ApiConstant.JUSTTALK_PWD);
-//
-//                    }
-                }
-
-                @Override
-                public void ebAuthFailed(int code, String reason) {
-                    Log.d("", "ebAuthFailed");
-                }
-            });
-
-            //   finish();
+            finish();
         } else {
             U.showToast("注册失败");
         }
@@ -103,8 +82,8 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
     @Override
     public void onError(Throwable throwable) {
         dismissLoadingDialog();
-       // U.showToast("服务器错误");
-        Log.d("onError",throwable.toString());
+        // U.showToast("服务器错误");
+        Log.d("onError", throwable.toString());
     }
 
     @OnClick({R.id.btn_get_code, R.id.btn_register, R.id.tv_exist, R.id.tv_protocol})
@@ -117,27 +96,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
                 register();
                 break;
             case R.id.tv_protocol:
-               // startActivity(new Intent(this, UserProtocolActivity.class));
-
-                EbLoginDelegate.SetJustAddress("aahyAYCRZWGnIAIy5XehnSHpOnydWZ5M", "https://datavoice.ebopencloud.com:19443");
-                EbAuthDelegate.AuthloginByVfc("18237056520", etCode.getText().toString(), new OnAuthLoginListener() {
-                    @Override
-                    public void ebAuthOk(String authcode, String deadline) {
-                        Log.i("", "ebAuthOk： "+deadline);
-                        // DataUtils.saveDeadline(phonenumber, deadline, DeployActivity.this);
-//                    ToastUtil.show(DeployActivity.this, getResources().getString(R.string.vfc_auth_ok));
-////                            /鉴权成功，判断是否在有效期内 执行SDK登录(此登录需企业输入自定义密码（需每个产品保持统一）)
-//                    if (AuthUtils.isDeadlineAvailable(deadline)) {
-//                        EbLoginDelegate.login(phonenumber, ApiConstant.JUSTTALK_PWD);
-//
-//                    }
-                    }
-
-                    @Override
-                    public void ebAuthFailed(int code, String reason) {
-                        Log.d("", "ebAuthFailed");
-                    }
-                });
+                startActivity(new Intent(this, UserProtocolActivity.class));
                 break;
             case R.id.tv_exist:
                 finish();
@@ -200,7 +159,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
             U.showToast("请输入正确的手机号码");
             return;
         }
-        String url = UrlUtil.GET_RANDOM_CODE + "mobile/" + phoneNum + "/type/1";
+        //  String url = UrlUtil.GET_RANDOM_CODE + "mobile/" + phoneNum + "/type/1";
         // presenter.getRandomCode(url);
 
         EbAuthDelegate.getAuthcode(phoneNum, new OnAuthcodeListener() {
@@ -223,5 +182,20 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+    }
+
+    @Override
+    public void ebLoginResult(int i, String s) {
+        Log.d("", "sdk登录result i=" + i + "||s=" + s);
+    }
+
+    @Override
+    public void ebLogoutOk() {
+
+    }
+
+    @Override
+    public void ebLogouted() {
+
     }
 }
