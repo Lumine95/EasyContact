@@ -10,4 +10,5 @@ public class UrlUtil {
     public static String REGISTER_NEW_USER = BASE_URL + "Login/register";
     public static String LOGIN = BASE_URL + "Login/login";
     public static String GET_PACKAGE_LIST = BASE_URL + "Call/getCallSetmeal";
+    public static String UPDATE_MOBILE_STATUS = BASE_URL + "Login/trusteeship";
 }

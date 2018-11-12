@@ -8,9 +8,16 @@ import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
+import com.ebupt.ebauth.biz.EbAuthDelegate;
+import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
+import com.ebupt.ebauth.biz.auth.OnAuthcodeListener;
+import com.ebupt.ebjar.EbLoginDelegate;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.util.AuthUtils;
+import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.SecurityCodeView;
 
@@ -20,7 +27,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/11/7 14:14.
  */
-public class NewDeviceLoginActivity extends BaseActivity implements SecurityCodeView.InputCompleteListener {
+public class NewDeviceLoginActivity extends BaseActivity implements SecurityCodeView.InputCompleteListener, EbLoginDelegate.LoginCallback {
     @BindView(R.id.tv_phone) TextView tvPhone;
     @BindView(R.id.tv_get_code) TextView tvGetCode;
     @BindView(R.id.code_view) SecurityCodeView codeView;
@@ -38,7 +45,26 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     @Override
     public void initView() {
         codeView.setInputCompleteListener(this);
-        new BaseTitleBar(this).setTitleText("新设备登录").setLeftIcoListening(v -> finish());
+        new BaseTitleBar(this).setTitleText("信息验证").setLeftIcoListening(v -> finish());
+        EbLoginDelegate.setLoginCallback(this);
+
+        EbAuthDelegate.AuthloginByTrust("18237056520", new OnAuthLoginListener() {
+            @Override
+            public void ebAuthOk(String authcode, String deadline) {
+                Logger.d("authcode " + authcode + deadline);
+                if (AuthUtils.isDeadlineAvailable(deadline)) {
+                    EbLoginDelegate.login("18237056520", "ebupt");
+                }
+            }
+
+            @Override
+            public void ebAuthFailed(int code, String reason) {
+                Logger.d("ebAuthFailed: " + code + reason);
+            }
+
+
+        });
+
     }
 
     @Override
@@ -54,6 +80,25 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     @Override
     public void inputComplete() {
         U.showToast(codeView.getEditContent());
+        // 鉴权登陆
+        EbAuthDelegate.AuthloginByVfc("18237056520", null, new OnAuthLoginListener() {
+            @Override
+            public void ebAuthOk(String authcode, String deadline) {
+                Logger.d("authcode " + authcode + deadline);
+                DataUtils.saveDeadline("18237056520", deadline, NewDeviceLoginActivity.this);
+                if (AuthUtils.isDeadlineAvailable(deadline)) {
+                    EbLoginDelegate.login("18237056520", "ebupt");
+                    Logger.d("login");
+                }
+            }
+
+            @Override
+            public void ebAuthFailed(int code, String reason) {
+                Logger.d("ebAuthFailed: " + code + reason);
+            }
+        });
+
+
     }
 
     @Override
@@ -65,11 +110,45 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_get_code:
+                getRandomCode();
                 break;
             case R.id.tv_tip:
                 showDialog();
                 break;
         }
+    }
+
+    private void getRandomCode() {
+        EbAuthDelegate.getAuthcode("18237056520", new OnAuthcodeListener() {
+            @Override
+            public void ebAuthCodeOk() {
+                U.showToast("获取验证码成功");
+            }
+
+            @Override
+            public void ebAuthCodeFailed(int code, String reason) {
+                Logger.d("ebAuthCodeFailed:" + code + reason);
+            }
+        });
+
+    }
+
+
+    @Override
+    public void ebLoginResult(int i, String s) {
+        Logger.d("sdk登录result i=" + i + "||s=" + s);
+
+
+    }
+
+    @Override
+    public void ebLogoutOk() {
+
+    }
+
+    @Override
+    public void ebLogouted() {
+
     }
 
     private void showDialog() {

@@ -128,8 +128,8 @@ public class DialFragment extends BaseFragment {
                 break;
             case R.id.iv_call:
                 startActivity(new Intent(mContext, CallActivity.class)
-                        .putExtra("tag", 1)
-                        .putExtra("phoneNumber", Objects.requireNonNull(etPhone.getText()).toString().trim()));
+                        .putExtra("comefrom", "dial")
+                        .putExtra("phonenum", Objects.requireNonNull(etPhone.getText()).toString().trim()));
                 break;
             case R.id.iv_collapse:
                 collapseDialKeyboard();

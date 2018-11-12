@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.call;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -17,8 +18,10 @@ import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.ebupt.ebjar.EbCallDelegate;
 import com.ebupt.ebjar.EbLoginDelegate;
+import com.ebupt.ebjar.MebConstants;
 import com.ebupt.ebjar.MebMdm;
 import com.justalk.cloud.zmf.ZmfAudio;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
@@ -29,13 +32,12 @@ import com.yigotone.app.util.DataUtils;
 import java.io.IOException;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by ZMM on 2018/11/6  23:24.
  */
-public class CallActivity extends BaseActivity {
+public class CallActivity extends BaseActivity implements EbCallDelegate.Callback {
     @BindView(R.id.tv_name) TextView tvName;
     @BindView(R.id.tv_status) TextView tvStatus;
     @BindView(R.id.iv_keyboard) ImageView ivKeyboard;
@@ -48,7 +50,14 @@ public class CallActivity extends BaseActivity {
     private boolean mCallMode = false;
     private int mode;
     private MediaPlayer mMediaPlayer;
-    private int mCallId;
+    private int mCallId; // 主叫
+    private int callId;  // 被叫
+    private String phoneNum;
+    private String comeFrom;
+    private boolean louderFlag = false;
+    private static int CALL_TYPE = -1;
+    private final int CALL_OUT = 0;
+    private final int CALL_IN = 1;
 
     @Override
     protected int getLayoutId() {
@@ -62,40 +71,55 @@ public class CallActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        String phoneNumber = getIntent().getStringExtra("phoneNumber");
-        int tag = getIntent().getIntExtra("tag", 0);
-        tvName.setText(phoneNumber);
-        EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
-
-        EbAuthDelegate.AuthloginByTrust("18237056520", new OnAuthLoginListener() {
-            @Override
-            public void ebAuthOk(String authcode, String deadline) {
-                Log.i("AuthloginByTrust", "ebAuthOk " + deadline);
-
-//    鉴权成功，判断是否在有效期内 执行SDK登录(此登录需企业输入自定义密码（需每个产品保持统一）)
-                if (AuthUtils.isDeadlineAvailable(deadline)) {
-                    EbLoginDelegate.login("18237056520", "ebupt");
-                }
-            }
-
-            @Override
-            public void ebAuthFailed(int code, String reason) {
-                Log.i("AuthloginByTrust", "ebAuthFailed :" + code + reason);
-
-
-            }
-        });
-
-
-        if (AuthUtils.isDeadlineAvailable(DataUtils.readDeadline(this, DataUtils.readAccount(this)))) {
-            U.showToast("正在处于鉴权有效期");
-        } else {
-            U.showToast("您的鉴权有效期已过期，请重新鉴权");
-//                jumpToDeployActivity();
+        EbCallDelegate.setCallback(this);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            phoneNum = bundle.getString("phonenum");
+            comeFrom = bundle.getString("comefrom");
+            callId = bundle.getInt(MebConstants.CALL_ID);
         }
-        // 设置通话音频模式
-        setCallMode();
-        mCallId = EbCallDelegate.call(phoneNumber);
+        tvName.setText(phoneNum);
+        if (comeFrom.equals("dial")) { // call out
+            CALL_TYPE = CALL_OUT;
+            EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
+            DataUtils.saveAccount("18237056520", this);
+
+            EbAuthDelegate.AuthloginByTrust("18237056520", new OnAuthLoginListener() {
+                @Override
+                public void ebAuthOk(String authcode, String deadline) {
+                    Logger.d("authcode " + authcode + deadline);
+                    if (AuthUtils.isDeadlineAvailable(deadline)) {
+                        EbLoginDelegate.login("18237056520", "ebupt");
+                    }
+                }
+
+                @Override
+                public void ebAuthFailed(int code, String reason) {
+                    Logger.d("ebAuthFailed: " + code + reason);
+                }
+
+
+            });
+            if (AuthUtils.isDeadlineAvailable(DataUtils.readDeadline(this, DataUtils.readAccount(this)))) {
+                U.showToast("正在处于鉴权有效期");
+                setCallMode(); // 设置通话音频模式
+                mCallId = EbCallDelegate.call(phoneNum);
+                Logger.d("callId: " + mCallId);
+            } else {
+                U.showToast("您的鉴权有效期已过期，请重新鉴权");
+                finish();
+            }
+        } else if (comeFrom.equals(MebConstants.FRO_PEER)) {
+            CALL_TYPE = CALL_IN;
+            tvStatus.setText("来电");
+            ivHangUp.setVisibility(View.GONE);
+            tvHangUp.setVisibility(View.VISIBLE);
+            tvAnswer.setVisibility(View.VISIBLE);
+            EbCallDelegate.alert(callId);
+            startAlarm();
+        }
+
+
     }
 
     private void setCallMode() {
@@ -118,6 +142,7 @@ public class CallActivity extends BaseActivity {
         audioStart();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void audioStart() {
         Log.d("", "====audioStart_method====");
 
@@ -169,9 +194,7 @@ public class CallActivity extends BaseActivity {
             mMediaPlayer.setLooping(true);
             try {
                 mMediaPlayer.prepare();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (IllegalStateException | IOException e) {
                 e.printStackTrace();
             }
             mMediaPlayer.start();
@@ -199,28 +222,88 @@ public class CallActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
-
     @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_keyboard:
                 break;
             case R.id.iv_speakerphone:
+                setupSpeaker();
                 break;
             case R.id.iv_hang_up:
-                break;
             case R.id.tv_hang_up:
+                if (CALL_TYPE == CALL_OUT) {
+                    EbCallDelegate.droped(mCallId);
+                } else if (CALL_TYPE == CALL_IN) {
+                    EbCallDelegate.droped(callId);
+                }
                 break;
             case R.id.tv_answer:
+                setCallMode();
+                EbCallDelegate.answer(callId);
                 break;
             case R.id.iv_mini:
                 break;
         }
+    }
+
+    private void setupSpeaker() {
+        louderFlag = !louderFlag;
+        ivSpeakerphone.setSelected(louderFlag);
+        if (louderFlag) {
+            // 设置开启扬声器
+            if (mCallMode && !mAudioManager.isSpeakerphoneOn())
+                mAudioManager.setSpeakerphoneOn(true);
+        } else {
+            // 设置关闭扬声器
+            if (mCallMode && mAudioManager.isSpeakerphoneOn())
+                mAudioManager.setSpeakerphoneOn(false);
+        }
+    }
+
+    @Override
+    public void ebCallDelegateOutgoing(int i) {
+        // 呼出电话动作完成后执行此方法
+        tvStatus.setText("正在呼叫…");
+    }
+
+    @Override
+    public void ebCallDelegateAlerted(int i, int i1) {
+        // 正在响铃
+    }
+
+    @Override
+    public void ebCallDelegateTalking(int i) {
+
+    }
+
+    @Override
+    public void ebCallDelegateTermed(int i, int i1, String s) {
+        // 对方挂断
+        stopAlarm();
+        tvStatus.setText("通话结束");
+        U.showToast("对方已挂断");
+        clearCallMode();
+        finish();
+    }
+
+    @Override
+    public void ebCallDelegateDidTerm(int i, int i1, String s) {
+        stopAlarm();
+        tvStatus.setText("通话结束");
+        U.showToast("已挂断");
+        clearCallMode();
+        finish();
+    }
+
+    @Override
+    public void ebCallDelegateLogouted() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clearCallMode();
     }
 }

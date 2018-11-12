@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.android.library.view.CustomProgressDialog;
 import com.android.library.view.UIHelper;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -40,7 +42,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         super.onDestroy();
         unbinder.unbind();
         dismissLoadingDialog();
-        // EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         if (presenter != null) {
             presenter.detach();
             presenter = null;

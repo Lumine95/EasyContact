@@ -33,7 +33,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="com.yigotone.app.ui.login.LoginActivity"
+            android:name="com.yigotone.app.ui.activity.SplashActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,6 +57,10 @@
         <!--注册-->
         <activity
             android:name="com.yigotone.app.ui.register.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <!--登录-->
+        <activity
+            android:name="com.yigotone.app.ui.login.LoginActivity"
             android:screenOrientation="portrait" />
         <!--拨号盘-->
         <activity
@@ -118,9 +122,10 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":locservice" />
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="AK_APPID" />
+            android:value="zixAcauKrZ9VQ195VLolezOXYXTtD9u2" />
 
         <meta-data
             android:name="com.ebupt.ebjar.DOMAIN"
@@ -131,6 +136,6 @@
         <meta-data
             android:name="com.ebupt.ebauth.APPSECRET"
             android:value="sVj4eQMCyzZupUFb5AWzvUmQmeu3iPTT" />
-      </application>
+    </application>
 
 </manifest>

@@ -29,7 +29,8 @@
     <Button
         android:id="@+id/btn_ok"
         android:layout_width="match_parent"
-        android:layout_height="42dp" android:layout_marginTop="@dimen/margin_size_25"
+        android:layout_height="42dp"
+        android:layout_marginTop="@dimen/margin_size_25"
         android:background="@color/color_6DBFFA"
         android:text="确定"
         android:textColor="@color/white"

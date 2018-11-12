@@ -11,6 +11,8 @@ import android.util.Log;
 import com.android.library.utils.U;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebjar.EbDelegate;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.call.CallActivity;
 
@@ -27,7 +29,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mAppContext = getApplicationContext();
+        Logger.addLogAdapter(new AndroidLogAdapter());
         U.init(this);
+
         if (EbDelegate.init(this, CallActivity.class) == EbDelegate.InitStat.Meb_INIT_SUCCESS &&
                 EbAuthDelegate.init(this) == EbAuthDelegate.InitStat.Meb_INIT_SUCCESS) {
             Log.i("EbDelegate ", "sdk init ok");

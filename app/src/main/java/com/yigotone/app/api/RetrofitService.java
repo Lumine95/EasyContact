@@ -2,6 +2,7 @@ package com.yigotone.app.api;
 
 
 import com.yigotone.app.bean.CodeBean;
+import com.yigotone.app.bean.DataEntity;
 import com.yigotone.app.bean.PackageBean;
 import com.yigotone.app.bean.UserBean;
 
@@ -28,6 +29,9 @@ public interface RetrofitService {
 
     @POST()
     Observable<UserBean> login(@Url String url, @QueryMap Map<String, String> map);
+
+    @POST()
+    Observable<DataEntity> updateMobileStatus(@Url String url, @QueryMap Map<String, Object> map);
 
     @POST()
     Observable<PackageBean> getPackageList(@Url String url);

@@ -6,6 +6,8 @@ import com.yigotone.app.api.Api;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BasePresenterImpl;
 
+import java.util.Map;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -28,5 +30,21 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                 .subscribe(bean -> {
 
                 }, throwable -> view.onError(throwable));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void updateMobileStatus(Map<String, Object> map) {
+        String url = UrlUtil.UPDATE_MOBILE_STATUS;
+        Api.getInstance().updateMobileStatus(url, map)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                })
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.onMobileStatusResult(bean.getData().getMobileStatus());
+                }, throwable -> view.onError(throwable));
+
     }
 }

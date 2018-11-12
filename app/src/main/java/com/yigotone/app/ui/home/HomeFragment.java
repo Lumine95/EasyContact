@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
+import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
@@ -25,6 +28,12 @@ import com.yigotone.app.view.TriangleDrawable;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
 import com.zyyoona7.popup.YGravity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -58,6 +67,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
 
     @Override
     public void initView(View view, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         tvPhone.setText(Utils.hidePhoneNumber(UserManager.getInstance().userData.getMobile()));
         presenter.getPackageList();
         mobileStatus = UserManager.getInstance().userData.getMobileStatus();
@@ -92,12 +102,12 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     }
 
     private void takeOver() {
-//        if (开机状态) {
-//            showDialogTip();
-//            return;
-//        }
-        UserManager.getInstance().userData.setMobileStatus(mobileStatus = mobileStatus.equals("1") ? "2" : "1");
-        refreshTakeOverLayout();
+        showLoadingDialog("");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("type", mobileStatus);
+        map.put("mobile", UserManager.getInstance().userData.getMobile());
+        presenter.updateMobileStatus(map);
+
     }
 
     private void showMenu() {
@@ -135,6 +145,43 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
 
     @Override
     public void onError(Throwable throwable) {
+        dismissLoadingDialog();
+    }
 
+    @Override
+    public void onMobileStatusResult(String status) {
+        dismissLoadingDialog();
+        if (!TextUtils.isEmpty(status)) {
+            UserManager.getInstance().userData.setMobileStatus(mobileStatus = mobileStatus.equals("1") ? "2" : "1");
+            refreshTakeOverLayout();
+            U.showToast(mobileStatus.equals("1") ? "设置托管成功" : "取消托管成功");
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        Logger.d("eventBus: " + event);
+        switch (event) {
+            case "mobileNotShutDown":
+                showDialogTip();
+                break;
+        }
+    }
+
+    private void showDialogTip() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(mContext, R.layout.dialog_warning, null);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        TextView tv_content = view.findViewById(R.id.tv_content);
+        Button btn_ok = view.findViewById(R.id.btn_ok);
+        tv_title.setText("提示");
+        tv_content.setText("您的号码" + UserManager.getInstance().userData.getMobile() + "还处于开机状态，请设置飞行模式或者拔卡后再进行接管。");
+        btn_ok.setText("知道了");
+        btn_ok.setOnClickListener(v -> dialog.dismiss());
+        dialog.setCancelable(true);
+        dialog.setView(view);
+        dialog.show();
+        dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 330), LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 }

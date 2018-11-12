@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.android.library.view.CustomProgressDialog;
 import com.android.library.view.UIHelper;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -78,5 +80,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
             presenter.detach();
             presenter = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 }

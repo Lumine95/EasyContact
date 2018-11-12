@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.yigotone.app.bean.Result;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -20,6 +22,11 @@ final class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private static final int ERROR_REPEAT_REG = 1005;  // 重复注册
     private static final int ERROR_CODE = 1006;  // 验证码错误
     private static final int ERROR_PASSWORD = 1007;  // 密码错误
+    private static final int ERROR_USER_OPEN = 1008;  // 用户开户失败
+    private static final int ERROR_TRUSTEESHIP_AlREADY = 1009;  // 用户已被托管
+    private static final int ERROR_TRUSTEESHIP_FAILURE = 1010;  // 托管失败 User phone not shut down
+    private static final int ERROR_TRUSTEESHIP_NONE = 1011;  // 用户未被托管
+    private static final int ERROR_TRUSTEESHIP_CANCEL = 1012;  // 取消托管失败
 
     private final Gson gson;
     private final TypeAdapter<T> adapter;
@@ -65,6 +72,21 @@ final class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
                 case ERROR_TOKEN:
                     U.showToast("账号异地登录,请重新登录");
                     // TODO: 2018/10/31 Token Invalid
+                    break;
+                case ERROR_USER_OPEN:
+                    U.showToast("开户失败");
+                    break;
+                case ERROR_TRUSTEESHIP_AlREADY:
+                    U.showToast("用户已被托管");
+                    break;
+                case ERROR_TRUSTEESHIP_FAILURE:
+                    EventBus.getDefault().post("mobileNotShutDown");
+                    break;
+                case ERROR_TRUSTEESHIP_NONE:
+                    U.showToast("用户未被托管");
+                    break;
+                case ERROR_TRUSTEESHIP_CANCEL:
+                    U.showToast("取消托管失败");
                     break;
             }
         }
