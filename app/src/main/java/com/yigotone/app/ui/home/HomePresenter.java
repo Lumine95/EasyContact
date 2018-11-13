@@ -6,6 +6,7 @@ import com.yigotone.app.api.Api;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BasePresenterImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -16,19 +17,20 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class HomePresenter extends BasePresenterImpl<HomeContract.View> implements HomeContract.Presenter {
 
-    public HomePresenter(HomeContract.View view) {
+    HomePresenter(HomeContract.View view) {
         super(view);
     }
 
     @SuppressLint("CheckResult")
     @Override
-    public void getPackageList() {
-        Api.getInstance().getPackageList(UrlUtil.GET_PACKAGE_LIST)
+    public void getCallRecords(  HashMap<String, Object> map) {
+        Api.getInstance().getCallRecordList(UrlUtil.GET_CALL_RECORD, map)
                 .subscribeOn(Schedulers.io())
                 .map(bean -> bean)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
-
+                    view.onFinish();
+                    view.callRecordsResult(bean.getData());
                 }, throwable -> view.onError(throwable));
     }
 

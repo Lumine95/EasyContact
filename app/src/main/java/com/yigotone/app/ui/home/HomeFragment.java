@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,16 +17,20 @@ import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
+import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.ui.activity.DialActivity;
 import com.yigotone.app.ui.activity.NoDisturbActivity;
 import com.yigotone.app.ui.packages.SubScribePackageActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.TriangleDrawable;
+import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
 import com.zyyoona7.popup.EasyPopup;
 import com.zyyoona7.popup.XGravity;
 import com.zyyoona7.popup.YGravity;
@@ -34,6 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,9 +57,12 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @BindView(R.id.iv_dial) ImageView ivDial;
     @BindView(R.id.iv_take_over) ImageView ivTakeOver;
     @BindView(R.id.ll_take_over) LinearLayout llTakeOver;
+    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
     private EasyPopup popup;
     private String mobileStatus;   //1未托管，2托管中
+    private StatusLayoutManager statusLayoutManager;
+    private BaseQuickAdapter<CallBean.DataBean, BaseViewHolder> mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -69,9 +79,52 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     public void initView(View view, Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
         tvPhone.setText(Utils.hidePhoneNumber(UserManager.getInstance().userData.getMobile()));
-        presenter.getPackageList();
+        initRecyclerView();
+        getCallRecord(true);
         mobileStatus = UserManager.getInstance().userData.getMobileStatus();
         refreshTakeOverLayout();
+    }
+
+    private void getCallRecord(boolean isLoadingLayout) {
+        if (isLoadingLayout) {
+            statusLayoutManager.showLoadingLayout();
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("page", pageIndex);
+        map.put("count", pageSize);
+        map.put("type", 1);
+        presenter.getCallRecords(map);
+    }
+
+    private void initRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        statusLayoutManager = new StatusLayoutManager.Builder(refreshLayout).setOnStatusChildClickListener(view -> {
+            getCallRecord(true);
+        }).build();
+        statusLayoutManager.showLoadingLayout();
+
+        recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<CallBean.DataBean, BaseViewHolder>(R.layout.item_call_record) {
+
+            @Override
+            protected void convert(BaseViewHolder helper, CallBean.DataBean item) {
+                helper.setText(R.id.tv_phone, item.getMobile());
+            }
+        });
+
+        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setOnLoadMoreListener(() -> {
+            pageIndex++;
+            getCallRecord(false);
+        }, recyclerView);
+        refreshLayout.setOnRefreshListener(() -> {
+            pageIndex = 1;
+            getCallRecord(false);
+        });
     }
 
     private void refreshTakeOverLayout() {
@@ -107,7 +160,6 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         map.put("type", mobileStatus);
         map.put("mobile", UserManager.getInstance().userData.getMobile());
         presenter.updateMobileStatus(map);
-
     }
 
     private void showMenu() {
@@ -140,12 +192,14 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
 
     @Override
     public void onFinish() {
-
+        refreshLayout.setRefreshing(false);
+        statusLayoutManager.showSuccessLayout();
     }
 
     @Override
     public void onError(Throwable throwable) {
         dismissLoadingDialog();
+        statusLayoutManager.showErrorLayout();
     }
 
     @Override
@@ -154,7 +208,25 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         if (!TextUtils.isEmpty(status)) {
             UserManager.getInstance().userData.setMobileStatus(mobileStatus = mobileStatus.equals("1") ? "2" : "1");
             refreshTakeOverLayout();
-            U.showToast(mobileStatus.equals("1") ? "设置托管成功" : "取消托管成功");
+            U.showToast(mobileStatus.equals("1") ? "取消托管成功" : "设置托管成功");
+        }
+    }
+
+    @Override
+    public void callRecordsResult(List<CallBean.DataBean> data) {
+        if (data.size() > 0) {
+            if (pageIndex == 1) {
+                mAdapter.setNewData(data);
+            } else {
+                mAdapter.addData(data);
+            }
+            mAdapter.loadMoreComplete();
+        } else {
+            if (pageIndex == 1) {
+                statusLayoutManager.showEmptyLayout();
+            } else {
+                mAdapter.loadMoreEnd();
+            }
         }
     }
 

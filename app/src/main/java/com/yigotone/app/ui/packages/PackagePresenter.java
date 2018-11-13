@@ -13,8 +13,8 @@ public class PackagePresenter extends BasePresenterImpl<PackageContract.View> im
 
 //    @SuppressLint("CheckResult")
 //    @Override
-//    public void getPackageList() {
-//        Api.getInstance().getPackageList(UrlUtil.GET_PACKAGE_LIST)
+//    public void getCallRecords() {
+//        Api.getInstance().getCallRecords(UrlUtil.GET_PACKAGE_LIST)
 //                .subscribeOn(Schedulers.io())
 //                .map(bean -> bean)
 //                .observeOn(AndroidSchedulers.mainThread())

@@ -1,6 +1,7 @@
 package com.yigotone.app.api;
 
 
+import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.DataEntity;
 import com.yigotone.app.bean.PackageBean;
@@ -32,6 +33,9 @@ public interface RetrofitService {
 
     @POST()
     Observable<DataEntity> updateMobileStatus(@Url String url, @QueryMap Map<String, Object> map);
+
+    @POST()
+    Observable<CallBean> getCallRecordList(@Url String url, @QueryMap Map<String, Object> map);
 
     @POST()
     Observable<PackageBean> getPackageList(@Url String url);

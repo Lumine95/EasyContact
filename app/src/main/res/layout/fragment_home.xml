@@ -140,11 +140,7 @@
             android:textColor="@color/color_6"
             android:textSize="@dimen/text_size_13" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_call_record" />
+        <include layout="@layout/recycler_view" />
     </LinearLayout>
 
     <ImageView

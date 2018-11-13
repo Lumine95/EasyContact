@@ -1,18 +1,20 @@
 package com.yigotone.app.application;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.android.library.utils.U;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebjar.EbDelegate;
+import com.ebupt.ebjar.EbLoginDelegate;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.yigotone.app.R;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.call.CallActivity;
 
@@ -20,7 +22,7 @@ import com.yigotone.app.ui.call.CallActivity;
  * Created by ZMM on 2018/2/5.
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
     private static Context mAppContext;
     private LocalBroadcastManager broadcastManager;
     private BroadcastReceiver mOfflineReceiver;
@@ -32,6 +34,7 @@ public class MyApplication extends Application {
         Logger.addLogAdapter(new AndroidLogAdapter());
         U.init(this);
 
+        EbLoginDelegate.setMiPushParams(getString(R.string.MiPush_AppId), getString(R.string.MiPush_AppKey));
         if (EbDelegate.init(this, CallActivity.class) == EbDelegate.InitStat.Meb_INIT_SUCCESS &&
                 EbAuthDelegate.init(this) == EbAuthDelegate.InitStat.Meb_INIT_SUCCESS) {
             Log.i("EbDelegate ", "sdk init ok");
@@ -48,7 +51,7 @@ public class MyApplication extends Application {
             }
             broadcastManager.registerReceiver(mOfflineReceiver, new IntentFilter("mebofflinenotification"));
         } else {
-            Log.i("EbDelegate ","sdk init fail");
+            Log.i("EbDelegate ", "sdk init fail");
             return;
         }
     }

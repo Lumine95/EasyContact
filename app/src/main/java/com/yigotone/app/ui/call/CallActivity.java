@@ -9,9 +9,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.library.utils.U;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
@@ -25,6 +27,7 @@ import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.ui.home.HomeFragment;
 import com.yigotone.app.user.Constant;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
@@ -111,6 +114,7 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
             }
         } else if (comeFrom.equals(MebConstants.FRO_PEER)) {
             CALL_TYPE = CALL_IN;
+            tvName.setText(EbCallDelegate.getPeerNum(callId));
             tvStatus.setText("来电");
             ivHangUp.setVisibility(View.GONE);
             tvHangUp.setVisibility(View.VISIBLE);
@@ -174,7 +178,6 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
         synchronized (this) {
             // 停止音频采集
             ZmfAudio.inputStopAll();
-
             // 停止音频播放
             ZmfAudio.outputStopAll();
         }
@@ -232,11 +235,7 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
                 break;
             case R.id.iv_hang_up:
             case R.id.tv_hang_up:
-                if (CALL_TYPE == CALL_OUT) {
-                    EbCallDelegate.droped(mCallId);
-                } else if (CALL_TYPE == CALL_IN) {
-                    EbCallDelegate.droped(callId);
-                }
+                hangUp();
                 break;
             case R.id.tv_answer:
                 setCallMode();
@@ -244,6 +243,14 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
                 break;
             case R.id.iv_mini:
                 break;
+        }
+    }
+
+    private void hangUp() {
+        if (CALL_TYPE == CALL_OUT) {
+            EbCallDelegate.droped(mCallId);
+        } else if (CALL_TYPE == CALL_IN) {
+            EbCallDelegate.droped(callId);
         }
     }
 
@@ -305,5 +312,22 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
     protected void onDestroy() {
         super.onDestroy();
         clearCallMode();
+    }
+
+    private static long currentBackPressedTime = 0;
+    int BACK_PRESSED_INTERVAL = 2000;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (System.currentTimeMillis() - currentBackPressedTime > BACK_PRESSED_INTERVAL) {
+                currentBackPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次挂断电话", Toast.LENGTH_SHORT).show();
+            } else {
+                hangUp();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);// 继续执行父类其他点击事件
     }
 }

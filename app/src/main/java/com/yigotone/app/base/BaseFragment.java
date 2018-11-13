@@ -27,6 +27,8 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     public Context mContext;
     private CustomProgressDialog loadingDialog;
     private Unbinder unbinder;
+    public int pageIndex = 1;
+    public int pageSize = 20;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
