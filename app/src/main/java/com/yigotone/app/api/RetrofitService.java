@@ -4,6 +4,7 @@ package com.yigotone.app.api;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.DataEntity;
+import com.yigotone.app.bean.MessageBean;
 import com.yigotone.app.bean.PackageBean;
 import com.yigotone.app.bean.UserBean;
 
@@ -39,6 +40,9 @@ public interface RetrofitService {
 
     @POST()
     Observable<PackageBean> getPackageList(@Url String url);
+
+    @POST()
+    Observable<MessageBean> getMessageList(@Url String url, @QueryMap Map<String, Object> map);
 //
 //    @POST
 //    Observable<UserBean> registerUser(@Url String url, @Body Map map);

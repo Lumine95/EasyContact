@@ -14,11 +14,13 @@ import com.android.library.utils.U;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yigotone.app.R;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseFragment;
-import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -26,7 +28,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/10/23 15:46.
  */
-public class MessageFragment extends BaseFragment {
+public class MessageFragment extends BaseFragment<MessageContract.Presenter> implements MessageContract.View {
     @BindView(R.id.tv_edit) TextView tvEdit;
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.et_search) EditText etSearch;
@@ -41,13 +43,14 @@ public class MessageFragment extends BaseFragment {
     }
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected MessagePresenter initPresenter() {
+        return new MessagePresenter(this);
     }
 
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         initRecyclerView();
+        getMessageList(true);
         ArrayList<String> strings = new ArrayList<>();
         for (int i = 0; i < 17; i++) {
             strings.add("消息 " + i);
@@ -64,6 +67,18 @@ public class MessageFragment extends BaseFragment {
 //            startActivity(new Intent(mContext, MessageDetailActivity.class));
 //            U.showToast("ddddd");
 //        });
+    }
+
+    private void getMessageList(boolean isLoadingLayout) {
+        if (isLoadingLayout) {
+            statusLayoutManager.showLoadingLayout();
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("page", pageIndex);
+        map.put("count", pageSize);
+        presenter.getMessageList(UrlUtil.GET_MESSAGE_LIST, map, "getMessage");
     }
 
     private void initRecyclerView() {
@@ -94,5 +109,10 @@ public class MessageFragment extends BaseFragment {
                 startActivity(new Intent(mContext, NewMessageActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void onResult(Object result, String message) {
+
     }
 }

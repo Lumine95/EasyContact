@@ -1,28 +1,28 @@
 package com.yigotone.app.bean;
 
-import com.chad.library.adapter.base.entity.MultiItemEntity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by ZMM on 2018/11/9 14:00.
+ * Created by ZMM on 2018/11/14 17:41.
  */
-public class MessageBean implements MultiItemEntity {
-    public static final int THIS = 1;
-    public static final int THAT = 2;
-    private int itemType;
+public class MessageBean {
+    private int status;
+    private String errorMsg;
+    private List<MessageDataBean> data;
 
-    private String content;
-
-    public MessageBean(int itemType, String content) {
-        this.itemType = itemType;
-        this.content = content;
+    public int getStatus() {
+        return status;
     }
 
-    public String getContent() {
-        return content == null ? "" : content;
+    public String getErrorMsg() {
+        return errorMsg == null ? "" : errorMsg;
     }
 
-    @Override
-    public int getItemType() {
-        return itemType;
+    public List<MessageDataBean> getData() {
+        if (data == null) {
+            return new ArrayList<>();
+        }
+        return data;
     }
 }
