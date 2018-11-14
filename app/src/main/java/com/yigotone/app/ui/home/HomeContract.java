@@ -16,11 +16,17 @@ public class HomeContract {
         void onMobileStatusResult(String status);
 
         void callRecordsResult(List<CallBean.DataBean> data);
+
+        void refreshMobileStatus(String mobileStatus);
+
+        void onRecyclerViewError(Throwable throwable);
     }
 
     public interface Presenter extends BasePresenter {
-        void getCallRecords(  HashMap<String, Object> map);
+        void getCallRecords(HashMap<String, Object> map);
 
         void updateMobileStatus(Map<String, Object> map);
+
+        void getMobileStatus(String url, Map<String, Object> map);
     }
 }

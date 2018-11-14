@@ -33,4 +33,14 @@ public class Utils {
     public static String hidePhoneNumber(String phone) {
         return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
     }
+
+    /**
+     * 判断手机号是否合法
+     *
+     * @param phone
+     * @return
+     */
+    public static boolean isPhoneNumber(String phone) {
+        return phone.matches("0?(13|14|15|16|17|18|19)[0-9]{9}");
+    }
 }

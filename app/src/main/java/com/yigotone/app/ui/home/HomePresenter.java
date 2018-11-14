@@ -23,7 +23,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
     @SuppressLint("CheckResult")
     @Override
-    public void getCallRecords(  HashMap<String, Object> map) {
+    public void getCallRecords(HashMap<String, Object> map) {
         Api.getInstance().getCallRecordList(UrlUtil.GET_CALL_RECORD, map)
                 .subscribeOn(Schedulers.io())
                 .map(bean -> bean)
@@ -31,7 +31,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                 .subscribe(bean -> {
                     view.onFinish();
                     view.callRecordsResult(bean.getData());
-                }, throwable -> view.onError(throwable));
+                }, throwable -> view.onRecyclerViewError(throwable));
     }
 
     @SuppressLint("CheckResult")
@@ -48,5 +48,17 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     view.onMobileStatusResult(bean.getData().getMobileStatus());
                 }, throwable -> view.onError(throwable));
 
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void getMobileStatus(String url, Map<String, Object> map) {
+        Api.getInstance().updateMobileStatus(url, map)
+                .subscribeOn(Schedulers.io())
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.refreshMobileStatus(bean.getData().getMobileStatus());
+                }, throwable -> view.onError(throwable));
     }
 }

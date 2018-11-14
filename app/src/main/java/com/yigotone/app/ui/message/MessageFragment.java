@@ -1,4 +1,4 @@
-package com.yigotone.app.ui.fragment;
+package com.yigotone.app.ui.message;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
-import com.yigotone.app.ui.activity.MessageDetailActivity;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class MessageFragment extends BaseFragment {
             protected void convert(BaseViewHolder helper, String item) {
                 helper.setText(R.id.tv_title, item);
                 helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
-                helper.setOnClickListener(R.id.content, view ->startActivity(new Intent(mContext, MessageDetailActivity.class)));
+                helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)));
             }
         });
 //        mAdapter.setOnItemClickListener((adapter, view1, position) -> {
@@ -92,6 +91,7 @@ public class MessageFragment extends BaseFragment {
             case R.id.tv_edit:
                 break;
             case R.id.iv_add:
+                startActivity(new Intent(mContext, NewMessageActivity.class));
                 break;
         }
     }

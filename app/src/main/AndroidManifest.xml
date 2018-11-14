@@ -122,7 +122,12 @@
             android:screenOrientation="portrait" />
         <!--短信详情-->
         <activity
-            android:name=".ui.activity.MessageDetailActivity"
+            android:name=".ui.message.MessageDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--新建短信-->
+        <activity
+            android:name=".ui.message.NewMessageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 

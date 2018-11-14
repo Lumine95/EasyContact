@@ -35,7 +35,7 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
 
     @SuppressLint("CheckResult")
     @Override
-    public void register(String url, Map<String, String> map) {
+    public void register(String url, Map<String, Object> map) {
         Api.getInstance().register(url, map)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
@@ -44,6 +44,20 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
                     view.onRegisterResult(bean);
+                }, throwable -> view.onError(throwable));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void modifyPassword(String url, Map<String, Object> map) {
+        Api.getInstance().register(url, map)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                })
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.onModifyResult(bean);
                 }, throwable -> view.onError(throwable));
     }
 }

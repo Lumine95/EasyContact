@@ -56,7 +56,7 @@ public class StatusLayoutManager {
 
     private int defaultBackgroundColor;
 
-    private OnStatusChildClickListener onStatusChildClickListener;
+    private OnStatusClickListener onStatusChildClickListener;
 
     private ReplaceLayoutHelper replaceLayoutHelper;
 
@@ -176,7 +176,8 @@ public class StatusLayoutManager {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // onStatusChildClickListener.onEmptyChildClick(view);
+             //  onStatusChildClickListener.onEmptyChildClick(view);
+                onStatusChildClickListener.onErrorChildClick(view);
             }
         });
 
@@ -208,7 +209,8 @@ public class StatusLayoutManager {
             }
             emptyClickViewTextView.setTextColor(emptyClickViewTextColor);
         } else {
-            emptyClickViewTextView.setVisibility(View.GONE);
+           // emptyClickViewTextView.setVisibility(View.GONE);
+            emptyClickViewTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -410,7 +412,7 @@ public class StatusLayoutManager {
 
         private int defaultBackgroundColor;
 
-        private OnStatusChildClickListener onStatusChildClickListener;
+        private OnStatusClickListener onStatusChildClickListener;
 
         /**
          * 创建状态布局 Build 对象
@@ -432,7 +434,7 @@ public class StatusLayoutManager {
             this.isErrorClickViewVisible = true;
             this.errorClickViewTextColor = contentLayout.getContext().getResources().getColor(R.color.status_layout_click_view_text_color);
             // 设置默认背景色
-            this.defaultBackgroundColor = contentLayout.getContext().getResources().getColor(R.color.status_layout_background_color);
+          //  this.defaultBackgroundColor = contentLayout.getContext().getResources().getColor(R.color.status_layout_background_color);
         }
 
         ///////////////////////////////////////////
@@ -730,7 +732,7 @@ public class StatusLayoutManager {
          * @param listener 点击事件监听器
          * @return 状态布局 Build 对象
          */
-        public Builder setOnStatusChildClickListener(OnStatusChildClickListener listener) {
+        public Builder setOnStatusClickListener(OnStatusClickListener listener) {
             this.onStatusChildClickListener = listener;
             return this;
         }

@@ -22,6 +22,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.ui.activity.DialActivity;
@@ -41,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -82,7 +84,6 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         initRecyclerView();
         getCallRecord(true);
         mobileStatus = UserManager.getInstance().userData.getMobileStatus();
-        refreshTakeOverLayout();
     }
 
     private void getCallRecord(boolean isLoadingLayout) {
@@ -103,7 +104,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        statusLayoutManager = new StatusLayoutManager.Builder(refreshLayout).setOnStatusChildClickListener(view -> {
+        statusLayoutManager = new StatusLayoutManager.Builder(refreshLayout).setOnStatusClickListener(view -> {
             getCallRecord(true);
         }).build();
         statusLayoutManager.showLoadingLayout();
@@ -125,11 +126,6 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
             pageIndex = 1;
             getCallRecord(false);
         });
-    }
-
-    private void refreshTakeOverLayout() {
-        btnTakeOver.setVisibility(mobileStatus.equals("1") ? View.VISIBLE : View.GONE);
-        llTakeOver.setVisibility(mobileStatus.equals("2") ? View.VISIBLE : View.GONE);
     }
 
     @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial, R.id.ll_take_over})
@@ -199,15 +195,16 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @Override
     public void onError(Throwable throwable) {
         dismissLoadingDialog();
-        statusLayoutManager.showErrorLayout();
+        refreshLayout.setRefreshing(false);
+        U.showToast("网络错误");
     }
 
     @Override
     public void onMobileStatusResult(String status) {
         dismissLoadingDialog();
         if (!TextUtils.isEmpty(status)) {
-            UserManager.getInstance().userData.setMobileStatus(mobileStatus = mobileStatus.equals("1") ? "2" : "1");
-            refreshTakeOverLayout();
+            refreshMobileStatus();
+            mobileStatus = mobileStatus.equals("1") ? "2" : "1";
             U.showToast(mobileStatus.equals("1") ? "取消托管成功" : "设置托管成功");
         }
     }
@@ -255,5 +252,30 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         dialog.setView(view);
         dialog.show();
         dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 330), LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshMobileStatus();
+    }
+
+    private void refreshMobileStatus() {
+        // 实时刷手机托管状态
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", UserManager.getInstance().userData.getMobile());
+        presenter.getMobileStatus(UrlUtil.GET_MOBILE_STATUS, map);
+    }
+
+    @Override
+    public void refreshMobileStatus(String mobileStatus) {
+        UserManager.getInstance().userData.setMobileStatus(mobileStatus);
+        btnTakeOver.setVisibility(mobileStatus.equals("1") ? View.VISIBLE : View.GONE);
+        llTakeOver.setVisibility(mobileStatus.equals("2") ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onRecyclerViewError(Throwable throwable) {
+        statusLayoutManager.showErrorLayout();
     }
 }

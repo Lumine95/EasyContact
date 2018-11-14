@@ -5,11 +5,11 @@ import android.view.View;
 /**
  * @author mafei
  * @date 2017/12/22
- * @see OnStatusChildClickListener 的默认实现类
+ * @see OnStatusClickListener 的默认实现类
  * https://bakumon.me
  */
 
-public class DefaultOnStatusChildClickListener implements OnStatusChildClickListener {
+public class DefaultOnStatusChildClickListener implements OnStatusClickListener {
     @Override
     public void onErrorChildClick(View view) {
 

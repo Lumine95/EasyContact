@@ -15,11 +15,15 @@ public class RegisterContract {
         void codeObtained(UserBean bean);
 
         void onRegisterResult(CodeBean bean);
+
+        void onModifyResult(CodeBean bean);
     }
 
     public interface Presenter extends BasePresenter {
         void getRandomCode(String url);
 
-        void register(String url, Map<String, String> map);
+        void register(String url, Map<String, Object> map);
+
+        void modifyPassword(String url, Map<String, Object> map);
     }
 }

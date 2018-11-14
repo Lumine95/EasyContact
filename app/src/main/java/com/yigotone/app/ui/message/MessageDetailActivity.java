@@ -1,4 +1,4 @@
-package com.yigotone.app.ui.activity;
+package com.yigotone.app.ui.message;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,7 +83,7 @@ public class MessageDetailActivity extends BaseActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        statusLayoutManager = new StatusLayoutManager.Builder(recyclerView).setOnStatusChildClickListener(view -> {
+        statusLayoutManager = new StatusLayoutManager.Builder(recyclerView).setOnStatusClickListener(view -> {
 
         }).build();
         //   statusLayoutManager.showLoadingLayout();

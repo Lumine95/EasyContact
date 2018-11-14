@@ -10,7 +10,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.fragment.DataFragment;
-import com.yigotone.app.ui.fragment.MessageFragment;
+import com.yigotone.app.ui.message.MessageFragment;
 import com.yigotone.app.ui.fragment.MineFragment;
 import com.yigotone.app.ui.home.HomeFragment;
 

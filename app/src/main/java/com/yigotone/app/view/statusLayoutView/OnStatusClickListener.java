@@ -10,7 +10,7 @@ import android.view.View;
  * @date 2017/12/19
  */
 
-public interface OnStatusChildClickListener {
+public interface OnStatusClickListener {
 
     /**
      * 空数据布局子 View 被点击

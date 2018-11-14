@@ -26,7 +26,7 @@ public interface RetrofitService {
     Observable<UserBean> getRandomCode(@Url String url);
 
     @POST()
-    Observable<CodeBean> register(@Url String url, @QueryMap Map<String, String> map);
+    Observable<CodeBean> register(@Url String url, @QueryMap Map<String, Object> map);
 
     @POST()
     Observable<UserBean> login(@Url String url, @QueryMap Map<String, String> map);

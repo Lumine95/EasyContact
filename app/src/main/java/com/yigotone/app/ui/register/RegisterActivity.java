@@ -50,15 +50,12 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
     @Override
     public void initView() {
         btnGetCode.setSelected(true);
-
     }
 
     @Override
     public void codeObtained(UserBean bean) {
         if (bean.getStatus() == 0) {
             countDown();
-        } else if (bean.getStatus() == 1005) {
-            U.showToast("该账号已经被注册");
         }
     }
 
@@ -73,10 +70,15 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
         }
     }
 
+    @Override
+    public void onModifyResult(CodeBean bean) {
+
+    }
+
 
     @Override
     public void onFinish() {
-
+        dismissLoadingDialog();
     }
 
     @Override
@@ -126,7 +128,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
             return;
         }
         showLoadingDialog("");
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("mobile", phoneNum);
         map.put("code", code);
         map.put("password", pwd);
