@@ -27,6 +27,7 @@ final class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     private static final int ERROR_TRUSTEESHIP_FAILURE = 1010;  // 托管失败 User phone not shut down
     private static final int ERROR_TRUSTEESHIP_NONE = 1011;  // 用户未被托管
     private static final int ERROR_TRUSTEESHIP_CANCEL = 1012;  // 取消托管失败
+    private static final int ERROR_SEND_MESSAGE = 1013;    // 短信发送失败
 
     private final Gson gson;
     private final TypeAdapter<T> adapter;
@@ -87,6 +88,9 @@ final class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
                     break;
                 case ERROR_TRUSTEESHIP_CANCEL:
                     U.showToast("取消托管失败");
+                    break;
+                case ERROR_SEND_MESSAGE:
+                    U.showToast("短信发送失败");
                     break;
             }
         }

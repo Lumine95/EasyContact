@@ -56,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_size_15"
-            android:text="15:30"
             android:textColor="#ff999999"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_name"

@@ -44,7 +44,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     @Override
     public void initView() {
         etPhone.setText("18237056520");
-        etPwd.setText("qq123456");
+        etPwd.setText("123456");
     }
 
     @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_forget_pwd, R.id.iv_logo})

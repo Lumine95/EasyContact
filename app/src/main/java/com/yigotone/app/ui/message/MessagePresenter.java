@@ -22,7 +22,7 @@ public class MessagePresenter extends BasePresenterImpl<MessageContract.View> im
     @SuppressLint("CheckResult")
     @Override
     public void sendMessage(String url, Map<String, Object> map, String message) {
-        Api.getInstance().getCallRecordList(url, map)
+        Api.getInstance().register(url, map)
                 .subscribeOn(Schedulers.io())
                 .map(bean -> bean)
                 .observeOn(AndroidSchedulers.mainThread())

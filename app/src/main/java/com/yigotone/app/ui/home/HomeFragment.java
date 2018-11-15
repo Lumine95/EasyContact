@@ -27,7 +27,7 @@ import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.ui.activity.DialActivity;
 import com.yigotone.app.ui.activity.NoDisturbActivity;
-import com.yigotone.app.ui.packages.SubScribePackageActivity;
+import com.yigotone.app.ui.packages.PackageListActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.TriangleDrawable;
@@ -84,6 +84,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         initRecyclerView();
         getCallRecord(true);
         mobileStatus = UserManager.getInstance().userData.getMobileStatus();
+        tvBalance.setText(UserManager.getInstance().userData.getTalkTime());
     }
 
     private void getCallRecord(boolean isLoadingLayout) {
@@ -171,7 +172,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                         popup.dismiss();
                     });
                     view.findViewById(R.id.tv_subscribe).setOnClickListener(v -> {
-                        startActivity(new Intent(mContext, SubScribePackageActivity.class));
+                        startActivity(new Intent(mContext, PackageListActivity.class));
                         popup.dismiss();
                     });
                 })

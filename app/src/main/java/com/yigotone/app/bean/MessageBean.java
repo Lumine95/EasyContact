@@ -1,5 +1,7 @@
 package com.yigotone.app.bean;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,49 @@ import java.util.List;
 public class MessageBean {
     private int status;
     private String errorMsg;
-    private List<MessageDataBean> data;
+    private List<DataBean> data;
+
+    public static class DataBean implements MultiItemEntity {
+        public static final int THIS = 1;
+        public static final int THAT = 2;
+        private int itemType;
+
+        private String content;
+        private String name;
+        private String mobile;
+        private String messageId;
+        private String messagetime;
+
+        public DataBean(int itemType, String content) {
+            this.itemType = itemType;
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content == null ? "" : content;
+        }
+
+        @Override
+        public int getItemType() {
+            return itemType;
+        }
+
+        public String getName() {
+            return name == null ? "" : name;
+        }
+
+        public String getMobile() {
+            return mobile == null ? "" : mobile;
+        }
+
+        public String getMessageId() {
+            return messageId == null ? "" : messageId;
+        }
+
+        public String getMessagetime() {
+            return messagetime == null ? "" : messagetime;
+        }
+    }
 
     public int getStatus() {
         return status;
@@ -19,7 +63,7 @@ public class MessageBean {
         return errorMsg == null ? "" : errorMsg;
     }
 
-    public List<MessageDataBean> getData() {
+    public List<DataBean> getData() {
         if (data == null) {
             return new ArrayList<>();
         }

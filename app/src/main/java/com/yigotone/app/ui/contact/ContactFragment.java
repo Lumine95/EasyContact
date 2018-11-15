@@ -1,16 +1,18 @@
 package com.yigotone.app.ui.contact;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
@@ -19,6 +21,9 @@ import com.yigotone.app.ui.adapter.ContactAdapter;
 import com.yigotone.app.view.contact.IndexableLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -30,7 +35,8 @@ public class ContactFragment extends BaseFragment {
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.indexableLayout) IndexableLayout indexableLayout;
 
-    ArrayList<ContactBean> list = new ArrayList<>();
+    ArrayList<ContactBean> contactList = new ArrayList<>();
+    private ContactAdapter mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -46,25 +52,35 @@ public class ContactFragment extends BaseFragment {
     protected void initView(View view, Bundle savedInstanceState) {
         initRecyclerView();
         getPhoneContacts();
-        recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact, list) {
-            @Override
-            protected void convert(BaseViewHolder helper, ContactBean item) {
-                helper.setText(R.id.tv_name, item.getName() + "|" + item.getId()  );
-                helper.setText(R.id.tv_phone, item.getPhone());
-//                helper.itemView.setOnClickListener(v -> startActivity(new Intent(mContext, WebViewActivity.class)
-//                        .putExtra("title",    item.getTitle())
-//                        .putExtra("url", item.getLink())));
-            }
-        });
-
+//        recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact, contactList) {
+//            @Override
+//            protected void convert(BaseViewHolder helper, ContactBean item) {
+//                helper.setText(R.id.tv_name, item.getName() + "|" + item.getId()  );
+//                helper.setText(R.id.tv_phone, item.getPhone());
+////                helper.itemView.setOnClickListener(v -> startActivity(new Intent(mContext, WebViewActivity.class)
+////                        .putExtra("title",    item.getTitle())
+////                        .putExtra("url", item.getLink())));
+//            }
+//        });
         indexableLayout.setLayoutManager(new LinearLayoutManager(mContext));
-        ContactAdapter mAdapter = new ContactAdapter(mContext);
+        mAdapter = new ContactAdapter(mContext);
         indexableLayout.setAdapter(mAdapter);
-        mAdapter.setDatas(list);
+        mAdapter.setDatas(contactList);
         indexableLayout.setOverlayStyle_Center();
         indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
         mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> startActivity(new Intent(mContext, ContactDetailActivity.class).putExtra("data", entity)));
+
+        etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (!TextUtils.isEmpty(etSearch.getText().toString().trim())) {
+                    searchContacts(etSearch.getText().toString().trim());
+                }
+                return true;
+            }
+            return false;
+        });
     }
+
 
     public void getPhoneContacts() {
         Cursor cursor = mContext.getContentResolver().query(Phone.CONTENT_URI,
@@ -78,7 +94,7 @@ public class ContactFragment extends BaseFragment {
             String number = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
             int Id = cursor.getInt(cursor.getColumnIndex(Phone.CONTACT_ID));
             ContactBean bean = new ContactBean(name, number, Id);
-            list.add(bean);
+            contactList.add(bean);
         }
         cursor.close();
         //  return list;
@@ -88,6 +104,61 @@ public class ContactFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    public void searchContacts(String keyword) {
+        ContentResolver cr = mContext.getContentResolver();
+        List<ContactBean> contactList = new ArrayList<>();
+
+        if (isPhoneNum(keyword)) {
+            Cursor cursorP = cr.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER + " like " + "'%" + keyword + "%'",
+                    null,
+                    null);
+            while (cursorP.moveToNext()) {
+                Map<String, String> map = new HashMap<>();
+                String number = cursorP.getString(cursorP.getColumnIndex(Phone.NUMBER));
+                int contactId = cursorP.getInt(cursorP.getColumnIndex(Phone.CONTACT_ID));
+
+                Cursor nameC = cr.query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts._ID + "=" + contactId, null, null);
+                while (nameC.moveToNext()) {
+                    String name = nameC.getString(nameC.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    contactList.add(new ContactBean(name, number, contactId));
+                }
+            }
+            cursorP.close();
+        } else {
+            Cursor cursorName = cr.query(
+                    ContactsContract.Contacts.CONTENT_URI,
+                    null,
+                    ContactsContract.PhoneLookup.DISPLAY_NAME + " like " + "'%" + keyword + "%'",
+                    null,
+                    null);
+            while (cursorName.moveToNext()) {
+
+                String name = cursorName.getString(cursorName.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                String contactId = cursorName.getString(cursorName.getColumnIndex(ContactsContract.Contacts._ID));
+                Cursor phone = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactId, null, null);
+                while (phone.moveToNext()) {
+                    int Id = phone.getInt(phone.getColumnIndex(Phone.CONTACT_ID));
+                    String phoneNumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    contactList.add(new ContactBean(name, phoneNumber, Id));
+                }
+            }
+            cursorName.close();
+        }
+        mAdapter.setDatas(contactList);
+    }
+
+    private boolean isPhoneNum(String keyword) {
+        //正则 匹配以数字或者加号开头的字符串(包括了带空格及-分割的号码
+        if (keyword.matches("^([0-9]|[/+]).*")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

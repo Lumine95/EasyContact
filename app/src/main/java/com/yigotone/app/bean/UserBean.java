@@ -40,7 +40,7 @@ public class UserBean {
         }
 
         public String getTalkTime() {
-            return talkTime == null ? "" : talkTime;
+            return talkTime == null ? "0分钟" : talkTime + "分钟";
         }
 
         public String getCode() {

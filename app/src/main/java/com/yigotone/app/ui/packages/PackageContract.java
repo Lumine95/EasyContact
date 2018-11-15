@@ -8,10 +8,12 @@ import com.yigotone.app.base.BaseView;
  */
 public class PackageContract {
     public interface View extends BaseView {
+        void onResult(Object result, String message);
 
+        void onLayoutError(Throwable throwable);
     }
 
     public interface Presenter extends BasePresenter {
-
+        void getPackageList(String message);
     }
 }

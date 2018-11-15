@@ -8,7 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
-import com.yigotone.app.bean.MessageDataBean;
+import com.yigotone.app.bean.MessageBean;
 import com.yigotone.app.ui.adapter.MessageAdapter;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
@@ -89,10 +89,10 @@ public class MessageDetailActivity extends BaseActivity {
         //   statusLayoutManager.showLoadingLayout();
     }
 
-    private List<MessageDataBean> genData() {
-        List<MessageDataBean> list = new ArrayList<>();
+    private List<MessageBean.DataBean> genData() {
+        List<MessageBean.DataBean> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            MessageDataBean movie = new MessageDataBean(i % 2 == 0 ? MessageDataBean.THAT : MessageDataBean.THIS, i + " 消息消息");
+            MessageBean.DataBean movie = new MessageBean.DataBean(i % 2 == 0 ? MessageBean.DataBean.THAT : MessageBean.DataBean.THIS, i + " 消息消息");
             list.add(movie);
         }
         return list;

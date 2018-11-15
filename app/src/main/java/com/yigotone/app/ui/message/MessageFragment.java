@@ -13,14 +13,21 @@ import android.widget.TextView;
 import com.android.library.utils.U;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseFragment;
+import com.yigotone.app.bean.MessageBean;
 import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -35,7 +42,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
     private StatusLayoutManager statusLayoutManager;
-    private BaseQuickAdapter<String, BaseViewHolder> mAdapter;
+    private BaseQuickAdapter<MessageBean.DataBean, BaseViewHolder> mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -50,23 +57,8 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         initRecyclerView();
+        EventBus.getDefault().register(this );
         getMessageList(true);
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 17; i++) {
-            strings.add("消息 " + i);
-        }
-        recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_message, strings) {
-            @Override
-            protected void convert(BaseViewHolder helper, String item) {
-                helper.setText(R.id.tv_title, item);
-                helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
-                helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)));
-            }
-        });
-//        mAdapter.setOnItemClickListener((adapter, view1, position) -> {
-//            startActivity(new Intent(mContext, MessageDetailActivity.class));
-//            U.showToast("ddddd");
-//        });
     }
 
     private void getMessageList(boolean isLoadingLayout) {
@@ -85,20 +77,35 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-
-        statusLayoutManager = new StatusLayoutManager.Builder(recyclerView).build();
-        //   statusLayoutManager.showLoadingLayout();
+        statusLayoutManager = new StatusLayoutManager.Builder(refreshLayout).setOnStatusClickListener(v -> {
+            pageIndex = 1;
+            getMessageList(true);
+        }).build();
+        recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<MessageBean.DataBean, BaseViewHolder>(R.layout.item_message) {
+            @Override
+            protected void convert(BaseViewHolder helper, MessageBean.DataBean item) {
+                helper.setText(R.id.tv_title, item.getContent());
+                helper.setText(R.id.tv_name, item.getName());
+                helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
+                helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
+                helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)));
+            }
+        });
+        mAdapter.setOnItemClickListener((adapter, view1, position) -> {
+            startActivity(new Intent(mContext, MessageDetailActivity.class));
+        });
+        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setOnLoadMoreListener(() -> {
+            pageIndex++;
+            getMessageList(false);
+        }, recyclerView);
+        mAdapter.disableLoadMoreIfNotFullPage();
+        refreshLayout.setOnRefreshListener(() -> {
+            pageIndex = 1;
+            getMessageList(false);
+        });
     }
 
-    @Override
-    public void onFinish() {
-
-    }
-
-    @Override
-    public void onError(Throwable throwable) {
-
-    }
 
     @OnClick({R.id.tv_edit, R.id.iv_add})
     public void onViewClicked(View view) {
@@ -113,6 +120,60 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
 
     @Override
     public void onResult(Object result, String message) {
+        switch (message) {
+            case "getMessage":
+                MessageBean bean = (MessageBean) result;
+                List<MessageBean.DataBean> data = bean.getData();
+                if (bean.getStatus() == 0) {
+                    if (data.size() > 0) {
+                        if (pageIndex == 1) {
+                            mAdapter.setNewData(data);
+                        } else {
+                            mAdapter.addData(data);
+                        }
+                        if (data.size() < pageSize) {
+                            mAdapter.loadMoreEnd(true);
+                        } else {
+                            mAdapter.loadMoreComplete();
+                        }
+                    } else {
+                        if (pageIndex == 1) {
+                            statusLayoutManager.showEmptyLayout();
+                        } else {
+                            mAdapter.loadMoreEnd();
+                        }
+                    }
+                }
+                break;
+        }
+    }
 
+    @Override
+    public void onLayoutError(Throwable throwable) {
+        statusLayoutManager.showErrorLayout();
+    }
+
+    @Override
+    public void onFinish() {
+        dismissLoadingDialog();
+        refreshLayout.setRefreshing(false);
+        statusLayoutManager.showSuccessLayout();
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+        dismissLoadingDialog();
+        refreshLayout.setRefreshing(false);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        Logger.d("eventBus: " + event);
+        switch (event) {
+            case "refreshMessageList":
+                pageIndex = 1;
+                getMessageList(true);
+                break;
+        }
     }
 }

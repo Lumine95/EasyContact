@@ -87,4 +87,14 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
             startActivity(new Intent(this, PayResultActivity.class));
         });
     }
+
+    @Override
+    public void onResult(Object result, String message) {
+
+    }
+
+    @Override
+    public void onLayoutError(Throwable throwable) {
+
+    }
 }

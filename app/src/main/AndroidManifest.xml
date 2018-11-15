@@ -78,7 +78,7 @@
             android:windowSoftInputMode="adjustPan" />
         <!--订购套餐-->
         <activity
-            android:name=".ui.packages.SubScribePackageActivity"
+            android:name=".ui.packages.PackageListActivity"
             android:screenOrientation="portrait" />
         <!--套餐详情-->
         <activity
