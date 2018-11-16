@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_size_25"
         android:layout_marginTop="@dimen/margin_size_20"
-        android:src="@mipmap/ic_contact_phone"
+        android:src="@mipmap/ic_contact_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iv_phone"
         app:layout_constraintTop_toBottomOf="@id/tv_phone" />

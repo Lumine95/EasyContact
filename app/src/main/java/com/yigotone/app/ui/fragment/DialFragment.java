@@ -11,10 +11,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
+import com.ebupt.ebauth.biz.EbAuthDelegate;
+import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
+import com.ebupt.ebjar.EbLoginDelegate;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.call.CallActivity;
+import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.AuthUtils;
+import com.yigotone.app.util.DataUtils;
+import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.DigitsEditText;
 
 import java.util.Objects;
@@ -127,9 +135,7 @@ public class DialFragment extends BaseFragment {
                 refreshEditText();
                 break;
             case R.id.iv_call:
-                startActivity(new Intent(mContext, CallActivity.class)
-                        .putExtra("comefrom", "dial")
-                        .putExtra("phonenum", Objects.requireNonNull(etPhone.getText()).toString().trim()));
+                authenticate();
                 break;
             case R.id.iv_collapse:
                 collapseDialKeyboard();
@@ -143,6 +149,32 @@ public class DialFragment extends BaseFragment {
                     refreshEditText();
                 }
                 break;
+        }
+    }
+
+    private void authenticate() {
+        if (Utils.CMAuthenticate(UserManager.getInstance().userData.getMobile())) {
+            startActivity(new Intent(mContext, CallActivity.class)
+                    .putExtra("comefrom", "dial")
+                    .putExtra("phonenum", Objects.requireNonNull(etPhone.getText()).toString().trim()));
+        } else {
+            EbAuthDelegate.AuthloginByVfc(UserManager.getInstance().userData.getMobile(), null, new OnAuthLoginListener() {
+                @Override
+                public void ebAuthOk(String authcode, String deadline) {
+                    Logger.d("authcode " + authcode + deadline);
+                    DataUtils.saveDeadline("18237056520", deadline, mContext);
+                    if (AuthUtils.isDeadlineAvailable(deadline)) {
+                        EbLoginDelegate.login("18237056520", "ebupt");
+                        Logger.d("login");
+                    }
+                }
+
+                @Override
+                public void ebAuthFailed(int code, String reason) {
+                    Logger.d("ebAuthFailed: " + code + reason);
+                }
+            });
+
         }
     }
 

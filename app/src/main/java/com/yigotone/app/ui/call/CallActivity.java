@@ -27,8 +27,8 @@ import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
-import com.yigotone.app.ui.home.HomeFragment;
 import com.yigotone.app.user.Constant;
+import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
 
@@ -40,7 +40,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/11/6  23:24.
  */
-public class CallActivity extends BaseActivity implements EbCallDelegate.Callback {
+public class CallActivity extends BaseActivity implements EbCallDelegate.Callback, EbLoginDelegate.LoginCallback {
     @BindView(R.id.tv_name) TextView tvName;
     @BindView(R.id.tv_status) TextView tvStatus;
     @BindView(R.id.iv_keyboard) ImageView ivKeyboard;
@@ -61,6 +61,7 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
     private static int CALL_TYPE = -1;
     private final int CALL_OUT = 0;
     private final int CALL_IN = 1;
+    private String thisPhoneNum;
 
     @Override
     protected int getLayoutId() {
@@ -74,7 +75,9 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
 
     @Override
     public void initView() {
+        thisPhoneNum = UserManager.getInstance().userData.getMobile();
         EbCallDelegate.setCallback(this);
+        EbLoginDelegate.setLoginCallback(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             phoneNum = bundle.getString("phonenum");
@@ -84,15 +87,17 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
         tvName.setText(phoneNum);
         if (comeFrom.equals("dial")) { // call out
             CALL_TYPE = CALL_OUT;
-            EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
-            DataUtils.saveAccount("18237056520", this);
+            setCallMode(); // 设置通话音频模式
 
-            EbAuthDelegate.AuthloginByTrust("18237056520", new OnAuthLoginListener() {
+            EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
+            DataUtils.saveAccount(thisPhoneNum, this);
+
+            EbAuthDelegate.AuthloginByTrust(thisPhoneNum, new OnAuthLoginListener() {
                 @Override
                 public void ebAuthOk(String authcode, String deadline) {
                     Logger.d("authcode " + authcode + deadline);
                     if (AuthUtils.isDeadlineAvailable(deadline)) {
-                        EbLoginDelegate.login("18237056520", "ebupt");
+                        EbLoginDelegate.login(thisPhoneNum, "ebupt");
                     }
                 }
 
@@ -104,10 +109,9 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
 
             });
             if (AuthUtils.isDeadlineAvailable(DataUtils.readDeadline(this, DataUtils.readAccount(this)))) {
-                U.showToast("正在处于鉴权有效期");
-                setCallMode(); // 设置通话音频模式
-                mCallId = EbCallDelegate.call(phoneNum);
-                Logger.d("callId: " + mCallId);
+                // U.showToast("正在处于鉴权有效期");
+                //  setCallMode(); // 设置通话音频模式
+
             } else {
                 U.showToast("您的鉴权有效期已过期，请重新鉴权");
                 finish();
@@ -329,5 +333,23 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
             return true;
         }
         return super.onKeyDown(keyCode, event);// 继续执行父类其他点击事件
+    }
+
+    @Override
+    public void ebLoginResult(int i, String s) {
+        if (i == 0) {
+            mCallId = EbCallDelegate.call(phoneNum);
+            Logger.d("callId: " + mCallId);
+        }
+    }
+
+    @Override
+    public void ebLogoutOk() {
+
+    }
+
+    @Override
+    public void ebLogouted() {
+
     }
 }

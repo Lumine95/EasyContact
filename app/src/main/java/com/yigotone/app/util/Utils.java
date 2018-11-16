@@ -1,5 +1,9 @@
 package com.yigotone.app.util;
 
+import com.ebupt.ebauth.biz.EbAuthDelegate;
+import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
+import com.orhanobut.logger.Logger;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +14,7 @@ import java.util.Date;
  * Created by ZMM on 2018/10/30 17:11.
  */
 public class Utils {
+
     /**
      * 判断包含大小写字母及数字且在8-16位
      *
@@ -54,19 +59,19 @@ public class Utils {
         String shortstring = null;
         String time = timestampToStr(dateline);
         Date date = getDateByString(time);
-        if(date == null) return shortstring;
+        if (date == null) return shortstring;
 
         long now = Calendar.getInstance().getTimeInMillis();
-        long deltime = (now - date.getTime())/1000;
-        if(deltime > 365*24*60*60) {
-            shortstring = (int)(deltime/(365*24*60*60)) + "年前";
-        } else if(deltime > 24*60*60) {
-            shortstring = (int)(deltime/(24*60*60)) + "天前";
-        } else if(deltime > 60*60) {
-            shortstring = (int)(deltime/(60*60)) + "小时前";
-        } else if(deltime > 60) {
-            shortstring = (int)(deltime/(60)) + "分前";
-        } else if(deltime > 1) {
+        long deltime = (now - date.getTime()) / 1000;
+        if (deltime > 365 * 24 * 60 * 60) {
+            shortstring = (int) (deltime / (365 * 24 * 60 * 60)) + "年前";
+        } else if (deltime > 24 * 60 * 60) {
+            shortstring = (int) (deltime / (24 * 60 * 60)) + "天前";
+        } else if (deltime > 60 * 60) {
+            shortstring = (int) (deltime / (60 * 60)) + "小时前";
+        } else if (deltime > 60) {
+            shortstring = (int) (deltime / (60)) + "分前";
+        } else if (deltime > 1) {
             shortstring = deltime + "秒前";
         } else {
             shortstring = "1秒前";
@@ -75,12 +80,13 @@ public class Utils {
     }
 
     //Timestamp转化为String:
-    public static String timestampToStr(long dateline){
-        Timestamp timestamp = new Timestamp(dateline*1000);
+    private static String timestampToStr(long dateline) {
+        Timestamp timestamp = new Timestamp(dateline * 1000);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//定义格式，不显示毫秒
         return df.format(timestamp);
     }
-    public static Date getDateByString(String time) {
+
+    static Date getDateByString(String time) {
         Date date = null;
         if (time == null)
             return date;
@@ -92,5 +98,28 @@ public class Utils {
             e.printStackTrace();
         }
         return date;
+    }
+
+    static boolean isOK;
+
+    public static boolean CMAuthenticate(String phone) {
+        EbAuthDelegate.AuthloginByTrust(phone, new OnAuthLoginListener() {
+
+            @Override
+            public void ebAuthOk(String authcode, String deadline) {
+                Logger.d("authcode " + authcode + deadline);
+                if (AuthUtils.isDeadlineAvailable(deadline)) {
+                    isOK = true;
+                    //  EbLoginDelegate.login(phone, "ebupt");
+                }
+            }
+
+            @Override
+            public void ebAuthFailed(int code, String reason) {
+                Logger.d("ebAuthFailed: " + code + reason);
+                isOK = false;
+            }
+        });
+        return isOK;
     }
 }

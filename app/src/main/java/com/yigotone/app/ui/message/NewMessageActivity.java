@@ -3,6 +3,7 @@ package com.yigotone.app.ui.message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.U;
@@ -10,6 +11,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CodeBean;
+import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
 
@@ -26,6 +28,9 @@ import butterknife.OnClick;
 public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> implements MessageContract.View {
     @BindView(R.id.et_message) EditText etMessage;
     @BindView(R.id.tv_user) TextView tvUser;
+    @BindView(R.id.rl_people) RelativeLayout rlPeople;
+    private String targetName;
+    private String targetPhone;
 
     @Override
     protected int getLayoutId() {
@@ -39,7 +44,17 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
 
     @Override
     public void initView() {
-        new BaseTitleBar(this).setTitleText("新信息").setLeftIcoListening(v -> finish());
+        String title;
+        ContactBean data = (ContactBean) getIntent().getSerializableExtra("data");
+        if (data != null) {
+            title = targetName = data.getName();
+            targetPhone = data.getPhone();
+            rlPeople.setVisibility(View.GONE);
+        } else {
+            title = "新信息";
+            rlPeople.setVisibility(View.VISIBLE);
+        }
+        new BaseTitleBar(this).setTitleText(title).setLeftIcoListening(v -> finish());
     }
 
     @Override
