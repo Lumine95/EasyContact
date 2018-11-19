@@ -29,4 +29,8 @@ public class UrlUtil {
     public static String GET_MESSAGE_LIST = BASE_URL + "Personal/getMyMessage";
     // 获取信息详情
     public static String GET_MESSAGE_DETAIL = BASE_URL + "Personal/getMyMessageInfo";
+    // 记录呼出电话
+    public static String RECORD_CALL_OUT = BASE_URL + "Call/callrecord";
+    // 更新通话状态
+    public static String UPDATE_CALL_STATUS = BASE_URL + "Call/updateCallrecord";
 }

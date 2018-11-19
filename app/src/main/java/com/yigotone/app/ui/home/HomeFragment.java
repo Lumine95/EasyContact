@@ -218,7 +218,11 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
             } else {
                 mAdapter.addData(data);
             }
-            mAdapter.loadMoreComplete();
+            if (data.size() < pageSize) {
+                mAdapter.loadMoreEnd(true);
+            } else {
+                mAdapter.loadMoreComplete();
+            }
         } else {
             if (pageIndex == 1) {
                 statusLayoutManager.showEmptyLayout();

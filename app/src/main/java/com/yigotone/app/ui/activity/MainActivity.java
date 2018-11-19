@@ -1,5 +1,7 @@
 package com.yigotone.app.ui.activity;
 
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -9,10 +11,12 @@ import android.widget.LinearLayout;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.fragment.DataFragment;
-import com.yigotone.app.ui.message.MessageFragment;
 import com.yigotone.app.ui.fragment.MineFragment;
 import com.yigotone.app.ui.home.HomeFragment;
+import com.yigotone.app.ui.message.MessageFragment;
+import com.yigotone.app.user.UserManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,6 +50,23 @@ public class MainActivity extends BaseActivity {
     public void initView() {
         setBottomButton(llHomeBtn);
         switchContentFragment(homeFragment == null ? homeFragment = new HomeFragment() : homeFragment);
+        queryContactInfo();
+    }
+
+    private void queryContactInfo() {  // 遍历通讯录并存储
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                new String[]{"display_name", "sort_key", "contact_id",
+                        "data1"}, null, null, null);
+        while (cursor.moveToNext()) {
+            //读取通讯录的姓名
+            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            //读取通讯录的号码
+            String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            int Id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+            ContactBean bean = new ContactBean(name, number.replaceAll("\\s*", ""), Id);
+            UserManager.getInstance().contactList.add(bean);
+        }
+        cursor.close();
     }
 
     @OnClick({R.id.ll_home_btn, R.id.ll_message_btn, R.id.ll_data_btn, R.id.ll_mine_btn})

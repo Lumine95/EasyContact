@@ -9,6 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.library.utils.U;
+import com.ebupt.ebauth.biz.EbAuthDelegate;
+import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
+import com.ebupt.ebjar.EbLoginDelegate;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.UserBean;
@@ -16,6 +20,8 @@ import com.yigotone.app.ui.activity.ForgetPwdActivity;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.register.RegisterActivity;
 import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.AuthUtils;
+import com.yigotone.app.util.DataUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -23,7 +29,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/10/24 14:51.
  */
-public class LoginActivity extends BaseActivity<LoginContract.Presenter> implements LoginContract.View {
+public class LoginActivity extends BaseActivity<LoginContract.Presenter> implements LoginContract.View, EbLoginDelegate.LoginCallback {
     @BindView(R.id.et_phone) EditText etPhone;
     @BindView(R.id.et_pwd) EditText etPwd;
     @BindView(R.id.btn_login) Button btnLogin;
@@ -95,13 +101,51 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     public void loginSuccess(UserBean bean) {
         dismissLoadingDialog();
         UserManager.getInstance().save(this, bean.getData().get(0));
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        String phoneNumber = UserManager.getInstance().userData.getMobile();
+
+        EbAuthDelegate.AuthloginByVfc(phoneNumber, null, new OnAuthLoginListener() {
+            @Override
+            public void ebAuthOk(String authcode, String deadline) {
+                Logger.d("EbLoginDelegate: authcode " + authcode + deadline);
+                DataUtils.saveDeadline(phoneNumber, deadline, LoginActivity.this);
+
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+                if (AuthUtils.isDeadlineAvailable(deadline)) {
+                    EbLoginDelegate.login(phoneNumber, "ebupt");
+                    Logger.d("EbLoginDelegate: login");
+                }
+            }
+
+            @Override
+            public void ebAuthFailed(int code, String reason) {
+                Logger.d("ebAuthFailed: " + code + reason);
+                startActivity(new Intent(LoginActivity.this, NewDeviceLoginActivity.class));
+            }
+        });
     }
 
     @Override
     public void loginFail(String errorMsg) {
         dismissLoadingDialog();
         Log.e("loginFail ", errorMsg);
+    }
+
+    @Override
+    public void ebLoginResult(int i, String s) {
+        if (i == 0) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }else {    startActivity(new Intent(LoginActivity.this, NewDeviceLoginActivity.class));}
+    }
+
+    @Override
+    public void ebLogoutOk() {
+
+    }
+
+    @Override
+    public void ebLogouted() {
+
     }
 }

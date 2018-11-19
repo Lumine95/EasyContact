@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.android.library.utils.DensityUtil;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
-import com.ebupt.ebjar.EbLoginDelegate;
 import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
@@ -33,7 +32,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/10/26 10:41.
  */
-public class DialFragment extends BaseFragment {
+public class DialFragment extends BaseFragment  {
     @BindView(R.id.iv_keyboard) ImageView ivKeyboard;
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.dial_keyword) LinearLayout dialKeyword;
@@ -42,6 +41,7 @@ public class DialFragment extends BaseFragment {
     private StringBuffer phoneStr = new StringBuffer();
     private TranslateAnimation hideAnim;
     private TranslateAnimation showAnim;
+    private String phoneNumber;
 
     @Override
     protected int getLayoutId() {
@@ -55,6 +55,7 @@ public class DialFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        phoneNumber = UserManager.getInstance().userData.getMobile();
         initAnimation();
     }
 
@@ -153,7 +154,7 @@ public class DialFragment extends BaseFragment {
     }
 
     private void authenticate() {
-        if (Utils.CMAuthenticate(UserManager.getInstance().userData.getMobile())) {
+        if (Utils.CMAuthenticate(phoneNumber)) {
             startActivity(new Intent(mContext, CallActivity.class)
                     .putExtra("comefrom", "dial")
                     .putExtra("phonenum", Objects.requireNonNull(etPhone.getText()).toString().trim()));
@@ -162,10 +163,14 @@ public class DialFragment extends BaseFragment {
                 @Override
                 public void ebAuthOk(String authcode, String deadline) {
                     Logger.d("authcode " + authcode + deadline);
-                    DataUtils.saveDeadline("18237056520", deadline, mContext);
+                    DataUtils.saveDeadline(phoneNumber, deadline, mContext);
                     if (AuthUtils.isDeadlineAvailable(deadline)) {
-                        EbLoginDelegate.login("18237056520", "ebupt");
-                        Logger.d("login");
+//                        EbLoginDelegate.login(phoneNumber, "ebupt");
+//                        Logger.d("login");
+
+                        startActivity(new Intent(mContext, CallActivity.class)
+                                .putExtra("comefrom", "dial")
+                                .putExtra("phonenum", Objects.requireNonNull(etPhone.getText()).toString().trim()));
                     }
                 }
 

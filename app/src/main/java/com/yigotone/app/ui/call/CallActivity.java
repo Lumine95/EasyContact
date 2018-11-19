@@ -25,14 +25,17 @@ import com.ebupt.ebjar.MebMdm;
 import com.justalk.cloud.zmf.ZmfAudio;
 import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
-import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.user.Constant;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
+import com.yigotone.app.util.Utils;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,7 +43,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/11/6  23:24.
  */
-public class CallActivity extends BaseActivity implements EbCallDelegate.Callback, EbLoginDelegate.LoginCallback {
+public class CallActivity extends BaseActivity<CallContract.Presenter> implements CallContract.View, EbCallDelegate.Callback, EbLoginDelegate.LoginCallback {
     @BindView(R.id.tv_name) TextView tvName;
     @BindView(R.id.tv_status) TextView tvStatus;
     @BindView(R.id.iv_keyboard) ImageView ivKeyboard;
@@ -69,8 +72,8 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
     }
 
     @Override
-    public BasePresenter initPresenter() {
-        return null;
+    public CallPresenter initPresenter() {
+        return new CallPresenter(this);
     }
 
     @Override
@@ -97,7 +100,10 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
                 public void ebAuthOk(String authcode, String deadline) {
                     Logger.d("authcode " + authcode + deadline);
                     if (AuthUtils.isDeadlineAvailable(deadline)) {
-                        EbLoginDelegate.login(thisPhoneNum, "ebupt");
+                        //  EbLoginDelegate.login(thisPhoneNum, "ebupt");
+                        mCallId = EbCallDelegate.call(phoneNum);
+                        Logger.d("callId: " + mCallId);
+                        recordCallOut();// 记录呼出状态
                     }
                 }
 
@@ -105,8 +111,6 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
                 public void ebAuthFailed(int code, String reason) {
                     Logger.d("ebAuthFailed: " + code + reason);
                 }
-
-
             });
             if (AuthUtils.isDeadlineAvailable(DataUtils.readDeadline(this, DataUtils.readAccount(this)))) {
                 // U.showToast("正在处于鉴权有效期");
@@ -126,8 +130,6 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
             EbCallDelegate.alert(callId);
             startAlarm();
         }
-
-
     }
 
     private void setCallMode() {
@@ -226,7 +228,29 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
 
     @Override
     public void onError(Throwable throwable) {
+        dismissLoadingDialog();
+        Logger.e(throwable.toString());
+    }
 
+    private void recordCallOut() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("callId", mCallId);
+        map.put("mobile", thisPhoneNum);
+        map.put("targetMobile", phoneNum);
+        map.put("targetName", Utils.getContactName(phoneNum));
+        presenter.postParams(UrlUtil.RECORD_CALL_OUT, map, "recordCallOut");
+    }
+
+    private void refreshCallStatus(int status) { // 更新记录通话状态
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("callId", mCallId);
+        map.put("status", status);
+        map.put("targetStatus", status);
+        presenter.postParams(UrlUtil.RECORD_CALL_OUT, map, "refreshCallStatus");
     }
 
     @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini})
@@ -276,16 +300,17 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
     public void ebCallDelegateOutgoing(int i) {
         // 呼出电话动作完成后执行此方法
         tvStatus.setText("正在呼叫…");
+
     }
 
     @Override
-    public void ebCallDelegateAlerted(int i, int i1) {
-        // 正在响铃
+    public void ebCallDelegateAlerted(int iCallId, int alertType) {
+        // 被叫 振铃
     }
 
     @Override
-    public void ebCallDelegateTalking(int i) {
-
+    public void ebCallDelegateTalking(int iCallId) {
+       // 通话已接通广播事件
     }
 
     @Override
@@ -293,6 +318,7 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
         // 对方挂断
         stopAlarm();
         tvStatus.setText("通话结束");
+        refreshCallStatus(2);
         U.showToast("对方已挂断");
         clearCallMode();
         finish();
@@ -302,6 +328,7 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
     public void ebCallDelegateDidTerm(int i, int i1, String s) {
         stopAlarm();
         tvStatus.setText("通话结束");
+        // refreshCallStatus( );
         U.showToast("已挂断");
         clearCallMode();
         finish();
@@ -351,5 +378,14 @@ public class CallActivity extends BaseActivity implements EbCallDelegate.Callbac
     @Override
     public void ebLogouted() {
 
+    }
+
+    @Override
+    public void onResult(Object result, String message) {
+        switch (message) {
+            case "recordCallOut":
+
+                break;
+        }
     }
 }

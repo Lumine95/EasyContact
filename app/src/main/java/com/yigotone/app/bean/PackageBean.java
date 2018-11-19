@@ -2,6 +2,7 @@ package com.yigotone.app.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -58,11 +59,16 @@ public class PackageBean {
             this.packageX = packageX;
         }
 
-        public static class PackageEntity {
+        public static class PackageEntity  implements Serializable {
             private String packageId;
             private String packageName;
             private String iosIapId;
             private String price;
+            private String intro;
+
+            public String getIntro() {
+                return intro == null ? "" : intro;
+            }
 
             public String getPackageId() {
                 return packageId;

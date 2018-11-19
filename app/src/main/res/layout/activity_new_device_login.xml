@@ -35,7 +35,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/margin_size_14"
         android:includeFontPadding="false"
-        android:text="短信验证码已发送至132604503335"
         android:textColor="#ff333333"
         android:textSize="13sp" />
 

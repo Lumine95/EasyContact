@@ -12,6 +12,7 @@ import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
+import com.yigotone.app.bean.PackageBean;
 import com.yigotone.app.ui.activity.PayResultActivity;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.SelectPaymentPopupView;
@@ -27,6 +28,7 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
     @BindView(R.id.tv_price) TextView tvPrice;
     @BindView(R.id.tv_intro) TextView tvIntro;
     @BindView(R.id.content) ConstraintLayout content;
+    private PackageBean.DataBean.PackageEntity data;
 
     @Override
     protected int getLayoutId() {
@@ -41,6 +43,14 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
     @Override
     public void initView() {
         new BaseTitleBar(this).setTitleText("套餐详情").setLeftIcoListening(v -> finish());
+        data = (PackageBean.DataBean.PackageEntity) getIntent().getSerializableExtra("data");
+        setData();
+    }
+
+    private void setData() {
+        tvTitle.setText(data.getPackageName());
+        tvPrice.setText("价格: RMB " + data.getPrice() + "元");
+        tvIntro.setText("描述: " + data.getIntro());
     }
 
     @Override

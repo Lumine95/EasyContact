@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_size_11"
         android:includeFontPadding="false"
-        android:text="正在呼叫…"
         android:textColor="#ffffffff"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -70,9 +70,10 @@ public class PackageListActivity extends BaseActivity<PackageContract.Presenter>
             @Override
             public void convert(MyViewHolder helper, PackageBean.DataBean.PackageEntity item, int position) {
                 helper.setText(R.id.tv_title, item.getPackageName());
-                helper.setText(R.id.tv_price, item.getPrice());
+                helper.setText(R.id.tv_price, "RMB " + item.getPrice() + "元");
                 helper.getConvertView().setOnClickListener(v ->
-                        startActivity(new Intent(PackageListActivity.this, PackageDetailActivity.class))
+                        startActivity(new Intent(PackageListActivity.this, PackageDetailActivity.class)
+                                .putExtra("data", item))
                 );
             }
         });
@@ -105,7 +106,7 @@ public class PackageListActivity extends BaseActivity<PackageContract.Presenter>
 
     @Override
     public void onLayoutError(Throwable throwable) {
-         statusLayoutManager.showErrorLayout();
+        statusLayoutManager.showErrorLayout();
         dismissLoadingDialog();
         Logger.e("onError: " + throwable);
     }

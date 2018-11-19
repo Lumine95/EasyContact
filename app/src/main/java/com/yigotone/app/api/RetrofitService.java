@@ -43,6 +43,9 @@ public interface RetrofitService {
 
     @POST()
     Observable<MessageBean> getMessageList(@Url String url, @QueryMap Map<String, Object> map);
+
+    @POST()
+    Observable<CallBean> postCallParams(@Url String url, @QueryMap Map<String, Object> map);
 //
 //    @POST
 //    Observable<UserBean> registerUser(@Url String url, @Body Map map);

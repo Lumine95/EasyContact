@@ -25,7 +25,6 @@ public class SplashActivity extends BaseActivity {
     public void initView() {
         // 移动SDK鉴权
 
-
         startActivity(new Intent(this, LoginActivity.class));
 
     }

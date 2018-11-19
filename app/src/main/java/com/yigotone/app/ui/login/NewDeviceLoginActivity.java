@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.login;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.ui.activity.MainActivity;
+import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.view.BaseTitleBar;
@@ -31,6 +34,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     @BindView(R.id.tv_phone) TextView tvPhone;
     @BindView(R.id.tv_get_code) TextView tvGetCode;
     @BindView(R.id.code_view) SecurityCodeView codeView;
+    private String phoneNumber;
 
     @Override
     protected int getLayoutId() {
@@ -44,26 +48,10 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
 
     @Override
     public void initView() {
+        tvPhone.setText("短信验证码已发送至" + (phoneNumber = UserManager.getInstance().userData.getMobile()));
         codeView.setInputCompleteListener(this);
         new BaseTitleBar(this).setTitleText("信息验证").setLeftIcoListening(v -> finish());
         EbLoginDelegate.setLoginCallback(this);
-
-        EbAuthDelegate.AuthloginByTrust("18237056520", new OnAuthLoginListener() {
-            @Override
-            public void ebAuthOk(String authcode, String deadline) {
-                Logger.d("authcode " + authcode + deadline);
-                if (AuthUtils.isDeadlineAvailable(deadline)) {
-                    EbLoginDelegate.login("18237056520", "ebupt");
-                }
-            }
-
-            @Override
-            public void ebAuthFailed(int code, String reason) {
-                Logger.d("ebAuthFailed: " + code + reason);
-            }
-
-
-        });
 
     }
 
@@ -81,13 +69,13 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     public void inputComplete() {
         U.showToast(codeView.getEditContent());
         // 鉴权登陆
-        EbAuthDelegate.AuthloginByVfc("18237056520", null, new OnAuthLoginListener() {
+        EbAuthDelegate.AuthloginByVfc(phoneNumber, codeView.getEditContent(), new OnAuthLoginListener() {
             @Override
             public void ebAuthOk(String authcode, String deadline) {
                 Logger.d("authcode " + authcode + deadline);
-                DataUtils.saveDeadline("18237056520", deadline, NewDeviceLoginActivity.this);
+                DataUtils.saveDeadline(phoneNumber, deadline, NewDeviceLoginActivity.this);
                 if (AuthUtils.isDeadlineAvailable(deadline)) {
-                    EbLoginDelegate.login("18237056520", "ebupt");
+                    EbLoginDelegate.login(codeView.getEditContent(), "ebupt");
                     Logger.d("login");
                 }
             }
@@ -119,7 +107,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     }
 
     private void getRandomCode() {
-        EbAuthDelegate.getAuthcode("18237056520", new OnAuthcodeListener() {
+        EbAuthDelegate.getAuthcode(phoneNumber, new OnAuthcodeListener() {
             @Override
             public void ebAuthCodeOk() {
                 U.showToast("获取验证码成功");
@@ -137,8 +125,12 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     @Override
     public void ebLoginResult(int i, String s) {
         Logger.d("sdk登录result i=" + i + "||s=" + s);
-
-
+        if (i == 0) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            U.showToast("登录失败");
+        }
     }
 
     @Override

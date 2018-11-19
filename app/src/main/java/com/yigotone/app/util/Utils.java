@@ -1,8 +1,12 @@
 package com.yigotone.app.util;
 
+import android.text.TextUtils;
+
 import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.orhanobut.logger.Logger;
+import com.yigotone.app.bean.ContactBean;
+import com.yigotone.app.user.UserManager;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -100,7 +104,7 @@ public class Utils {
         return date;
     }
 
-    static boolean isOK;
+    private static boolean isOK;
 
     public static boolean CMAuthenticate(String phone) {
         EbAuthDelegate.AuthloginByTrust(phone, new OnAuthLoginListener() {
@@ -121,5 +125,21 @@ public class Utils {
             }
         });
         return isOK;
+    }
+
+    /**
+     * 根据手机号码获取在通讯录中的名字
+     *
+     * @param phone
+     * @return
+     */
+    public static String getContactName(String phone) {
+
+        for (ContactBean bean : UserManager.getInstance().contactList) {
+            if (TextUtils.equals(phone, bean.getPhone())) {
+                return bean.getName();
+            }
+        }
+        return phone;
     }
 }

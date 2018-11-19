@@ -109,7 +109,7 @@ public class ContactFragment extends BaseFragment {
             //读取通讯录的号码
             String number = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
             int Id = cursor.getInt(cursor.getColumnIndex(Phone.CONTACT_ID));
-            ContactBean bean = new ContactBean(name, number, Id);
+            ContactBean bean = new ContactBean(name, number.replaceAll("\\s*", ""), Id);
             contactList.add(bean);
         }
         cursor.close();
