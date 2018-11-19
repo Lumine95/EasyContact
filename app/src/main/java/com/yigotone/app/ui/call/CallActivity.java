@@ -8,6 +8,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,8 +37,11 @@ import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.util.Utils;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,8 +62,8 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     private boolean mCallMode = false;
     private int mode;
     private MediaPlayer mMediaPlayer;
-    private int mCallId; // 主叫
-    private int callId;  // 被叫
+    private int mCallId = 0; // 主叫
+    private int callId = 0;  // 被叫
     private String phoneNum;
     private String comeFrom;
     private boolean louderFlag = false;
@@ -65,6 +71,16 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     private final int CALL_OUT = 0;
     private final int CALL_IN = 1;
     private String thisPhoneNum;
+    private long baseTimer;
+    private int callTime; // 通话时长
+    @SuppressLint("HandlerLeak") Handler timeHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (null != tvStatus) {
+                tvStatus.setText((String) msg.obj);
+            }
+        }
+    };
+
 
     @Override
     protected int getLayoutId() {
@@ -236,7 +252,7 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         Map<String, Object> map = new HashMap<>();
         map.put("uid", UserManager.getInstance().userData.getUid());
         map.put("token", UserManager.getInstance().userData.getToken());
-        map.put("callId", mCallId);
+        map.put("callId", mCallId == 0 ? callId : mCallId);
         map.put("mobile", thisPhoneNum);
         map.put("targetMobile", phoneNum);
         map.put("targetName", Utils.getContactName(phoneNum));
@@ -247,10 +263,10 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         Map<String, Object> map = new HashMap<>();
         map.put("uid", UserManager.getInstance().userData.getUid());
         map.put("token", UserManager.getInstance().userData.getToken());
-        map.put("callId", mCallId);
+        map.put("callId", mCallId == 0 ? callId : mCallId);
         map.put("status", status);
         map.put("targetStatus", status);
-        presenter.postParams(UrlUtil.RECORD_CALL_OUT, map, "refreshCallStatus");
+        presenter.postParams(UrlUtil.UPDATE_CALL_STATUS, map, "refreshCallStatus");
     }
 
     @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini})
@@ -300,21 +316,43 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     public void ebCallDelegateOutgoing(int i) {
         // 呼出电话动作完成后执行此方法
         tvStatus.setText("正在呼叫…");
-
     }
 
     @Override
     public void ebCallDelegateAlerted(int iCallId, int alertType) {
-        // 被叫 振铃
+        // 振铃
+        Logger.d("响铃：" + alertType);
     }
 
     @Override
     public void ebCallDelegateTalking(int iCallId) {
-       // 通话已接通广播事件
+        // 通话已接通
+        refreshCallStatus(3);
+        stopAlarm();
+        startTimeClock();
+    }
+
+    private void startTimeClock() {
+        baseTimer = SystemClock.elapsedRealtime();
+        new Timer("计时器").scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                callTime = (int) ((SystemClock.elapsedRealtime() - baseTimer) / 1000);
+                String hh = new DecimalFormat("00").format(callTime / 3600);
+                String mm = new DecimalFormat("00").format(callTime % 3600 / 60);
+                String ss = new DecimalFormat("00").format(callTime % 60);
+                String timeFormat = hh + ":" + mm + ":" + ss;
+                Message msg = new Message();
+                msg.obj = timeFormat;
+                timeHandler.sendMessage(msg);
+            }
+
+        }, 0, 1000L);
     }
 
     @Override
-    public void ebCallDelegateTermed(int i, int i1, String s) {
+    public void ebCallDelegateTermed(int callId, int statusCode, String reason) {
+        Logger.d("对方挂断：" + statusCode + " reason: " + reason);
         // 对方挂断
         stopAlarm();
         tvStatus.setText("通话结束");
@@ -325,10 +363,11 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     }
 
     @Override
-    public void ebCallDelegateDidTerm(int i, int i1, String s) {
+    public void ebCallDelegateDidTerm(int callId, int statusCode, String reason) {
+        Logger.d("我方挂断：" + statusCode + " reason: " + reason);
         stopAlarm();
         tvStatus.setText("通话结束");
-        // refreshCallStatus( );
+        // refreshCallStatus();
         U.showToast("已挂断");
         clearCallMode();
         finish();
@@ -336,13 +375,25 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
 
     @Override
     public void ebCallDelegateLogouted() {
-
+        Logger.d("ebCallDelegateLogouted");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (callTime > 0) {
+            recordCallTime();
+        }
         clearCallMode();
+    }
+
+    private void recordCallTime() { // 记录通话时长
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("callId", mCallId == 0 ? callId : mCallId);
+        map.put("talktime", callTime);
+        presenter.postParams(UrlUtil.RECORD_CALL_TIME, map, "recordCallTime");
     }
 
     private static long currentBackPressedTime = 0;

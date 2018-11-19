@@ -114,7 +114,9 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
 
             @Override
             protected void convert(BaseViewHolder helper, CallBean.DataBean item) {
-                helper.setText(R.id.tv_phone, item.getMobile());
+                String number = item.getCallNum() > 1 ? "(" + item.getCallNum() + ")" : "";
+                helper.setText(R.id.tv_phone, item.getTargetName() + number);
+                helper.setText(R.id.tv_time, Utils.getShortTime(Long.parseLong(item.getCreateAt())));
             }
         });
 

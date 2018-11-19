@@ -1,6 +1,7 @@
 package com.yigotone.app.ui.login;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
     @BindView(R.id.tv_get_code) TextView tvGetCode;
     @BindView(R.id.code_view) SecurityCodeView codeView;
     private String phoneNumber;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected int getLayoutId() {
@@ -52,7 +54,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
         codeView.setInputCompleteListener(this);
         new BaseTitleBar(this).setTitleText("信息验证").setLeftIcoListening(v -> finish());
         EbLoginDelegate.setLoginCallback(this);
-
+        tvGetCode.setOnClickListener(v -> getRandomCode());
     }
 
     @Override
@@ -94,12 +96,9 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
 
     }
 
-    @OnClick({R.id.tv_get_code, R.id.tv_tip})
+    @OnClick({R.id.tv_tip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.tv_get_code:
-                getRandomCode();
-                break;
             case R.id.tv_tip:
                 showDialog();
                 break;
@@ -111,6 +110,8 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
             @Override
             public void ebAuthCodeOk() {
                 U.showToast("获取验证码成功");
+                tvPhone.setText("短信验证码已发送至" + (phoneNumber = UserManager.getInstance().userData.getMobile()));
+                countDown();
             }
 
             @Override
@@ -119,6 +120,26 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
             }
         });
 
+    }
+
+    private void countDown() {
+        tvGetCode.setTextColor(getResources().getColor(R.color.color_9));
+        tvGetCode.setOnClickListener(view -> {
+        });
+        countDownTimer = new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long l) {
+                tvGetCode.setText((l / 1000) + "S 后重新发送");
+            }
+
+            @Override
+            public void onFinish() {
+                tvGetCode.setTextColor(getResources().getColor(R.color.color_3CA3ED));
+                tvGetCode.setText("获取验证码");
+                tvGetCode.setOnClickListener(view -> getRandomCode());
+            }
+        };
+        countDownTimer.start();
     }
 
 
@@ -159,4 +180,11 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
         dialog.getWindow().setLayout(DensityUtil.dip2px(this, 330), LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
 }

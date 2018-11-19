@@ -12,13 +12,54 @@ public class CallBean {
     private List<DataBean> data;
 
     public static class DataBean {
-        private String mobile;
+        private String othermobile;
         private String status;
+        private String targetStatus;
         private String createAt;
         private String duration;
+        private String callId;
+        private String targetName;
+        private int type;
+        private int callNum;
+
+        public int getCallNum() {
+            return callNum;
+        }
+
+        public String getOthermobile() {
+            return othermobile == null ? "" : othermobile;
+        }
+
+        public String getStatus() {
+            return status == null ? "" : status;
+        }
+
+        public String getTargetStatus() {
+            return targetStatus == null ? "" : targetStatus;
+        }
+
+        public String getCreateAt() {
+            return createAt == null ? "" : createAt;
+        }
+
+        public String getDuration() {
+            return duration == null ? "" : duration;
+        }
+
+        public String getCallId() {
+            return callId == null ? "" : callId;
+        }
+
+        public String getTargetName() {
+            return targetName == null ? "" : targetName;
+        }
+
+        public int getType() {
+            return type;
+        }
 
         public String getMobile() {
-            return mobile == null ? "" : mobile;
+            return othermobile == null ? "" : othermobile;
         }
     }
 

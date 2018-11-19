@@ -33,4 +33,6 @@ public class UrlUtil {
     public static String RECORD_CALL_OUT = BASE_URL + "Call/callrecord";
     // 更新通话状态
     public static String UPDATE_CALL_STATUS = BASE_URL + "Call/updateCallrecord";
+    // 记录通话时长
+    public static String RECORD_CALL_TIME = BASE_URL + "Call/Call/updateCalltime";
 }
