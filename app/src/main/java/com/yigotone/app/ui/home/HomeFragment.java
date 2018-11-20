@@ -13,22 +13,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.ebupt.ebauth.biz.EbAuthDelegate;
+import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.bean.CallBean;
+import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.ui.activity.DialActivity;
 import com.yigotone.app.ui.activity.NoDisturbActivity;
+import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.ui.packages.PackageListActivity;
 import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.AuthUtils;
+import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.TriangleDrawable;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
@@ -60,11 +67,16 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @BindView(R.id.iv_take_over) ImageView ivTakeOver;
     @BindView(R.id.ll_take_over) LinearLayout llTakeOver;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
-
+    @BindView(R.id.tv_select_all) TextView tvSelectAll;
+    @BindView(R.id.tv_delete) TextView tvDelete;
+    @BindView(R.id.tv_cancel) TextView tvCancel;
+    @BindView(R.id.rl_delete) RelativeLayout rlDelete;
     private EasyPopup popup;
     private String mobileStatus;   //1未托管，2托管中
     private StatusLayoutManager statusLayoutManager;
     private BaseQuickAdapter<CallBean.DataBean, BaseViewHolder> mAdapter;
+    private boolean isEdit = false; // 编辑模式
+    private boolean isSelectAll = false; // 全选模式
 
     @Override
     protected int getLayoutId() {
@@ -111,12 +123,15 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         statusLayoutManager.showLoadingLayout();
 
         recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<CallBean.DataBean, BaseViewHolder>(R.layout.item_call_record) {
-
             @Override
             protected void convert(BaseViewHolder helper, CallBean.DataBean item) {
                 String number = item.getCallNum() > 1 ? "(" + item.getCallNum() + ")" : "";
                 helper.setText(R.id.tv_phone, item.getTargetName() + number);
                 helper.setText(R.id.tv_time, Utils.getShortTime(Long.parseLong(item.getCreateAt())));
+                helper.getView(R.id.iv_select).setSelected(item.isSelect);
+                helper.setGone(R.id.iv_select, isEdit);
+                helper.addOnClickListener(R.id.iv_select);
+                helper.addOnClickListener(R.id.iv_detail);
             }
         });
 
@@ -129,9 +144,34 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
             pageIndex = 1;
             getCallRecord(false);
         });
+        mAdapter.setOnItemClickListener((adapter, v, p) -> {
+            CallBean.DataBean item = (CallBean.DataBean) adapter.getItem(p);
+            authenticate(item.getMobile());
+        });
+        mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            CallBean.DataBean item = (CallBean.DataBean) adapter.getItem(position);
+            isEdit = true;
+            item.isSelect = true;
+            mAdapter.notifyDataSetChanged();
+            rlDelete.setVisibility(View.VISIBLE);
+            U.showToast("删除 " + item.getCallId());
+            return true;
+        });
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            CallBean.DataBean item = (CallBean.DataBean) adapter.getItem(position);
+            switch (view.getId()) {
+                case R.id.iv_select:
+                    item.isSelect = !item.isSelect;
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                case R.id.iv_detail:
+                    startActivity(new Intent(mContext, CallDetailActivity.class).putExtra("data",item));
+                    break;
+            }
+        });
     }
 
-    @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial, R.id.ll_take_over})
+    @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial, R.id.ll_take_over, R.id.tv_select_all, R.id.tv_delete, R.id.tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_take_over:
@@ -150,7 +190,65 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                     }
                 });
                 break;
+            case R.id.tv_select_all:
+                isSelectAll = !isSelectAll;
+                tvSelectAll.setText(isSelectAll ? "全不选" : "全选");
+                for (CallBean.DataBean bean : mAdapter.getData()) {
+                    bean.isSelect = isSelectAll;
+                }
+                mAdapter.notifyDataSetChanged();
+                break;
+            case R.id.tv_delete:
+                deleteDialog();
+                break;
+            case R.id.tv_cancel:
+                rlDelete.setVisibility(View.GONE);
+                isEdit = false;
+                isSelectAll = false;
+                for (CallBean.DataBean bean : mAdapter.getData()) {
+                    bean.isSelect = false;
+                }
+                mAdapter.notifyDataSetChanged();
+                break;
         }
+    }
+
+    private void deleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(mContext, R.layout.dialog_package_buy, null);
+        TextView tv_tip = view.findViewById(R.id.tv_tip);
+        TextView tv_cancel = view.findViewById(R.id.tv_cancel);
+        TextView tv_sure = view.findViewById(R.id.tv_sure);
+        tv_cancel.setText("取消");
+        tv_sure.setText("确认");
+        tv_tip.setText("确认删除所选通话记录？");
+        tv_cancel.setOnClickListener(v -> dialog.dismiss());
+        tv_sure.setOnClickListener(v -> {
+            dialog.dismiss();
+            deleteCallRecord();
+        });
+
+        dialog.setCancelable(true);
+        dialog.setView(view);
+        dialog.show();
+        dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 340), LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void deleteCallRecord() {
+        StringBuilder sb = new StringBuilder();
+        for (CallBean.DataBean bean : mAdapter.getData()) {
+            if (bean.isSelect) {
+                sb.append(bean.getMobile()).append(",");
+            }
+        }
+        showLoadingDialog("正在删除");
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("type", isSelectAll ? 1 : 2);
+        map.put("targetMobile", sb.toString().substring(0, sb.toString().length() - 1));
+        presenter.deleteCallRecord(UrlUtil.DELETE_CALL_RECORD, map);
     }
 
     private void takeOver() {
@@ -284,5 +382,46 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @Override
     public void onRecyclerViewError(Throwable throwable) {
         statusLayoutManager.showErrorLayout();
+    }
+
+    @Override
+    public void onDeleteResult(CodeBean bean) {
+        dismissLoadingDialog();
+        if (bean.getStatus() == 0) {
+            U.showToast("删除成功");
+            pageIndex = 1;
+            getCallRecord(false);
+        } else {
+            U.showToast("删除失败");
+        }
+    }
+
+    private void authenticate(String phoneNumber) {
+        if (Utils.CMAuthenticate(phoneNumber)) {
+            startActivity(new Intent(mContext, CallActivity.class)
+                    .putExtra("comefrom", "dial")
+                    .putExtra("phonenum", phoneNumber));
+        } else {
+            EbAuthDelegate.AuthloginByVfc(UserManager.getInstance().userData.getMobile(), null, new OnAuthLoginListener() {
+                @Override
+                public void ebAuthOk(String authcode, String deadline) {
+                    Logger.d("authcode " + authcode + deadline);
+                    DataUtils.saveDeadline(phoneNumber, deadline, mContext);
+                    if (AuthUtils.isDeadlineAvailable(deadline)) {
+//                        EbLoginDelegate.login(phoneNumber, "ebupt");
+//                        Logger.d("login");
+
+                        startActivity(new Intent(mContext, CallActivity.class)
+                                .putExtra("comefrom", "dial")
+                                .putExtra("phonenum", phoneNumber));
+                    }
+                }
+
+                @Override
+                public void ebAuthFailed(int code, String reason) {
+                    Logger.d("ebAuthFailed: " + code + reason);
+                }
+            });
+        }
     }
 }

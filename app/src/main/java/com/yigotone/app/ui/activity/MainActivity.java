@@ -4,11 +4,14 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.yigotone.app.R;
+import com.yigotone.app.application.MyApplication;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
@@ -126,4 +129,22 @@ public class MainActivity extends BaseActivity {
     public void onError(Throwable throwable) {
 
     }
+
+    private static long currentBackPressedTime = 0;
+    int BACK_PRESSED_INTERVAL = 2000;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (System.currentTimeMillis() - currentBackPressedTime > BACK_PRESSED_INTERVAL) {
+                currentBackPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "再按一次返回键退出程序", Toast.LENGTH_SHORT).show();
+            } else {
+                MyApplication.getInstance().exit();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);// 继续执行父类其他点击事件
+    }
+
 }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.yigotone.app.api.Api;
 import com.yigotone.app.base.BasePresenterImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -15,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class CallPresenter extends BasePresenterImpl<CallContract.View> implements CallContract.Presenter {
 
-    CallPresenter(CallContract.View view) {
+    public CallPresenter(CallContract.View view) {
         super(view);
     }
 
@@ -27,6 +28,19 @@ public class CallPresenter extends BasePresenterImpl<CallContract.View> implemen
                 .map(bean -> bean)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
+                    view.onResult(bean, message);
+                }, throwable -> view.onError(throwable));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void getCallDetail(String url, HashMap<String, Object> map, String message) {
+        Api.getInstance().getCallDetail(url, map)
+                .subscribeOn(Schedulers.io())
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.onFinish();
                     view.onResult(bean, message);
                 }, throwable -> view.onError(throwable));
     }

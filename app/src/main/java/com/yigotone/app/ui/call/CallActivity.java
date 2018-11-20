@@ -367,7 +367,10 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         Logger.d("我方挂断：" + statusCode + " reason: " + reason);
         stopAlarm();
         tvStatus.setText("通话结束");
-        // refreshCallStatus();
+
+        if (callTime == 0) { // 如果电话挂断时，通话时间为0，则为未接通
+            refreshCallStatus(1);
+        }
         U.showToast("已挂断");
         clearCallMode();
         finish();

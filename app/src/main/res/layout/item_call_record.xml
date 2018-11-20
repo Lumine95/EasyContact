@@ -7,13 +7,22 @@
     android:background="@color/white">
 
     <ImageView
+        android:id="@+id/iv_select"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:paddingStart="@dimen/margin_size_15"
+        android:src="@drawable/selector_select"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/iv_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_size_15"
         android:src="@mipmap/ic_call_send"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_select"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

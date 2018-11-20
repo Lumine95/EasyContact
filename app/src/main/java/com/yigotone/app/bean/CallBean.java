@@ -1,5 +1,6 @@
 package com.yigotone.app.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class CallBean {
     private String errorMsg;
     private List<DataBean> data;
 
-    public static class DataBean {
+    public static class DataBean implements Serializable {
         private String othermobile;
         private String status;
         private String targetStatus;
@@ -21,6 +22,7 @@ public class CallBean {
         private String targetName;
         private int type;
         private int callNum;
+        public boolean isSelect = false;
 
         public int getCallNum() {
             return callNum;

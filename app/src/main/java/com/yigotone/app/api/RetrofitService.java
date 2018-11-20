@@ -2,6 +2,7 @@ package com.yigotone.app.api;
 
 
 import com.yigotone.app.bean.CallBean;
+import com.yigotone.app.bean.CallDetailBean;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.DataEntity;
 import com.yigotone.app.bean.MessageBean;
@@ -46,6 +47,9 @@ public interface RetrofitService {
 
     @POST()
     Observable<CallBean> postCallParams(@Url String url, @QueryMap Map<String, Object> map);
+
+    @POST()
+    Observable<CallDetailBean> getCallDetail(@Url String url, @QueryMap Map<String, Object> map);
 //
 //    @POST
 //    Observable<UserBean> registerUser(@Url String url, @Body Map map);

@@ -61,4 +61,16 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     view.refreshMobileStatus(bean.getData().getMobileStatus());
                 }, throwable -> view.onError(throwable));
     }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void deleteCallRecord(String url, Map<String, Object> map) {
+        Api.getInstance().register(url, map)
+                .subscribeOn(Schedulers.io())
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.onDeleteResult(bean );
+                }, throwable -> view.onError(throwable));
+    }
 }

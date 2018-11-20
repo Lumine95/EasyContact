@@ -120,6 +120,10 @@
         <activity
             android:name=".ui.login.NewDeviceLoginActivity"
             android:screenOrientation="portrait" />
+        <!--通话详情-->
+        <activity
+            android:name=".ui.home.CallDetailActivity"
+            android:screenOrientation="portrait" />
         <!--短信详情-->
         <activity
             android:name=".ui.message.MessageDetailActivity"

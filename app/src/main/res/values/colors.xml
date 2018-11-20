@@ -13,6 +13,8 @@
     <color name="color_6DBFFA">#6DBFFA</color>
     <color name="color_A8DBFF">#A8DBFF</color>
 
+    <color name="color_ef2626">#ffef2626</color>
+
     <color name="status_layout_background_color">#EBEBEB</color>
     <color name="status_layout_tip_text_color">#BFBFBF</color>
     <color name="status_layout_click_view_text_color">#6DBFFA</color>

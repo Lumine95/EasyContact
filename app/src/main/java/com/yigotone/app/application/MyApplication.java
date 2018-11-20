@@ -1,5 +1,7 @@
 package com.yigotone.app.application;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,14 +20,19 @@ import com.yigotone.app.R;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.call.CallActivity;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by ZMM on 2018/2/5.
  */
 
 public class MyApplication extends MultiDexApplication {
     private static Context mAppContext;
+    @SuppressLint("StaticFieldLeak") private static MyApplication instance;
     private LocalBroadcastManager broadcastManager;
     private BroadcastReceiver mOfflineReceiver;
+    private List<Activity> activities = new LinkedList<>();
 
     @Override
     public void onCreate() {
@@ -55,8 +62,28 @@ public class MyApplication extends MultiDexApplication {
             return;
         }
     }
+    public static MyApplication getInstance() {
+        if (null == instance) {
+            instance = new MyApplication();
+        }
+        return instance;
 
+    }
     public static Context getAppContext() {
         return mAppContext;
     }
+
+    public void addActivity(Activity activity) {
+        if (!activities.contains(activity)) {
+            activities.add(activity);
+        }
+    }
+
+    public void exit() {
+        for (Activity activity : activities) {
+            activity.finish();
+        }
+       // System.exit(0);
+    }
+
 }

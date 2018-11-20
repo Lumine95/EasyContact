@@ -35,4 +35,12 @@ public class UrlUtil {
     public static String UPDATE_CALL_STATUS = BASE_URL + "Call/updateCallrecord";
     // 记录通话时长
     public static String RECORD_CALL_TIME = BASE_URL + "Call/Call/updateCalltime";
+    // 删除通话记录
+    public static String DELETE_CALL_RECORD = BASE_URL + "Call/deleteCallRecord";
+    // 获取通话记录详情
+    public static String GET_CALL_RECORD_DETAIL = BASE_URL + "Call/getCallRecordInfo";
+    // 设置消息免打扰
+    public static String SET_DISTURB_STATUS = BASE_URL + "Personal/setMessageDisturb";
+    // 设置短信已读状态
+    public static String MARK_SMS_READ = BASE_URL + "Personal/updateMessageStatus";
 }

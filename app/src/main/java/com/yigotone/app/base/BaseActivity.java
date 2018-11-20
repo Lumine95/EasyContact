@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.android.library.view.CustomProgressDialog;
 import com.android.library.view.UIHelper;
+import com.yigotone.app.application.MyApplication;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,11 +21,14 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     public P presenter;
     private Unbinder unbinder;
     private CustomProgressDialog loadingDialog;
+    public int pageIndex = 1;
+    public int pageSize = 20;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
+        MyApplication.getInstance().addActivity(this);
         presenter = initPresenter();
         unbinder = ButterKnife.bind(this);
         initView();
