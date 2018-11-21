@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -58,6 +59,8 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     @BindView(R.id.tv_hang_up) TextView tvHangUp;
     @BindView(R.id.tv_answer) TextView tvAnswer;
     @BindView(R.id.iv_mini) ImageView ivMini;
+    @BindView(R.id.cl_keyboard) ConstraintLayout clKeyboard;
+
     private AudioManager mAudioManager;
     private boolean mCallMode = false;
     private int mode;
@@ -269,10 +272,14 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         presenter.postParams(UrlUtil.UPDATE_CALL_STATUS, map, "refreshCallStatus");
     }
 
-    @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini})
+    @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini,R.id.tv_hide})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.tv_hide:
+                showHideKeyboardLayout(false);
+                break;
             case R.id.iv_keyboard:
+                showHideKeyboardLayout(true);
                 break;
             case R.id.iv_speakerphone:
                 setupSpeaker();
@@ -441,5 +448,9 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
 
                 break;
         }
+    }
+
+    private void showHideKeyboardLayout(boolean isShow) {
+        clKeyboard.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 }
