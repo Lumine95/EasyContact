@@ -48,12 +48,14 @@
 
         <ImageView
             android:id="@+id/iv_contact"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_size_15"
-            android:src="@color/color_3" />
+            android:background="@drawable/shape_ripple"
+            android:paddingStart="@dimen/margin_size_15"
+            android:paddingEnd="@dimen/margin_size_15"
+            android:src="@mipmap/ic_contact" />
 
         <TextView
             android:id="@+id/tv_tag"

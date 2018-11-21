@@ -13,9 +13,12 @@ import java.util.List;
  * Created by ZMM on 2018/10/31 11:08.
  */
 public class UserManager {
+
     private static UserManager mUserManager;
     public UserBean.DataBean userData;
-    public  List<ContactBean> contactList = new ArrayList<>();
+    public List<ContactBean> contactList = new ArrayList<>();
+
+    public List<ContactBean> selectedList = new ArrayList<>(); // 存放选中的通讯录联系人
 
     public static UserManager getInstance() {
         if (mUserManager == null) {

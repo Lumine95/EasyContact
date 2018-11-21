@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yigotone.app.R;
@@ -15,10 +16,12 @@ import com.yigotone.app.view.contact.IndexableAdapter;
  * Created by YoKey on 16/10/8.
  */
 public class ContactAdapter extends IndexableAdapter<ContactBean> {
+    private boolean isEdit;
     private LayoutInflater mInflater;
 
-    public ContactAdapter(Context context) {
+    public ContactAdapter(Context context, boolean isEdit) {
         mInflater = LayoutInflater.from(context);
+        this.isEdit = isEdit;
     }
 
     @Override
@@ -44,6 +47,12 @@ public class ContactAdapter extends IndexableAdapter<ContactBean> {
         ContentVH vh = (ContentVH) holder;
         vh.tvName.setText(entity.getName());
         vh.tvMobile.setText(entity.getPhone());
+        vh.ivSelect.setVisibility(isEdit ? View.VISIBLE : View.GONE);
+        vh.ivSelect.setSelected(entity.isSelect);
+        vh.ivSelect.setOnClickListener(v -> {
+            entity.isSelect = !entity.isSelect;
+            notifyDataSetChanged();
+        });
     }
 
     private class IndexVH extends RecyclerView.ViewHolder {
@@ -51,17 +60,19 @@ public class ContactAdapter extends IndexableAdapter<ContactBean> {
 
         public IndexVH(View itemView) {
             super(itemView);
-            tv = (TextView) itemView.findViewById(R.id.tv_index);
+            tv = itemView.findViewById(R.id.tv_index);
         }
     }
 
     private class ContentVH extends RecyclerView.ViewHolder {
         TextView tvName, tvMobile;
+        ImageView ivSelect;
 
         public ContentVH(View itemView) {
             super(itemView);
-            tvName = (TextView) itemView.findViewById(R.id.tv_name);
-            tvMobile = (TextView) itemView.findViewById(R.id.tv_phone);
+            tvName = itemView.findViewById(R.id.tv_name);
+            tvMobile = itemView.findViewById(R.id.tv_phone);
+            ivSelect = itemView.findViewById(R.id.iv_select);
         }
     }
 }

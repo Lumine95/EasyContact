@@ -8,6 +8,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yigotone.app.R;
@@ -32,6 +34,11 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.ll_data_btn) LinearLayout llDataBtn;
     @BindView(R.id.ll_mine_btn) LinearLayout llMineBtn;
 
+    @BindView(R.id.tv_select_all) public TextView tvSelectAll;
+    @BindView(R.id.tv_delete) public TextView tvDelete;
+    @BindView(R.id.tv_cancel) public TextView tvCancel;
+    @BindView(R.id.rl_call_delete) public RelativeLayout rlDelete;
+
     private Fragment mContent;
     private HomeFragment homeFragment;
     private MessageFragment messageFragment;
@@ -53,6 +60,7 @@ public class MainActivity extends BaseActivity {
     public void initView() {
         setBottomButton(llHomeBtn);
         switchContentFragment(homeFragment == null ? homeFragment = new HomeFragment() : homeFragment);
+        homeFragment.setActivity(this);
         queryContactInfo();
     }
 

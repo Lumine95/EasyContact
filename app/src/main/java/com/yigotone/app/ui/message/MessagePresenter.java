@@ -45,4 +45,17 @@ public class MessagePresenter extends BasePresenterImpl<MessageContract.View> im
                 }, throwable -> view.onLayoutError(throwable));
 
     }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void getMessageDetail(String url, HashMap<String, Object> map, String message) {
+        Api.getInstance().getCallDetail(url, map)
+                .subscribeOn(Schedulers.io())
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.onFinish();
+                    view.onResult(bean, message);
+                }, throwable -> view.onError(throwable));
+    }
 }

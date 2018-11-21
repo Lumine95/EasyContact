@@ -4,9 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="57dp">
 
+    <ImageView
+        android:id="@+id/iv_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/margin_size_15"
+        android:background="@drawable/shape_ripple"
+        android:src="@drawable/selector_select"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="57dp"
+        android:layout_marginStart="@dimen/margin_size_15"
+        android:layout_toEndOf="@id/iv_select"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -14,7 +26,6 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_size_15"
             android:layout_marginTop="@dimen/margin_size_8"
             android:textColor="#ff333333"
             android:textSize="16sp"
@@ -24,7 +35,6 @@
             android:id="@+id/tv_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_size_15"
             android:layout_marginTop="@dimen/margin_size_2"
             android:textColor="@color/color_9"
             android:textSize="15sp"

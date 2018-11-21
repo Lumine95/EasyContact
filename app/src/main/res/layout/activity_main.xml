@@ -1,23 +1,13 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/color_e6" />
-
-    <LinearLayout
+        android:id="@+id/ll_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
         android:background="@color/color_f9"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -60,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/selector_btn_home" />
+                android:src="@drawable/selector_btn_message" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/selector_btn_home" />
+                android:src="@drawable/selector_btn_data" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -111,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/selector_btn_home" />
+                android:src="@drawable/selector_btn_mine" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -123,4 +113,112 @@
                 android:textSize="@dimen/text_size_11" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_size_0.5"
+        android:layout_above="@id/ll_btn"
+        android:background="@color/color_e6" />
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/line"
+        android:orientation="horizontal" />
+
+    <RelativeLayout
+        android:id="@+id/rl_call_delete"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_6DBFFA"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_ripple"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_size_15"
+            android:paddingEnd="@dimen/margin_size_15"
+            android:text="全选"
+            android:textColor="#ffffffff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/shape_ripple"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_size_15"
+            android:paddingEnd="@dimen/margin_size_15"
+            android:text="删除"
+            android:textColor="#ffffffff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/tv_delete"
+            android:background="@drawable/shape_ripple"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_size_15"
+            android:paddingEnd="@dimen/margin_size_15"
+            android:text="@string/cancel"
+            android:textColor="#ffffffff"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_message_read"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/color_6DBFFA"-->
+        <!--android:visibility="gone">-->
+
+        <!--<TextView-->
+            <!---->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/shape_ripple"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingStart="@dimen/margin_size_15"-->
+            <!--android:paddingEnd="@dimen/margin_size_15"-->
+            <!--android:text="全选"-->
+            <!--android:textColor="#ffffffff"-->
+            <!--android:textSize="16sp" />-->
+
+        <!--<TextView-->
+            <!---->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:background="@drawable/shape_ripple"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingStart="@dimen/margin_size_15"-->
+            <!--android:paddingEnd="@dimen/margin_size_15"-->
+            <!--android:text="删除"-->
+            <!--android:textColor="#ffffffff"-->
+            <!--android:textSize="16sp" />-->
+
+        <!--<TextView-->
+           <!---->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_toStartOf="@id/tv_delete"-->
+            <!--android:background="@drawable/shape_ripple"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingStart="@dimen/margin_size_15"-->
+            <!--android:paddingEnd="@dimen/margin_size_15"-->
+            <!--android:text="@string/cancel"-->
+            <!--android:textColor="#ffffffff"-->
+            <!--android:textSize="16sp" />-->
+    <!--</RelativeLayout>-->
+</RelativeLayout>

@@ -17,7 +17,7 @@ public class UserBean {
         private String token;
         private String mobile;
         private String mobileStatus;
-        private String talkTime;
+        private int talkTime;
 
         public String getUid() {
             return uid == null ? "" : uid;
@@ -39,8 +39,12 @@ public class UserBean {
             return mobileStatus == null ? "" : mobileStatus;
         }
 
-        public String getTalkTime() {
-            return talkTime == null ? "0分钟" : talkTime + "分钟";
+        public String getTalkTimeText() {
+            return talkTime == 0 ? "0分钟" : talkTime + "分钟";
+        }
+
+        public int getTalkTime() {
+            return talkTime;
         }
 
         public String getCode() {

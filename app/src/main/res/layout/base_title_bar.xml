@@ -8,10 +8,12 @@
 
     <ImageView
         android:id="@+id/iv_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:scaleType="centerInside"
+        android:background="@drawable/shape_ripple"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
         android:src="@mipmap/ic_back_white" />
 
     <TextView
@@ -37,6 +39,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="17dp"
+        android:background="@drawable/shape_ripple"
         android:gravity="center_vertical"
         android:text="@string/app_name"
         android:textColor="@color/white"

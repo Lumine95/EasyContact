@@ -1,22 +1,22 @@
 package com.yigotone.app.ui.contact;
 
-import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
 
+import com.android.library.utils.U;
 import com.yigotone.app.R;
-import com.yigotone.app.base.BaseFragment;
+import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.adapter.ContactAdapter;
+import com.yigotone.app.user.UserManager;
+import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.contact.IndexableLayout;
 
 import java.util.ArrayList;
@@ -25,57 +25,42 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * Created by ZMM on 2018/11/1 15:21.
+ * Created by ZMM on 2018/11/21 13:48.
  */
-public class ContactFragment extends BaseFragment {
+public class ContactActivity extends BaseActivity {
     @BindView(R.id.et_search) EditText etSearch;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.indexableLayout) IndexableLayout indexableLayout;
 
     ArrayList<ContactBean> contactList = new ArrayList<>();
     private ContactAdapter mAdapter;
+    private boolean tag;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_contact;
+        return R.layout.activity_contact;
     }
 
     @Override
-    protected BasePresenter initPresenter() {
+    public BasePresenter initPresenter() {
         return null;
     }
 
     @Override
-    protected void initView(View view, Bundle savedInstanceState) {
+    public void initView() {
+        tag = getIntent().getBooleanExtra("tag", false);
+        new BaseTitleBar(this).setTitleText("通讯录").setLeftIcoListening(v -> finish()).setTitleRight("确定").setRightIcoListening(v -> {
+            submitSelectedContact();
+        });
         initRecyclerView();
         getPhoneContacts();
-//        recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact, contactList) {
-//            @Override
-//            protected void convert(BaseViewHolder helper, ContactBean item) {
-//                helper.setText(R.id.tv_name, item.getName() + "|" + item.getId()  );
-//                helper.setText(R.id.tv_phone, item.getPhone());
-////                helper.itemView.setOnClickListener(v -> startActivity(new Intent(mContext, WebViewActivity.class)
-////                        .putExtra("title",    item.getTitle())
-////                        .putExtra("url", item.getLink())));
-//            }
-//        });
-        indexableLayout.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new ContactAdapter(mContext, false);
+        indexableLayout.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new ContactAdapter(this, tag);
         indexableLayout.setAdapter(mAdapter);
         mAdapter.setDatas(contactList);
         indexableLayout.setOverlayStyle_Center();
         indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
-        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> startActivity(new Intent(mContext, ContactDetailActivity.class).putExtra("data", entity)));
-
-        //        etSearch.setOnEditorActionListener((v, actionId, event) -> {
-//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                if (!TextUtils.isEmpty(etSearch.getText().toString().trim())) {
-//                    searchContacts(etSearch.getText().toString().trim());
-//                }
-//                return true;
-//            }
-//            return false;
-//        });
+        //  mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> startActivity(new Intent(this, ContactDetailActivity.class).putExtra("data", entity)));
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,26 +83,47 @@ public class ContactFragment extends BaseFragment {
         });
     }
 
+    private void submitSelectedContact() {
+        UserManager.getInstance().selectedList.clear();
+        for (ContactBean bean : contactList) {
+            if (bean.isSelect) {
+                UserManager.getInstance().selectedList.add(bean);
+            }
+        }
+        if (UserManager.getInstance().selectedList.size() == 0) {
+            U.showToast("还未选中任何联系人");
+            return;
+        }
+        setResult(9527);
+        finish();
+    }
+
     public void getPhoneContacts() {
-        Cursor cursor = mContext.getContentResolver().query(Phone.CONTENT_URI,
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 new String[]{"display_name", "sort_key", "contact_id",
                         "data1"}, null, null, null);
 //        moveToNext方法返回的是一个boolean类型的数据
         while (cursor.moveToNext()) {
             //读取通讯录的姓名
-            String name = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
+            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             //读取通讯录的号码
-            String number = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
-            int Id = cursor.getInt(cursor.getColumnIndex(Phone.CONTACT_ID));
+            String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            int Id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
             ContactBean bean = new ContactBean(name, number.replaceAll("\\s*", ""), Id);
             contactList.add(bean);
         }
         cursor.close();
         //  return list;
+
+        for (ContactBean bean : contactList) {
+            if (UserManager.getInstance().selectedList.contains(bean)) {
+                bean.isSelect = true;
+            }
+        }
     }
 
     private void initRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
     }

@@ -57,7 +57,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
     @Override
     public void initView(View view, Bundle savedInstanceState) {
         initRecyclerView();
-        EventBus.getDefault().register(this );
+        EventBus.getDefault().register(this);
         getMessageList(true);
     }
 
@@ -88,7 +88,8 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
                 helper.setText(R.id.tv_name, item.getName());
                 helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
                 helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
-                helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)));
+                helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)
+                        .putExtra("messageId", item.getMessageId())));
             }
         });
         mAdapter.setOnItemClickListener((adapter, view1, position) -> {

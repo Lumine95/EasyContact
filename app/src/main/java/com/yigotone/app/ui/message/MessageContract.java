@@ -20,5 +20,7 @@ public class MessageContract {
         void sendMessage(String url, Map<String, Object> map, String message);
 
         void getMessageList(String url, HashMap<String, Object> map, String message);
+
+        void getMessageDetail(String url, HashMap<String, Object> map, String message);
     }
 }

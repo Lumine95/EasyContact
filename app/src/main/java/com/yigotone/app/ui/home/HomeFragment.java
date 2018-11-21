@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
@@ -30,6 +29,7 @@ import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.ui.activity.DialActivity;
+import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.activity.NoDisturbActivity;
 import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.ui.packages.PackageListActivity;
@@ -67,16 +67,14 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @BindView(R.id.iv_take_over) ImageView ivTakeOver;
     @BindView(R.id.ll_take_over) LinearLayout llTakeOver;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.tv_select_all) TextView tvSelectAll;
-    @BindView(R.id.tv_delete) TextView tvDelete;
-    @BindView(R.id.tv_cancel) TextView tvCancel;
-    @BindView(R.id.rl_delete) RelativeLayout rlDelete;
+
     private EasyPopup popup;
     private String mobileStatus;   //1未托管，2托管中
     private StatusLayoutManager statusLayoutManager;
     private BaseQuickAdapter<CallBean.DataBean, BaseViewHolder> mAdapter;
     private boolean isEdit = false; // 编辑模式
     private boolean isSelectAll = false; // 全选模式
+    private MainActivity mainActivity;
 
     @Override
     protected int getLayoutId() {
@@ -96,7 +94,9 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         initRecyclerView();
         getCallRecord(true);
         mobileStatus = UserManager.getInstance().userData.getMobileStatus();
-        tvBalance.setText(UserManager.getInstance().userData.getTalkTime());
+        tvBalance.setText(UserManager.getInstance().userData.getTalkTimeText());
+
+
     }
 
     private void getCallRecord(boolean isLoadingLayout) {
@@ -153,8 +153,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
             isEdit = true;
             item.isSelect = true;
             mAdapter.notifyDataSetChanged();
-            rlDelete.setVisibility(View.VISIBLE);
-            U.showToast("删除 " + item.getCallId());
+            mainActivity.rlDelete.setVisibility(View.VISIBLE);
             return true;
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
@@ -165,13 +164,13 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                     mAdapter.notifyDataSetChanged();
                     break;
                 case R.id.iv_detail:
-                    startActivity(new Intent(mContext, CallDetailActivity.class).putExtra("data",item));
+                    startActivity(new Intent(mContext, CallDetailActivity.class).putExtra("data", item));
                     break;
             }
         });
     }
 
-    @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial, R.id.ll_take_over, R.id.tv_select_all, R.id.tv_delete, R.id.tv_cancel})
+    @OnClick({R.id.btn_take_over, R.id.iv_add, R.id.iv_dial, R.id.ll_take_over})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_take_over:
@@ -189,26 +188,6 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                         U.showToast("没有获取到权限");
                     }
                 });
-                break;
-            case R.id.tv_select_all:
-                isSelectAll = !isSelectAll;
-                tvSelectAll.setText(isSelectAll ? "全不选" : "全选");
-                for (CallBean.DataBean bean : mAdapter.getData()) {
-                    bean.isSelect = isSelectAll;
-                }
-                mAdapter.notifyDataSetChanged();
-                break;
-            case R.id.tv_delete:
-                deleteDialog();
-                break;
-            case R.id.tv_cancel:
-                rlDelete.setVisibility(View.GONE);
-                isEdit = false;
-                isSelectAll = false;
-                for (CallBean.DataBean bean : mAdapter.getData()) {
-                    bean.isSelect = false;
-                }
-                mAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -241,6 +220,10 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
             if (bean.isSelect) {
                 sb.append(bean.getMobile()).append(",");
             }
+        }
+        if (TextUtils.isEmpty(sb.toString())) {
+            U.showToast("请选择至少一项删除");
+            return;
         }
         showLoadingDialog("正在删除");
         Map<String, Object> map = new HashMap<>();
@@ -423,5 +406,31 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                 }
             });
         }
+    }
+
+    public void setActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+        mainActivity.rlDelete.setOnClickListener(v -> {
+        });
+        mainActivity.tvCancel.setOnClickListener(v -> {
+            mainActivity.rlDelete.setVisibility(View.GONE);
+            isEdit = false;
+            isSelectAll = false;
+            for (CallBean.DataBean bean : mAdapter.getData()) {
+                bean.isSelect = false;
+            }
+            mAdapter.notifyDataSetChanged();
+        });
+        mainActivity.tvDelete.setOnClickListener(v -> {
+            deleteDialog();
+        });
+        mainActivity.tvSelectAll.setOnClickListener(v -> {
+            isSelectAll = !isSelectAll;
+            mainActivity.tvSelectAll.setText(isSelectAll ? "全不选" : "全选");
+            for (CallBean.DataBean bean : mAdapter.getData()) {
+                bean.isSelect = isSelectAll;
+            }
+            mAdapter.notifyDataSetChanged();
+        });
     }
 }

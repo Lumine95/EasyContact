@@ -14,6 +14,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.PackageBean;
 import com.yigotone.app.ui.activity.PayResultActivity;
+import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.SelectPaymentPopupView;
 
@@ -76,7 +77,11 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
         TextView tv_cancel = view.findViewById(R.id.tv_cancel);
         TextView tv_sure = view.findViewById(R.id.tv_sure);
 
-        tv_tip.setText("购买【40分钟30天】套餐后，您的主叫分钟数将有54分钟，有效期至本地时间2018-11-06  18:00时");
+
+
+        UserManager.getInstance().userData.getTalkTime();
+
+        tv_tip.setText("购买【" + data.getPackageName() + "】套餐后，您的主叫分钟数将有54分钟，有效期至本地时间2018-11-06  18:00时");
         tv_cancel.setOnClickListener(v -> dialog.dismiss());
         tv_sure.setOnClickListener(v -> {
             dialog.dismiss();

@@ -61,7 +61,8 @@ public class ContactDetailActivity extends BaseActivity {
                 break;
             case R.id.iv_message:
                 startActivity(new Intent(this, NewMessageActivity.class)
-                        .putExtra("data", data));
+                        .putExtra("targetName", data.getName())
+                        .putExtra("targetPhone", data.getPhone()));
                 break;
         }
     }

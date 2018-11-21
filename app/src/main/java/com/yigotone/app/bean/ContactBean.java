@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Created by ZMM on 2018/11/1 16:35.
  */
 public class ContactBean implements IndexableEntity, Serializable {
+    public boolean isSelect;
     private String name;
     private String phone;
     private String pinyin;
@@ -48,5 +49,11 @@ public class ContactBean implements IndexableEntity, Serializable {
     @Override
     public void setFieldPinyinIndexBy(String pinyin) {
         this.pinyin = pinyin;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        ContactBean bean = (ContactBean) obj;
+        return phone.equals(bean.getPhone()) && name.equals(bean.getName());
     }
 }

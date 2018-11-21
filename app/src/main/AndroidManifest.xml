@@ -134,6 +134,11 @@
             android:name=".ui.message.NewMessageActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--通讯录-->
+        <activity
+            android:name=".ui.contact.ContactActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
 
         <service

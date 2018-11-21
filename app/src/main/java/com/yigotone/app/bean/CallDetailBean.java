@@ -1,5 +1,7 @@
 package com.yigotone.app.bean;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.util.List;
 
 /**
@@ -63,12 +65,15 @@ public class CallDetailBean {
             this.info = info;
         }
 
-        public static class InfoBean {
+        public static class InfoBean implements MultiItemEntity {
+            public static final int THIS = 1;
+            public static final int THAT = 2;
             private String uid;
             private String mobile;
             private String status;
             private String createAt;
             private String duration;
+            private String content;
             private int type;
 
             public String getUid() {
@@ -81,6 +86,10 @@ public class CallDetailBean {
 
             public String getMobile() {
                 return mobile;
+            }
+
+            public String getContent() {
+                return content == null ? "" : content;
             }
 
             public void setMobile(String mobile) {
@@ -117,6 +126,11 @@ public class CallDetailBean {
 
             public void setType(int type) {
                 this.type = type;
+            }
+
+            @Override
+            public int getItemType() {
+                return  type;
             }
         }
     }

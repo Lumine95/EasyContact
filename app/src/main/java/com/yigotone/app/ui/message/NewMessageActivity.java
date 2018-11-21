@@ -1,5 +1,7 @@
 package com.yigotone.app.ui.message;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -7,11 +9,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.U;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.ContactBean;
+import com.yigotone.app.ui.contact.ContactActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
 
@@ -45,10 +49,10 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
     @Override
     public void initView() {
         String title;
-        ContactBean data = (ContactBean) getIntent().getSerializableExtra("data");
-        if (data != null) {
-            title = targetName = data.getName();
-            targetPhone = data.getPhone();
+        String targetName = getIntent().getStringExtra("targetName");
+        if (targetName != null) {
+            title = this.targetName = targetName;
+            targetPhone = getIntent().getStringExtra("targetPhone");
             rlPeople.setVisibility(View.GONE);
         } else {
             title = "新信息";
@@ -75,24 +79,32 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
                 sendMessage();
                 break;
             case R.id.iv_contact:
+                startActivityForResult(new Intent(this, ContactActivity.class)
+                        .putExtra("tag", true), 9527);
                 break;
         }
     }
 
     private void sendMessage() {
         String content = etMessage.getText().toString().trim();
+        if (targetPhone == null && targetName == null) {
+            U.showToast("请选择联系人");
+            return;
+        }
         if (TextUtils.isEmpty(content)) {
             U.showToast("请输入短信内容");
             return;
         }
         HashMap<String, Object> map = new HashMap<>();
         map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
         map.put("callingnumber", UserManager.getInstance().userData.getMobile());
-        map.put("callednumber", "13260450335");
-        map.put("calledname", "MM");
+        map.put("callednumber", targetPhone);
+        map.put("calledname", targetName);
         map.put("content", content);
-        presenter.sendMessage(UrlUtil.SEND_MESSAGE, map, "sendMessage");
         showLoadingDialog("正在发送");
+        presenter.sendMessage(UrlUtil.SEND_MESSAGE, map, "sendMessage");
+        Logger.d(map);
     }
 
     @Override
@@ -112,5 +124,21 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
     @Override
     public void onLayoutError(Throwable throwable) {
         dismissLoadingDialog();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 9527) {
+            StringBuilder nameStr = new StringBuilder();
+            StringBuilder phoneStr = new StringBuilder();
+            for (ContactBean bean : UserManager.getInstance().selectedList) {
+                nameStr.append(bean.getName()).append(",");
+                phoneStr.append(bean.getPhone()).append(",");
+            }
+            targetName = nameStr.toString().substring(0, nameStr.toString().length() - 1);
+            targetPhone = phoneStr.toString().substring(0, phoneStr.toString().length() - 1);
+            tvUser.setText(targetName);
+        }
     }
 }

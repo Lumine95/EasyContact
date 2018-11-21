@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_size_15"
             android:src="@mipmap/ic_red_dot"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_title" />

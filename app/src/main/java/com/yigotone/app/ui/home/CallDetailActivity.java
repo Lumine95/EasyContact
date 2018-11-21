@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.home;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,8 +15,10 @@ import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CallDetailBean;
+import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.ui.call.CallContract;
 import com.yigotone.app.ui.call.CallPresenter;
+import com.yigotone.app.ui.message.NewMessageActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.BaseTitleBar;
@@ -158,8 +161,14 @@ public class CallDetailActivity extends BaseActivity<CallContract.Presenter> imp
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_message:
+                startActivity(new Intent(this, NewMessageActivity.class)
+                        .putExtra("targetName", data.getTargetName())
+                        .putExtra("targetPhone", data.getMobile()));
                 break;
             case R.id.iv_call:
+                startActivity(new Intent(this, CallActivity.class)
+                        .putExtra("comefrom", "dial")
+                        .putExtra("phonenum", data.getMobile()));
                 break;
         }
     }
