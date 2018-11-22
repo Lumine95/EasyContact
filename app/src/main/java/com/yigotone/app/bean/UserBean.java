@@ -18,6 +18,34 @@ public class UserBean {
         private String mobile;
         private String mobileStatus;
         private int talkTime;
+        private int disturb;  // 是否免打扰 1否 2是
+
+        private String starttime;
+        private String endtime;
+
+        public int getDisturb() {
+            return disturb;
+        }
+
+        public String getStarttime() {
+            return starttime.equals("0") ? "" : starttime;
+        }
+
+        public void setStarttime(String starttime) {
+            this.starttime = starttime;
+        }
+
+        public String getEndtime() {
+            return endtime.equals("0") ? "" : endtime;
+        }
+
+        public void setEndtime(String endtime) {
+            this.endtime = endtime;
+        }
+
+        public void setDisturb(int disturb) {
+            this.disturb = disturb;
+        }
 
         public String getUid() {
             return uid == null ? "" : uid;

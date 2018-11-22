@@ -30,6 +30,7 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
     private MessageAdapter mAdapter;
     private int count;
     private String messageId;
+    private String targetMobile;
 
     @Override
     protected int getLayoutId() {
@@ -44,6 +45,7 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
     @Override
     public void initView() {
         messageId = getIntent().getStringExtra("messageId");
+        targetMobile = getIntent().getStringExtra("targetMobile");
         new BaseTitleBar(this).setTitleText("短信详情").setLeftIcoListening(v -> finish());
         initRecyclerView();
         getMessageList();
@@ -58,6 +60,7 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
         map.put("uid", UserManager.getInstance().userData.getUid());
         map.put("token", UserManager.getInstance().userData.getToken());
         map.put("messageId", messageId);
+        map.put("targetMobile", targetMobile);
         map.put("page", pageIndex);
         map.put("count", pageSize);
         presenter.getMessageDetail(UrlUtil.GET_MESSAGE_DETAIL, map, "getMessageDetail");

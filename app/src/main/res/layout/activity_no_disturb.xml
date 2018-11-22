@@ -110,7 +110,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/margin_size_30"
-            android:text="22:00"
+
             android:textColor="@color/color_3"
             android:textSize="@dimen/text_size_16" />
 
@@ -151,7 +151,6 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/margin_size_30"
-            android:text="次日 9:00"
             android:textColor="@color/color_3"
             android:textSize="@dimen/text_size_16" />
 

@@ -30,7 +30,7 @@ import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.ui.activity.DialActivity;
 import com.yigotone.app.ui.activity.MainActivity;
-import com.yigotone.app.ui.activity.NoDisturbActivity;
+import com.yigotone.app.ui.disturb.NoDisturbActivity;
 import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.ui.packages.PackageListActivity;
 import com.yigotone.app.user.UserManager;

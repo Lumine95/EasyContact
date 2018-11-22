@@ -52,7 +52,7 @@
         </activity>
         <!--免打扰设置-->
         <activity
-            android:name=".ui.activity.NoDisturbActivity"
+            android:name=".ui.disturb.NoDisturbActivity"
             android:screenOrientation="portrait" />
         <!--主页-->
         <activity

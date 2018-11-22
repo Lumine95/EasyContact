@@ -41,9 +41,9 @@ public class OrderActivity extends BaseActivity {
     public void initView() {
         new BaseTitleBar(this).setTitleText("我的订单").setLeftIcoListening(v -> finish());
         titleList.add("语音订单");
-        titleList.add("流量订单");
+     //   titleList.add("流量订单");
         fragmentList.add(new VoiceOrderFragment());
-        fragmentList.add(new DataOrderFragment());
+      //  fragmentList.add(new DataOrderFragment());
 
         if (fragmentAdapter == null) {
             fragmentAdapter = new CommonFragmentAdapter(getSupportFragmentManager(), fragmentList, titleList);

@@ -19,6 +19,7 @@ import com.yigotone.app.bean.UserBean;
 import com.yigotone.app.ui.activity.ForgetPwdActivity;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.register.RegisterActivity;
+import com.yigotone.app.user.Constant;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
@@ -49,6 +50,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     @Override
     public void initView() {
+        EbLoginDelegate.setLoginCallback(this);
         etPhone.setText("18237056520");
         etPwd.setText("123456");
     }
@@ -103,15 +105,19 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
         UserManager.getInstance().save(this, bean.getData().get(0));
         String phoneNumber = UserManager.getInstance().userData.getMobile();
 
+        EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
+        DataUtils.saveAccount(phoneNumber, this);
+
         EbAuthDelegate.AuthloginByVfc(phoneNumber, null, new OnAuthLoginListener() {
             @Override
             public void ebAuthOk(String authcode, String deadline) {
                 Logger.d("EbLoginDelegate: authcode " + authcode + deadline);
                 DataUtils.saveDeadline(phoneNumber, deadline, LoginActivity.this);
 
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                finish();
                 if (AuthUtils.isDeadlineAvailable(deadline)) {
+
                     EbLoginDelegate.login(phoneNumber, "ebupt");
                     Logger.d("EbLoginDelegate: login");
                 }
@@ -136,7 +142,9 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
         if (i == 0) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
-        }else {    startActivity(new Intent(LoginActivity.this, NewDeviceLoginActivity.class));}
+        } else {
+            startActivity(new Intent(LoginActivity.this, NewDeviceLoginActivity.class));
+        }
     }
 
     @Override

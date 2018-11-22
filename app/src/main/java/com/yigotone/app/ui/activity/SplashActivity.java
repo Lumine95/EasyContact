@@ -1,7 +1,10 @@
 package com.yigotone.app.ui.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
@@ -21,12 +24,25 @@ public class SplashActivity extends BaseActivity {
         return null;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initView() {
+        new RxPermissions(this).request(Manifest.permission.READ_CONTACTS).subscribe(granted -> {
+            if (granted) {
+                permissionGranted();
+            } else {
+                finish();
+            }
+        });
+
+
         // 移动SDK鉴权
 
-        startActivity(new Intent(this, LoginActivity.class));
 
+    }
+
+    private void permissionGranted() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override

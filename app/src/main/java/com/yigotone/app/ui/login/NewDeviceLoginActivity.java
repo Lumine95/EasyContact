@@ -19,6 +19,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.ui.activity.MainActivity;
+import com.yigotone.app.user.Constant;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
@@ -69,8 +70,10 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
 
     @Override
     public void inputComplete() {
-        U.showToast(codeView.getEditContent());
         // 鉴权登陆
+        showLoadingDialog("");
+        EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
+        DataUtils.saveAccount(phoneNumber, this);
         EbAuthDelegate.AuthloginByVfc(phoneNumber, codeView.getEditContent(), new OnAuthLoginListener() {
             @Override
             public void ebAuthOk(String authcode, String deadline) {
@@ -85,6 +88,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
             @Override
             public void ebAuthFailed(int code, String reason) {
                 Logger.d("ebAuthFailed: " + code + reason);
+                U.showToast("验证错误");
             }
         });
 

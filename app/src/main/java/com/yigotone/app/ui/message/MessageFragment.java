@@ -89,6 +89,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
                 helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
                 helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
                 helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)
+                        .putExtra("targetMobile", item.getMobile())
                         .putExtra("messageId", item.getMessageId())));
             }
         });
