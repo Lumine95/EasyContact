@@ -18,6 +18,7 @@ import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.bean.MessageBean;
+import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
@@ -37,12 +38,16 @@ import butterknife.OnClick;
  */
 public class MessageFragment extends BaseFragment<MessageContract.Presenter> implements MessageContract.View {
     @BindView(R.id.tv_edit) TextView tvEdit;
+    @BindView(R.id.tv_select_all) TextView tv_select_all;
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.et_search) EditText etSearch;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
     private StatusLayoutManager statusLayoutManager;
     private BaseQuickAdapter<MessageBean.DataBean, BaseViewHolder> mAdapter;
+    private MainActivity mainActivity;
+    private boolean isEdit = false;
+    private boolean isSelectAll = false;
 
     @Override
     protected int getLayoutId() {
@@ -86,11 +91,18 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
             protected void convert(BaseViewHolder helper, MessageBean.DataBean item) {
                 helper.setText(R.id.tv_title, item.getContent());
                 helper.setText(R.id.tv_name, item.getName());
+                helper.setGone(R.id.iv_red_dot, item.getIsread() == 0);
+                helper.getView(R.id.iv_select).setSelected(item.isSelect);
                 helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
                 helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
+                helper.setOnClickListener(R.id.iv_select, view -> {
+                    item.isSelect = !item.isSelect;
+                    mAdapter.notifyDataSetChanged();
+                });
                 helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)
                         .putExtra("targetMobile", item.getMobile())
                         .putExtra("messageId", item.getMessageId())));
+                helper.setGone(R.id.iv_select, isEdit);
             }
         });
         mAdapter.setOnItemClickListener((adapter, view1, position) -> {
@@ -109,15 +121,34 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
     }
 
 
-    @OnClick({R.id.tv_edit, R.id.iv_add})
+    @OnClick({R.id.tv_edit, R.id.iv_add, R.id.tv_select_all})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_edit:
+                refreshEditStatus();
                 break;
             case R.id.iv_add:
                 startActivity(new Intent(mContext, NewMessageActivity.class));
                 break;
+            case R.id.tv_select_all:
+                isSelectAll = !isSelectAll;
+                tv_select_all.setText(isSelectAll ? "全不选" : "全选");
+                for (MessageBean.DataBean bean : mAdapter.getData()) {
+                    bean.isSelect = isSelectAll;
+                }
+                mAdapter.notifyDataSetChanged();
+                break;
         }
+    }
+
+    private void refreshEditStatus() {
+        isEdit = !isEdit;
+        tvEdit.setText(isEdit ? "取消" : "编辑");
+        mAdapter.notifyDataSetChanged();
+        mainActivity.rlSMS.setVisibility(isEdit ? View.VISIBLE : View.GONE);
+
+        ivAdd.setVisibility(isEdit ? View.GONE : View.VISIBLE);
+        tv_select_all.setVisibility(isEdit ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -177,5 +208,15 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
                 getMessageList(true);
                 break;
         }
+    }
+
+    public void setActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+        mainActivity.rlSMS.setOnClickListener(v -> {
+        });
+        mainActivity.tvAllRead.setOnClickListener(v -> {
+        });
+        mainActivity.tvDeleteSMS.setOnClickListener(v -> {
+        });
     }
 }

@@ -39,6 +39,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tv_cancel) public TextView tvCancel;
     @BindView(R.id.rl_call_delete) public RelativeLayout rlDelete;
 
+    @BindView(R.id.tv_all_read) public TextView tvAllRead;
+    @BindView(R.id.tv_delete_sms) public TextView tvDeleteSMS;
+    @BindView(R.id.rl_sms_read) public RelativeLayout rlSMS;
+
     private Fragment mContent;
     private HomeFragment homeFragment;
     private MessageFragment messageFragment;
@@ -90,6 +94,7 @@ public class MainActivity extends BaseActivity {
             case R.id.ll_message_btn:
                 setBottomButton(llMessageBtn);
                 switchContentFragment(messageFragment == null ? messageFragment = new MessageFragment() : messageFragment);
+                messageFragment.setActivity(this);
                 break;
             case R.id.ll_data_btn:
                 setBottomButton(llDataBtn);

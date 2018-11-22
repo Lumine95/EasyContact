@@ -175,50 +175,37 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/rl_message_read"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:background="@color/color_6DBFFA"-->
-        <!--android:visibility="gone">-->
+    <RelativeLayout
+        android:id="@+id/rl_sms_read"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_6DBFFA"
+        android:visibility="gone">
 
-        <!--<TextView-->
-            <!---->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/shape_ripple"-->
-            <!--android:gravity="center"-->
-            <!--android:paddingStart="@dimen/margin_size_15"-->
-            <!--android:paddingEnd="@dimen/margin_size_15"-->
-            <!--android:text="全选"-->
-            <!--android:textColor="#ffffffff"-->
-            <!--android:textSize="16sp" />-->
+        <TextView
+            android:id="@+id/tv_all_read"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_ripple"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_size_15"
+            android:paddingEnd="@dimen/margin_size_15"
+            android:text="标为已读"
+            android:textColor="#ffffffff"
+            android:textSize="16sp" />
 
-        <!--<TextView-->
-            <!---->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:background="@drawable/shape_ripple"-->
-            <!--android:gravity="center"-->
-            <!--android:paddingStart="@dimen/margin_size_15"-->
-            <!--android:paddingEnd="@dimen/margin_size_15"-->
-            <!--android:text="删除"-->
-            <!--android:textColor="#ffffffff"-->
-            <!--android:textSize="16sp" />-->
-
-        <!--<TextView-->
-           <!---->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_toStartOf="@id/tv_delete"-->
-            <!--android:background="@drawable/shape_ripple"-->
-            <!--android:gravity="center"-->
-            <!--android:paddingStart="@dimen/margin_size_15"-->
-            <!--android:paddingEnd="@dimen/margin_size_15"-->
-            <!--android:text="@string/cancel"-->
-            <!--android:textColor="#ffffffff"-->
-            <!--android:textSize="16sp" />-->
-    <!--</RelativeLayout>-->
+        <TextView
+            android:id="@+id/tv_delete_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/shape_ripple"
+            android:gravity="center"
+            android:paddingStart="@dimen/margin_size_15"
+            android:paddingEnd="@dimen/margin_size_15"
+            android:text="删除"
+            android:textColor="#ffffffff"
+            android:textSize="16sp" />
+    </RelativeLayout>
 </RelativeLayout>

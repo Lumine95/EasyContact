@@ -16,7 +16,9 @@ public class MessageBean {
     public static class DataBean implements MultiItemEntity {
         public static final int THIS = 1;
         public static final int THAT = 2;
+        public boolean isSelect = false;
         private int itemType;
+        private int isread;
 
         private String content;
         private String name;
@@ -29,13 +31,17 @@ public class MessageBean {
             this.content = content;
         }
 
+        @Override
+        public int getItemType() {
+            return itemType;
+        }
+
         public String getContent() {
             return content == null ? "" : content;
         }
 
-        @Override
-        public int getItemType() {
-            return itemType;
+        public int getIsread() {
+            return isread;
         }
 
         public String getName() {
