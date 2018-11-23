@@ -16,5 +16,8 @@ public class LoginContract {
 
     public interface Presenter extends BasePresenter {
         void login(String mobile, String pwd);
+
+        void autoLogin(String uid, String token);
+
     }
 }

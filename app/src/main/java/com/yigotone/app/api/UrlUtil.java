@@ -13,6 +13,8 @@ public class UrlUtil {
     public static String LOGIN = BASE_URL + "Login/login";
     // 自动登录
     public static String AUTO_LOGIN = BASE_URL + "Login/autoLogin";
+    // 退出
+    public static String LOG_OUT = BASE_URL + "Login/logout";
     // 密码重置
     public static String MODIFY_PWD = BASE_URL + "Login/resetPassword";
     // 获取手机套餐列表
@@ -39,10 +41,8 @@ public class UrlUtil {
     public static String DELETE_CALL_RECORD = BASE_URL + "Call/deleteCallRecord";
     // 获取通话记录详情
     public static String GET_CALL_RECORD_DETAIL = BASE_URL + "Call/getCallRecordInfo";
-    // 设置消息免打扰
-    public static String SET_DISTURB_STATUS = BASE_URL + "Personal/setMessageDisturb";
     // 设置短信已读状态
-    public static String MARK_MESSAHE_READ = BASE_URL + "Personal/updateMessageStatus";
+    public static String MARK_MESSAGE_READ = BASE_URL + "Personal/updateMessageStatus";
     // 获取语音流量订单
     public static String GET_MY_ORDER = BASE_URL + "Personal/getMyOrder";
     // 免打扰设置

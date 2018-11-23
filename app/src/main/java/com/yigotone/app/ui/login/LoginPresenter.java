@@ -40,4 +40,25 @@ public class LoginPresenter extends BasePresenterImpl<LoginContract.View> implem
                     }
                 }, throwable -> view.onError(throwable));
     }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void autoLogin(String uid, String token) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uid", uid);
+        map.put("token", token);
+        Api.getInstance().login(UrlUtil.AUTO_LOGIN, map)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                })
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    if (bean.getStatus() == 0) {
+                        view.loginSuccess(bean);
+                    } else {
+                        view.loginFail(bean.getErrorMsg());
+                    }
+                }, throwable -> view.onError(throwable));
+    }
 }

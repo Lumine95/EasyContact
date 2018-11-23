@@ -32,7 +32,7 @@ import butterknife.OnClick;
 /**
  * Created by ZMM on 2018/10/26 10:41.
  */
-public class DialFragment extends BaseFragment  {
+public class DialFragment extends BaseFragment {
     @BindView(R.id.iv_keyboard) ImageView ivKeyboard;
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.dial_keyword) LinearLayout dialKeyword;

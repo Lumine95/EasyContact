@@ -27,6 +27,7 @@ import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
+import com.yigotone.app.view.swipeMenu.EasySwipeMenuLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,12 +96,13 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<MessageBean.DataBean, BaseViewHolder>(R.layout.item_message) {
             @Override
             protected void convert(BaseViewHolder helper, MessageBean.DataBean item) {
+                ((EasySwipeMenuLayout) helper.getView(R.id.swipe_menu)).setCanLeftSwipe(!isEdit);
                 helper.setText(R.id.tv_title, item.getContent());
                 helper.setText(R.id.tv_name, item.getName());
                 helper.setGone(R.id.iv_red_dot, item.getIsread() == 0);
                 helper.getView(R.id.iv_select).setSelected(item.isSelect);
                 helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
-                helper.setOnClickListener(R.id.right, view -> U.showToast(helper.getLayoutPosition() + ""));
+                helper.setOnClickListener(R.id.right, view -> deleteDialog(item.getMobile()));
                 helper.setOnClickListener(R.id.iv_select, view -> {
                     item.isSelect = !item.isSelect;
                     mAdapter.notifyDataSetChanged();
@@ -190,7 +192,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
                 if (code.getStatus() == 0) {
                     U.showToast("标记成功");
                     getMessageList(false);
-                }else{
+                } else {
                     U.showToast("标记失败");
                 }
                 break;
@@ -241,7 +243,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
             setMessageRead();
         });
         mainActivity.tvDeleteSMS.setOnClickListener(v -> {
-            deleteDialog();
+            deleteDialog("");
         });
     }
 
@@ -262,10 +264,10 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         map.put("token", UserManager.getInstance().userData.getToken());
         map.put("type", isSelectAll ? 1 : 2);
         map.put("targetMobile", sb.toString().substring(0, sb.toString().length() - 1));
-        presenter.sendMessage(UrlUtil.MARK_MESSAHE_READ, map, "markRead");
+        presenter.sendMessage(UrlUtil.MARK_MESSAGE_READ, map, "markRead");
     }
 
-    private void deleteDialog() {
+    private void deleteDialog(String mobile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final AlertDialog dialog = builder.create();
         View view = View.inflate(mContext, R.layout.dialog_package_buy, null);
@@ -278,7 +280,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         tv_cancel.setOnClickListener(v -> dialog.dismiss());
         tv_sure.setOnClickListener(v -> {
             dialog.dismiss();
-            deleteMessage();
+            deleteMessage(mobile);
         });
 
         dialog.setCancelable(true);
@@ -287,23 +289,30 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 340), LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
-    private void deleteMessage() {
+    private void deleteMessage(String mobile) {
         StringBuilder sb = new StringBuilder();
-        for (MessageBean.DataBean bean : mAdapter.getData()) {
-            if (bean.isSelect) {
-                sb.append(bean.getMobile()).append(",");
+        if (TextUtils.isEmpty(mobile)) {
+            for (MessageBean.DataBean bean : mAdapter.getData()) {
+                if (bean.isSelect) {
+                    sb.append(bean.getMobile()).append(",");
+                }
             }
-        }
-        if (TextUtils.isEmpty(sb.toString())) {
-            U.showToast("请选择至少一项删除");
-            return;
+            if (TextUtils.isEmpty(sb.toString())) {
+                U.showToast("请选择至少一项删除");
+                return;
+            }
         }
         showLoadingDialog("正在删除");
         Map<String, Object> map = new HashMap<>();
         map.put("uid", UserManager.getInstance().userData.getUid());
         map.put("token", UserManager.getInstance().userData.getToken());
         map.put("type", isSelectAll ? 1 : 2);
-        map.put("targetMobile", sb.toString().substring(0, sb.toString().length() - 1));
-        presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
+        if (TextUtils.isEmpty(mobile)) {
+            map.put("targetMobile", sb.toString().substring(0, sb.toString().length() - 1));
+        } else {
+            map.put("targetMobile", mobile);
+        }
+        Logger.d(map);
+        // presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
     }
 }

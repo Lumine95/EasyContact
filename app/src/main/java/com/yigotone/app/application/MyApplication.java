@@ -85,5 +85,4 @@ public class MyApplication extends MultiDexApplication {
         }
        // System.exit(0);
     }
-
 }
