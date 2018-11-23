@@ -3,13 +3,17 @@ package com.yigotone.app.ui.message;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.library.utils.DensityUtil;
 import com.android.library.utils.U;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -17,6 +21,7 @@ import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseFragment;
+import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.MessageBean;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.user.UserManager;
@@ -29,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -178,6 +184,21 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
                     }
                 }
                 break;
+
+            case "markRead":
+                CodeBean code = (CodeBean) result;
+                if (code.getStatus() == 0) {
+                    U.showToast("标记成功");
+                    getMessageList(false);
+                }
+                break;
+            case "delete":
+                CodeBean codeBean = (CodeBean) result;
+                if (codeBean.getStatus() == 0) {
+                    U.showToast("删除成功");
+                    getMessageList(false);
+                }
+                break;
         }
     }
 
@@ -215,8 +236,72 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         mainActivity.rlSMS.setOnClickListener(v -> {
         });
         mainActivity.tvAllRead.setOnClickListener(v -> {
+            setMessageRead();
         });
         mainActivity.tvDeleteSMS.setOnClickListener(v -> {
+            deleteDialog();
         });
+    }
+
+    private void setMessageRead() {
+        StringBuilder sb = new StringBuilder();
+        for (MessageBean.DataBean bean : mAdapter.getData()) {
+            if (bean.isSelect) {
+                sb.append(bean.getMobile()).append(",");
+            }
+        }
+        if (TextUtils.isEmpty(sb.toString())) {
+            U.showToast("请至少选择一项");
+            return;
+        }
+        showLoadingDialog("");
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("type", isSelectAll ? 1 : 2);
+        map.put("targetMobile", sb.toString().substring(0, sb.toString().length() - 1));
+        presenter.sendMessage(UrlUtil.MARK_MESSAHE_READ, map, "markRead");
+    }
+
+    private void deleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(mContext, R.layout.dialog_package_buy, null);
+        TextView tv_tip = view.findViewById(R.id.tv_tip);
+        TextView tv_cancel = view.findViewById(R.id.tv_cancel);
+        TextView tv_sure = view.findViewById(R.id.tv_sure);
+        tv_cancel.setText("取消");
+        tv_sure.setText("确认");
+        tv_tip.setText("确认删除所选短消息？");
+        tv_cancel.setOnClickListener(v -> dialog.dismiss());
+        tv_sure.setOnClickListener(v -> {
+            dialog.dismiss();
+            deleteMessage();
+        });
+
+        dialog.setCancelable(true);
+        dialog.setView(view);
+        dialog.show();
+        dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 340), LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void deleteMessage() {
+        StringBuilder sb = new StringBuilder();
+        for (MessageBean.DataBean bean : mAdapter.getData()) {
+            if (bean.isSelect) {
+                sb.append(bean.getMobile()).append(",");
+            }
+        }
+        if (TextUtils.isEmpty(sb.toString())) {
+            U.showToast("请选择至少一项删除");
+            return;
+        }
+        showLoadingDialog("正在删除");
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("type", isSelectAll ? 1 : 2);
+        map.put("targetMobile", sb.toString().substring(0, sb.toString().length() - 1));
+        presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
     }
 }

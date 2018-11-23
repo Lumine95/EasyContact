@@ -42,9 +42,11 @@ public class UrlUtil {
     // 设置消息免打扰
     public static String SET_DISTURB_STATUS = BASE_URL + "Personal/setMessageDisturb";
     // 设置短信已读状态
-    public static String MARK_SMS_READ = BASE_URL + "Personal/updateMessageStatus";
+    public static String MARK_MESSAHE_READ = BASE_URL + "Personal/updateMessageStatus";
     // 获取语音流量订单
     public static String GET_MY_ORDER = BASE_URL + "Personal/getMyOrder";
     // 免打扰设置
     public static String DO_NOT_DISTURB = BASE_URL + "Personal/setMessageDisturb";
+    // 删除短信
+    public static String DELETE_MESSAGE = BASE_URL + "Personal/deleteMessage";
 }

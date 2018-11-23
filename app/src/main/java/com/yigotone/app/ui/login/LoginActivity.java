@@ -101,7 +101,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     @Override
     public void loginSuccess(UserBean bean) {
-        dismissLoadingDialog();
+        // dismissLoadingDialog();
         UserManager.getInstance().save(this, bean.getData().get(0));
         String phoneNumber = UserManager.getInstance().userData.getMobile();
 
@@ -139,6 +139,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
 
     @Override
     public void ebLoginResult(int i, String s) {
+        dismissLoadingDialog();
         if (i == 0) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
