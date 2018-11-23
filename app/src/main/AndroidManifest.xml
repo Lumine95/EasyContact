@@ -139,6 +139,13 @@
             android:name=".ui.contact.ContactActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!--系统消息-->
+        <activity
+            android:name=".ui.message.SystemMsgActivity"
+            android:screenOrientation="portrait" />
+        <!--系统消息详情-->
+        <activity android:name=".ui.message.SystemMsgDetailActivity"
+            android:screenOrientation="portrait" />
 
 
         <service

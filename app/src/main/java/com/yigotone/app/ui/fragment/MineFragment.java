@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.ui.message.SystemMsgActivity;
 import com.yigotone.app.ui.order.OrderActivity;
 import com.yigotone.app.ui.setting.SettingActivity;
 import com.yigotone.app.ui.setting.VoiceAccountActivity;
@@ -65,6 +66,7 @@ public class MineFragment extends BaseFragment {
             case R.id.rl_call_detail:
                 break;
             case R.id.rl_message:
+                startActivity(new Intent(mContext, SystemMsgActivity.class));
                 break;
             case R.id.rl_feedback:
                 break;

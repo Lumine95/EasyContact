@@ -2,6 +2,7 @@ package com.yigotone.app.bean;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class MessageBean {
     private String errorMsg;
     private List<DataBean> data;
 
-    public static class DataBean implements MultiItemEntity {
+    public static class DataBean implements MultiItemEntity,Serializable {
         public static final int THIS = 1;
         public static final int THAT = 2;
         public boolean isSelect = false;
@@ -25,6 +26,8 @@ public class MessageBean {
         private String mobile;
         private String messageId;
         private String messagetime;
+        private String title;
+        private String createAt;
 
         public DataBean(int itemType, String content) {
             this.itemType = itemType;
@@ -34,6 +37,14 @@ public class MessageBean {
         @Override
         public int getItemType() {
             return itemType;
+        }
+
+        public String getTitle() {
+            return title == null ? "" : title;
+        }
+
+        public String getCreateAt() {
+            return createAt == null ? "" : createAt;
         }
 
         public String getContent() {

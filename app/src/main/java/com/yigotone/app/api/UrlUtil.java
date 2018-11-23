@@ -49,4 +49,6 @@ public class UrlUtil {
     public static String DO_NOT_DISTURB = BASE_URL + "Personal/setMessageDisturb";
     // 删除短信
     public static String DELETE_MESSAGE = BASE_URL + "Personal/deleteMessage";
+    // 获取系统消息
+    public static String GET_SYSTEM_MESSAGE = BASE_URL + "Personal/getNotice";
 }

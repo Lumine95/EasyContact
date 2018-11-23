@@ -56,7 +56,7 @@ final class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
                     U.showToast("参数验证失败");
                     break;
                 case ERROR_MYSQL:
-                 U.showToast("数据库操作失败");
+                    //  U.showToast("数据库操作失败");
                     break;
                 case ERROR_NO_USER:
                     U.showToast("用户不存在");

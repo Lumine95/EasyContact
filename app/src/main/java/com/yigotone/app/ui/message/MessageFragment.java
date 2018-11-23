@@ -190,6 +190,8 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
                 if (code.getStatus() == 0) {
                     U.showToast("标记成功");
                     getMessageList(false);
+                }else{
+                    U.showToast("标记失败");
                 }
                 break;
             case "delete":
