@@ -3,6 +3,7 @@ package com.yigotone.app.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -145,10 +146,17 @@ public class DialFragment extends BaseFragment {
                 showDialKeyboard();
                 break;
             case R.id.iv_delete:
-                if (phoneStr.length() > 0 && etPhone.getSelectionStart() > 0) {
-                    phoneStr.deleteCharAt(etPhone.getSelectionStart() - 1);
-                    refreshEditText();
-                }
+//                if (phoneStr.length() > 0 && etPhone.getSelectionStart() > 0) {
+//                    phoneStr.deleteCharAt(etPhone.getSelectionStart() - 1);
+//                    refreshEditText();
+//                }
+                int  keyCode = KeyEvent.KEYCODE_DEL;
+                KeyEvent keyEventDown = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
+                KeyEvent keyEventUp = new KeyEvent(KeyEvent.ACTION_UP, keyCode);
+                etPhone.onKeyDown(keyCode, keyEventDown);
+                etPhone.onKeyUp(keyCode, keyEventUp);
+
+
                 break;
         }
     }

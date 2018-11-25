@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.call;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
@@ -28,6 +29,7 @@ import com.ebupt.ebjar.MebConstants;
 import com.ebupt.ebjar.MebMdm;
 import com.justalk.cloud.zmf.ZmfAudio;
 import com.orhanobut.logger.Logger;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
@@ -95,8 +97,16 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         return new CallPresenter(this);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initView() {
+        new RxPermissions(this).request(Manifest.permission.RECORD_AUDIO).subscribe(granted -> {
+            if (!granted) {
+                U.showToast("权限申请失败");
+                finish();
+            }
+        });
+
         thisPhoneNum = UserManager.getInstance().userData.getMobile();
         EbCallDelegate.setCallback(this);
         EbLoginDelegate.setLoginCallback(this);
@@ -106,11 +116,11 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
             comeFrom = bundle.getString("comefrom");
             callId = bundle.getInt(MebConstants.CALL_ID);
         }
-        tvName.setText(phoneNum);
+
         if (comeFrom.equals("dial")) { // call out
             CALL_TYPE = CALL_OUT;
             setCallMode(); // 设置通话音频模式
-
+            tvName.setText(Utils.getContactName(phoneNum));
             EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
             DataUtils.saveAccount(thisPhoneNum, this);
 
@@ -141,12 +151,14 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
             }
         } else if (comeFrom.equals(MebConstants.FRO_PEER)) {
             CALL_TYPE = CALL_IN;
-            tvName.setText(EbCallDelegate.getPeerNum(callId));
+            phoneNum = EbCallDelegate.getPeerNum(callId);
+            tvName.setText(Utils.getContactName(phoneNum));
             tvStatus.setText("来电");
             ivHangUp.setVisibility(View.GONE);
             tvHangUp.setVisibility(View.VISIBLE);
             tvAnswer.setVisibility(View.VISIBLE);
             EbCallDelegate.alert(callId);
+            recordCallIn();
             startAlarm();
         }
     }
@@ -262,6 +274,15 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         presenter.postParams(UrlUtil.RECORD_CALL_OUT, map, "recordCallOut");
     }
 
+    private void recordCallIn() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("callId", mCallId == 0 ? callId : mCallId);
+        map.put("mobile", phoneNum);
+        map.put("targetMobile", thisPhoneNum);
+        map.put("targetName", Utils.getContactName(phoneNum));
+        presenter.postParams(UrlUtil.RECORD_CALL_IN, map, "recordCall");
+    }
+
     private void refreshCallStatus(int status) { // 更新记录通话状态
         Map<String, Object> map = new HashMap<>();
         map.put("uid", UserManager.getInstance().userData.getUid());
@@ -272,7 +293,7 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         presenter.postParams(UrlUtil.UPDATE_CALL_STATUS, map, "refreshCallStatus");
     }
 
-    @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini,R.id.tv_hide})
+    @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini, R.id.tv_hide})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_hide:
@@ -390,11 +411,11 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (callTime > 0) {
             recordCallTime();
         }
         clearCallMode();
+        super.onDestroy();
     }
 
     private void recordCallTime() { // 记录通话时长

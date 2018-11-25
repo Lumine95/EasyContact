@@ -313,6 +313,6 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
             map.put("targetMobile", mobile);
         }
         Logger.d(map);
-        // presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
+     presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
     }
 }

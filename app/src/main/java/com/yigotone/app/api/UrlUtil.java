@@ -36,7 +36,7 @@ public class UrlUtil {
     // 更新通话状态
     public static String UPDATE_CALL_STATUS = BASE_URL + "Call/updateCallrecord";
     // 记录通话时长
-    public static String RECORD_CALL_TIME = BASE_URL + "Call/Call/updateCalltime";
+    public static String RECORD_CALL_TIME = BASE_URL + "Call/updateCalltime";
     // 删除通话记录
     public static String DELETE_CALL_RECORD = BASE_URL + "Call/deleteCallRecord";
     // 获取通话记录详情
@@ -51,4 +51,8 @@ public class UrlUtil {
     public static String DELETE_MESSAGE = BASE_URL + "Personal/deleteMessage";
     // 获取系统消息
     public static String GET_SYSTEM_MESSAGE = BASE_URL + "Personal/getNotice";
+    // 记录呼入电话
+    public static String RECORD_CALL_IN = BASE_URL + "Call/callinrecord";
+    // 提交订单
+    public static String SUBMIT_ORDER = BASE_URL + "Personal/addOrder";
 }

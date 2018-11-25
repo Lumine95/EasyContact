@@ -41,7 +41,7 @@
                 android:layout_marginStart="@dimen/margin_size_80"
                 android:layout_marginTop="@dimen/margin_size_20"
                 android:background="@null"
-                android:cursorVisible="false"
+                android:cursorVisible="true"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
