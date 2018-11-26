@@ -1,5 +1,8 @@
 package com.yigotone.app.ui.activity;
 
+import android.database.ContentObserver;
+import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -11,6 +14,8 @@ import com.yigotone.app.ui.adapter.CommonFragmentAdapter;
 import com.yigotone.app.ui.contact.ContactFragment;
 import com.yigotone.app.ui.fragment.DialFragment;
 import com.yigotone.app.view.BaseTitleBar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,13 @@ public class DialActivity extends BaseActivity {
     private List<String> titleList = new ArrayList<>();
     private CommonFragmentAdapter fragmentAdapter;
 
+    private ContentObserver mObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {//这里就是联系人变化的相关操作，根据自己的 逻辑来处理
+            EventBus.getDefault().post("SystemContactChanged");
+        }
+    };
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_dial;
@@ -41,6 +53,7 @@ public class DialActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, mObserver);
         new BaseTitleBar(this).setTitleText("拨号盘").setLeftIcoListening(v -> finish());
         titleList.add("拨号盘");
         titleList.add("联系人");
@@ -69,5 +82,11 @@ public class DialActivity extends BaseActivity {
     @Override
     public void onError(Throwable throwable) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getContentResolver().unregisterContentObserver(mObserver);
     }
 }

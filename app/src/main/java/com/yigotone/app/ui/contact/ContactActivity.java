@@ -35,6 +35,7 @@ public class ContactActivity extends BaseActivity {
     ArrayList<ContactBean> contactList = new ArrayList<>();
     private ContactAdapter mAdapter;
     private boolean tag;
+    private String phoneNumber;
 
     @Override
     protected int getLayoutId() {
@@ -48,6 +49,7 @@ public class ContactActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
         tag = getIntent().getBooleanExtra("tag", false);
         new BaseTitleBar(this).setTitleText("通讯录").setLeftIcoListening(v -> finish()).setTitleRight("确定").setRightIcoListening(v -> {
             submitSelectedContact();
@@ -60,7 +62,11 @@ public class ContactActivity extends BaseActivity {
         mAdapter.setDatas(contactList);
         indexableLayout.setOverlayStyle_Center();
         indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
-        //  mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> startActivity(new Intent(this, ContactDetailActivity.class).putExtra("data", entity)));
+        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> {
+            if (!TextUtils.isEmpty(phoneNumber)) {
+                addExistContact(entity);
+            }
+        });
 
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,6 +87,14 @@ public class ContactActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+    }
+
+    private void addExistContact(ContactBean entity) {
+        com.orhanobut.logger.Logger.d(entity.getId());
+        com.orhanobut.logger.Logger.d(entity.getPhone());
+        com.orhanobut.logger.Logger.d(entity.getName());
+        com.orhanobut.logger.Logger.d(phoneNumber);
+        // TODO: 2018/11/26 test
     }
 
     private void submitSelectedContact() {

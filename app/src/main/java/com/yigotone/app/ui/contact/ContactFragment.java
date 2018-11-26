@@ -12,12 +12,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.adapter.ContactAdapter;
 import com.yigotone.app.view.contact.IndexableLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +50,7 @@ public class ContactFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView(View view, Bundle savedInstanceState) {
+    protected void initView(View view, Bundle savedInstanceState) { EventBus.getDefault().register(this);
         initRecyclerView();
         getPhoneContacts();
 //        recyclerView.setAdapter(new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact, contactList) {
@@ -99,6 +103,7 @@ public class ContactFragment extends BaseFragment {
     }
 
     public void getPhoneContacts() {
+        contactList.clear();
         Cursor cursor = mContext.getContentResolver().query(Phone.CONTENT_URI,
                 new String[]{"display_name", "sort_key", "contact_id",
                         "data1"}, null, null, null);
@@ -156,5 +161,16 @@ public class ContactFragment extends BaseFragment {
     @Override
     public void onError(Throwable throwable) {
 
+    }
+
+    @Subscribe
+    public void onEvent(String event) {
+        Logger.d("eventBus: " + event);
+        switch (event) {
+            case "SystemContactChanged":
+                getPhoneContacts();
+                mAdapter.setDatas(contactList);
+                break;
+        }
     }
 }

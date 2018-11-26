@@ -8,9 +8,11 @@
 
     <TextView
         android:id="@+id/tv_create"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_size_15"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_size_15"
+        android:paddingTop="@dimen/margin_size_15"
         android:text="新建联系人"
         android:textColor="@color/color_3"
         android:textSize="17sp" />
@@ -18,15 +20,15 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_size_0.5"
-        android:layout_marginTop="@dimen/margin_size_15"
         android:background="@color/color_e6" />
 
     <TextView
         android:id="@+id/tv_exist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_size_15"
-        android:layout_marginTop="@dimen/margin_size_15"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingBottom="@dimen/margin_size_15"
+        android:paddingTop="@dimen/margin_size_15"
         android:text="添加到已有联系人"
         android:textColor="@color/color_3"
         android:textSize="17sp" />

@@ -2,6 +2,7 @@ package com.yigotone.app.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,11 +28,16 @@ import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.call.CallActivity;
+import com.yigotone.app.ui.contact.ContactActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.DigitsEditText;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +74,7 @@ public class DialFragment extends BaseFragment {
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         phoneNumber = UserManager.getInstance().userData.getMobile();
         initAnimation();
         initRecyclerView();
@@ -160,7 +167,9 @@ public class DialFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_add:
-                showDialog();
+                if (!TextUtils.isEmpty(etPhone.getText().toString())) {
+                    showDialog();
+                }
                 break;
             case R.id.iv_one:
                 phoneStr.append(1);
@@ -272,10 +281,30 @@ public class DialFragment extends BaseFragment {
         TextView tv_create = view.findViewById(R.id.tv_create);
         TextView tv_exist = view.findViewById(R.id.tv_exist);
 
+        tv_create.setOnClickListener(v -> {
+            addContact();
+            dialog.dismiss();
+        });
+        tv_exist.setOnClickListener(v -> {
+            addExistContact();
+            dialog.dismiss();
+        });
         dialog.setCancelable(true);
         dialog.setView(view);
         dialog.show();
         dialog.getWindow().setLayout(DensityUtil.dip2px(mContext, 266), LinearLayout.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void addExistContact() {
+        startActivity(new Intent(mContext, ContactActivity.class)
+                .putExtra("phoneNumber", etPhone.getText().toString().trim()));
+    }
+
+    private void addContact() {
+        Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
+        intent.putExtra(android.provider.ContactsContract.Intents.Insert.NAME, "");
+        intent.putExtra(android.provider.ContactsContract.Intents.Insert.PHONE, etPhone.getText().toString());
+        startActivity(intent);
     }
 
     private void refreshEditText() {
@@ -293,5 +322,15 @@ public class DialFragment extends BaseFragment {
         showAnim.setDuration(260);
         dialKeyword.startAnimation(showAnim);
         dialKeyword.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        Logger.d("eventBus: " + event);
+        switch (event) {
+            case "SystemContactChanged":
+                //     U.showToast("联系人添加成功");
+                break;
+        }
     }
 }
