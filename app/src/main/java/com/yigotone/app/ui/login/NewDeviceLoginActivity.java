@@ -51,7 +51,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
 
     @Override
     public void initView() {
-        tvPhone.setText("短信验证码已发送至" + (phoneNumber = UserManager.getInstance().userData.getMobile()));
+        phoneNumber = UserManager.getInstance().userData.getMobile();
         codeView.setInputCompleteListener(this);
         new BaseTitleBar(this).setTitleText("信息验证").setLeftIcoListening(v -> finish());
         EbLoginDelegate.setLoginCallback(this);
@@ -91,8 +91,6 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
                 U.showToast("验证错误");
             }
         });
-
-
     }
 
     @Override
@@ -114,7 +112,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
             @Override
             public void ebAuthCodeOk() {
                 U.showToast("获取验证码成功");
-                tvPhone.setText("短信验证码已发送至" + (phoneNumber = UserManager.getInstance().userData.getMobile()));
+                tvPhone.setText("短信验证码已发送至" + phoneNumber);
                 countDown();
             }
 

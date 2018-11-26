@@ -3,6 +3,11 @@ package com.yigotone.app.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,12 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
+import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
@@ -25,6 +33,8 @@ import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.DigitsEditText;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -38,11 +48,13 @@ public class DialFragment extends BaseFragment {
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.dial_keyword) LinearLayout dialKeyword;
     @BindView(R.id.et_phone) DigitsEditText etPhone;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     private StringBuffer phoneStr = new StringBuffer();
     private TranslateAnimation hideAnim;
     private TranslateAnimation showAnim;
     private String phoneNumber;
+    private BaseQuickAdapter<ContactBean, BaseViewHolder> mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -58,6 +70,62 @@ public class DialFragment extends BaseFragment {
     protected void initView(View view, Bundle savedInstanceState) {
         phoneNumber = UserManager.getInstance().userData.getMobile();
         initAnimation();
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<ContactBean, BaseViewHolder>(R.layout.item_contact) {
+            @Override
+            protected void convert(BaseViewHolder helper, ContactBean item) {
+                helper.setText(R.id.tv_name, item.getName());
+                helper.setText(R.id.tv_phone, item.getPhone());
+            }
+        });
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!TextUtils.isEmpty(s.toString())) {
+                    searchContacts(s.toString());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    public void searchContacts(String keyword) {
+        List<ContactBean> list = new ArrayList<>();
+        for (ContactBean bean : UserManager.getInstance().contactList) {
+            if (isPhoneNum(keyword)) {
+                if (bean.getPhone().contains(keyword)) {
+                    list.add(bean);
+                }
+            } else {
+                if (bean.getName().contains(keyword)) {
+                    list.add(bean);
+                }
+            }
+        }
+        mAdapter.setNewData(list);
+    }
+
+    private boolean isPhoneNum(String keyword) {
+        // 正则 匹配以数字或者加号开头的字符串(包括了带空格及-分割的号码
+        if (keyword.matches("^([0-9]|[/+]).*")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void initAnimation() {
@@ -150,13 +218,13 @@ public class DialFragment extends BaseFragment {
 //                    phoneStr.deleteCharAt(etPhone.getSelectionStart() - 1);
 //                    refreshEditText();
 //                }
-                int  keyCode = KeyEvent.KEYCODE_DEL;
+                int keyCode = KeyEvent.KEYCODE_DEL;
                 KeyEvent keyEventDown = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
                 KeyEvent keyEventUp = new KeyEvent(KeyEvent.ACTION_UP, keyCode);
                 etPhone.onKeyDown(keyCode, keyEventDown);
                 etPhone.onKeyUp(keyCode, keyEventUp);
-
-
+                //  phoneStr = etPhone.getText().toString();
+                phoneStr = new StringBuffer(etPhone.getText().toString());
                 break;
         }
     }

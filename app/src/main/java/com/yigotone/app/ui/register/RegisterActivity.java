@@ -10,14 +10,22 @@ import android.widget.EditText;
 
 import com.android.library.utils.U;
 import com.ebupt.ebauth.biz.EbAuthDelegate;
+import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.ebupt.ebauth.biz.auth.OnAuthcodeListener;
 import com.ebupt.ebjar.EbLoginDelegate;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.bean.UserBean;
+import com.yigotone.app.ui.activity.MainActivity;
+import com.yigotone.app.ui.login.NewDeviceLoginActivity;
 import com.yigotone.app.ui.setting.UserProtocolActivity;
+import com.yigotone.app.user.Constant;
+import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.AuthUtils;
+import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.util.Utils;
 
 import java.util.HashMap;
@@ -49,14 +57,15 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
 
     @Override
     public void initView() {
+        EbLoginDelegate.setLoginCallback(this);
         btnGetCode.setSelected(true);
     }
 
     @Override
     public void codeObtained(UserBean bean) {
-        if (bean.getStatus() == 0) {
-            countDown();
-        }
+//        if (bean.getStatus() == 0) {
+//            countDown();
+//        }
     }
 
     @Override
@@ -64,7 +73,8 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
         dismissLoadingDialog();
         if (bean.getStatus() == 0) {
             U.showToast("注册成功");
-            finish();
+//           finish();
+            login();
         } else {
             U.showToast("注册失败");
         }
@@ -73,6 +83,39 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
     @Override
     public void onModifyResult(CodeBean bean) {
 
+    }
+
+    @Override
+    public void loginSuccess(UserBean bean) {
+        UserManager.getInstance().save(this, bean.getData().get(0));
+        String phoneNumber = UserManager.getInstance().userData.getMobile();
+        EbLoginDelegate.SetJustAddress(Constant.JUSTALK_KEY, Constant.JUSTALK_IP);
+        DataUtils.saveAccount(phoneNumber, this);
+        EbAuthDelegate.AuthloginByVfc(phoneNumber, etCode.getText().toString(), new OnAuthLoginListener() {
+            @Override
+            public void ebAuthOk(String authcode, String deadline) {
+                Logger.d("EbLoginDelegate: authcode " + authcode + deadline);
+                DataUtils.saveDeadline(phoneNumber, deadline, RegisterActivity.this);
+//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                finish();
+                if (AuthUtils.isDeadlineAvailable(deadline)) {
+                    EbLoginDelegate.login(phoneNumber, "ebupt");
+                    Logger.d("EbLoginDelegate: login");
+                }
+            }
+
+            @Override
+            public void ebAuthFailed(int code, String reason) {
+                Logger.d("ebAuthFailed: " + code + reason);
+                startActivity(new Intent(RegisterActivity.this, NewDeviceLoginActivity.class));
+            }
+        });
+    }
+
+    @Override
+    public void loginFail(String errorMsg) {
+        dismissLoadingDialog();
+        Log.e("loginFail ", errorMsg);
     }
 
 
@@ -167,7 +210,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
         EbAuthDelegate.getAuthcode(phoneNum, new OnAuthcodeListener() {
             @Override
             public void ebAuthCodeOk() {
-
+                countDown();
             }
 
             @Override
@@ -175,7 +218,21 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
                 Log.d("ebAuthCodeFailed: ", code + reason);
             }
         });
+    }
 
+    private void login() {
+        String phoneNum = etPhone.getText().toString().trim();
+        String pwd = etPwd.getText().toString().trim();
+        if (!phoneNum.matches("0?(13|14|15|16|17|18)[0-9]{9}")) {
+            U.showToast("请输入正确的手机号码");
+            return;
+        }
+        if (TextUtils.isEmpty(pwd)) {
+            U.showToast("请输入密码");
+            return;
+        }
+        showLoadingDialog("正在登录");
+        presenter.login(phoneNum, pwd);
     }
 
     @Override
@@ -188,7 +245,13 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
 
     @Override
     public void ebLoginResult(int i, String s) {
-        Log.d("", "sdk登录result i=" + i + "||s=" + s);
+        dismissLoadingDialog();
+        if (i == 0) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            startActivity(new Intent(this, NewDeviceLoginActivity.class));
+        }
     }
 
     @Override

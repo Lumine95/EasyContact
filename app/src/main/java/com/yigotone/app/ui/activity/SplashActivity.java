@@ -10,6 +10,7 @@ import com.ebupt.ebauth.biz.EbAuthDelegate;
 import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.ebupt.ebjar.EbLoginDelegate;
 import com.orhanobut.logger.Logger;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
@@ -40,6 +41,7 @@ public class SplashActivity extends BaseActivity<LoginContract.Presenter> implem
     @SuppressLint("CheckResult")
     @Override
     public void initView() {
+        QMUIStatusBarHelper.translucent(this);
         EbLoginDelegate.setLoginCallback(this);
         new RxPermissions(this).request(Manifest.permission.READ_CONTACTS).subscribe(granted -> {
             if (granted) {
@@ -54,7 +56,6 @@ public class SplashActivity extends BaseActivity<LoginContract.Presenter> implem
     }
 
     private void permissionGranted() {
-
         String uid = (String) U.getPreferences("uid", "");
         String token = (String) U.getPreferences("token", "");
 

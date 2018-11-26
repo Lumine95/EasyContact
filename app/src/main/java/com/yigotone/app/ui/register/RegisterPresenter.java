@@ -3,8 +3,10 @@ package com.yigotone.app.ui.register;
 import android.annotation.SuppressLint;
 
 import com.yigotone.app.api.Api;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BasePresenterImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -58,6 +60,27 @@ public class RegisterPresenter extends BasePresenterImpl<RegisterContract.View> 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bean -> {
                     view.onModifyResult(bean);
+                }, throwable -> view.onError(throwable));
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void login(String phoneNum, String pwd) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("mobile", phoneNum);
+        map.put("password", pwd);
+        Api.getInstance().login(UrlUtil.LOGIN, map)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                })
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    if (bean.getStatus() == 0) {
+                        view.loginSuccess(bean);
+                    } else {
+                        view.loginFail(bean.getErrorMsg());
+                    }
                 }, throwable -> view.onError(throwable));
     }
 }

@@ -17,6 +17,10 @@ public class RegisterContract {
         void onRegisterResult(CodeBean bean);
 
         void onModifyResult(CodeBean bean);
+
+        void loginSuccess(UserBean bean);
+
+        void loginFail(String errorMsg);
     }
 
     public interface Presenter extends BasePresenter {
@@ -25,5 +29,8 @@ public class RegisterContract {
         void register(String url, Map<String, Object> map);
 
         void modifyPassword(String url, Map<String, Object> map);
+
+        void login(String phoneNum, String pwd);
+
     }
 }

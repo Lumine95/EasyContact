@@ -136,6 +136,16 @@ public class ForgetPwdActivity extends BaseActivity<RegisterContract.Presenter> 
     }
 
     @Override
+    public void loginSuccess(UserBean bean) {
+
+    }
+
+    @Override
+    public void loginFail(String errorMsg) {
+
+    }
+
+    @Override
     public void onFinish() {
         dismissLoadingDialog();
     }

@@ -2,7 +2,6 @@ package com.yigotone.app.ui.call;
 
 import android.annotation.SuppressLint;
 
-import com.orhanobut.logger.Logger;
 import com.yigotone.app.api.Api;
 import com.yigotone.app.base.BasePresenterImpl;
 
@@ -24,8 +23,6 @@ public class CallPresenter extends BasePresenterImpl<CallContract.View> implemen
     @SuppressLint("CheckResult")
     @Override
     public void postParams(String url, Map<String, Object> map, String message) {
-        Logger.d("message-> " + url);
-        Logger.d("message-> " + map);
         Api.getInstance().register(url, map)
                 .subscribeOn(Schedulers.io())
                 .map(bean -> bean)

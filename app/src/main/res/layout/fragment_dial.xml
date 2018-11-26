@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_contact" />
 
     <ImageView
         android:id="@+id/iv_keyboard"
@@ -37,9 +44,9 @@
                 android:id="@+id/et_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_size_80"
                 android:layout_marginStart="@dimen/margin_size_80"
                 android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginEnd="@dimen/margin_size_80"
                 android:background="@null"
                 android:cursorVisible="true"
                 android:maxLines="1"
@@ -199,8 +206,8 @@
                 android:id="@+id/iv_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_size_20"
                 android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginBottom="@dimen/margin_size_20"
                 android:background="@drawable/shape_ripple"
                 android:src="@mipmap/ic_call"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -212,9 +219,9 @@
                 android:id="@+id/iv_collapse"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginBottom="@dimen/margin_size_20"
-                android:layout_marginEnd="29dp"
                 android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginEnd="29dp"
+                android:layout_marginBottom="@dimen/margin_size_20"
                 android:background="@drawable/shape_ripple"
                 android:scaleType="centerInside"
                 android:src="@mipmap/ic_collapse_keyboard"
@@ -226,9 +233,9 @@
                 android:id="@+id/iv_delete"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginBottom="@dimen/margin_size_20"
                 android:layout_marginStart="29dp"
                 android:layout_marginTop="@dimen/margin_size_20"
+                android:layout_marginBottom="@dimen/margin_size_20"
                 android:background="@drawable/shape_ripple"
                 android:scaleType="centerInside"
                 android:src="@mipmap/ic_backspace"

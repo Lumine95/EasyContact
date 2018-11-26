@@ -60,6 +60,7 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     @BindView(R.id.iv_hang_up) ImageView ivHangUp;
     @BindView(R.id.tv_hang_up) TextView tvHangUp;
     @BindView(R.id.tv_answer) TextView tvAnswer;
+    @BindView(R.id.tv_input) TextView tvInput;
     @BindView(R.id.iv_mini) ImageView ivMini;
     @BindView(R.id.cl_keyboard) ConstraintLayout clKeyboard;
 
@@ -78,8 +79,9 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     private String thisPhoneNum;
     private long baseTimer;
     private int callTime; // 通话时长
+    private StringBuffer inputStr = new StringBuffer();
     @SuppressLint("HandlerLeak") Handler timeHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
+        public void handleMessage(Message msg) {
             if (null != tvStatus) {
                 tvStatus.setText((String) msg.obj);
             }
@@ -293,7 +295,7 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         presenter.postParams(UrlUtil.UPDATE_CALL_STATUS, map, "refreshCallStatus");
     }
 
-    @OnClick({R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini, R.id.tv_hide})
+    @OnClick({R.id.iv_one, R.id.iv_two, R.id.iv_three, R.id.iv_four, R.id.iv_five, R.id.iv_six, R.id.iv_seven, R.id.iv_eight, R.id.iv_nine, R.id.iv_asterisk, R.id.iv_zero, R.id.iv_pound, R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini, R.id.tv_hide})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_hide:
@@ -314,6 +316,42 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
                 EbCallDelegate.answer(callId);
                 break;
             case R.id.iv_mini:
+                break;
+            case R.id.iv_one:
+                PostDTMF(1, "1");
+                break;
+            case R.id.iv_two:
+                PostDTMF(2, "2");
+                break;
+            case R.id.iv_three:
+                PostDTMF(3, "3");
+                break;
+            case R.id.iv_four:
+                PostDTMF(4, "4");
+                break;
+            case R.id.iv_five:
+                PostDTMF(5, "5");
+                break;
+            case R.id.iv_six:
+                PostDTMF(6, "6");
+                break;
+            case R.id.iv_seven:
+                PostDTMF(7, "7");
+                break;
+            case R.id.iv_eight:
+                PostDTMF(8, "8");
+                break;
+            case R.id.iv_nine:
+                PostDTMF(9, "9");
+                break;
+            case R.id.iv_asterisk:
+                PostDTMF(10, "10");
+                break;
+            case R.id.iv_zero:
+                PostDTMF(0, "0");
+                break;
+            case R.id.iv_pound:
+                PostDTMF(11, "11");
                 break;
         }
     }
@@ -473,5 +511,11 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
 
     private void showHideKeyboardLayout(boolean isShow) {
         clKeyboard.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    private void PostDTMF(int playId, String tag) {
+        EbCallDelegate.dtmf(mCallId, playId);
+        Log.d("", "playId=" + playId);
+        tvInput.setText(inputStr.append(tag).toString());
     }
 }
