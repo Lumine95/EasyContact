@@ -1,6 +1,5 @@
 package com.yigotone.app.ui.packages;
 
-import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -9,14 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.library.utils.DensityUtil;
-import com.android.library.utils.U;
 import com.yigotone.app.R;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.PackageBean;
-import com.yigotone.app.ui.activity.PayResultActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.SelectPaymentPopupView;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -30,6 +30,7 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
     @BindView(R.id.tv_intro) TextView tvIntro;
     @BindView(R.id.content) ConstraintLayout content;
     private PackageBean.DataBean.PackageEntity data;
+    private int payment = 1;  // 1:ali 2:wechat
 
     @Override
     protected int getLayoutId() {
@@ -78,7 +79,6 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
         TextView tv_sure = view.findViewById(R.id.tv_sure);
 
 
-
         UserManager.getInstance().userData.getTalkTime();
 
         tv_tip.setText("购买【" + data.getPackageName() + "】套餐后，您的主叫分钟数将有54分钟，有效期至本地时间2018-11-06  18:00时");
@@ -98,9 +98,19 @@ public class PackageDetailActivity extends BaseActivity<PackageContract.Presente
         SelectPaymentPopupView popupView = new SelectPaymentPopupView(this);
         popupView.showAtLocation(content, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         popupView.setOnSuccessListener(channel -> {
-            U.showToast(channel + "");
-            startActivity(new Intent(this, PayResultActivity.class));
+            payment = channel;
+            submitOrder();
         });
+    }
+
+    private void submitOrder() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("setmealId", data.getPackageId());
+        map.put("payment", payment);
+        map.put("price", data.getPrice());
+        presenter.submitOrder(UrlUtil.SUBMIT_ORDER, map, "submitOrder");
     }
 
     @Override

@@ -12,6 +12,8 @@ import java.util.Map;
 public class CallContract {
     public interface View extends BaseView {
         void onResult(Object result, String message);
+
+       // void onRecyclerViewError(Throwable throwable);
     }
 
     public interface Presenter extends BasePresenter {
@@ -19,5 +21,7 @@ public class CallContract {
         void postParams(String url, Map<String, Object> map, String message);
 
         void getCallDetail(String url, HashMap<String, Object> map, String message);
+
+        void postCallParams(String url, HashMap<String, Object> map, String message);
     }
 }

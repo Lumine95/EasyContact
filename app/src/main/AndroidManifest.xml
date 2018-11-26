@@ -122,7 +122,7 @@
             android:screenOrientation="portrait" />
         <!--通话详情-->
         <activity
-            android:name=".ui.home.CallDetailActivity"
+            android:name=".ui.call.CallDetailActivity"
             android:screenOrientation="portrait" />
         <!--短信详情-->
         <activity
@@ -144,7 +144,12 @@
             android:name=".ui.message.SystemMsgActivity"
             android:screenOrientation="portrait" />
         <!--系统消息详情-->
-        <activity android:name=".ui.message.SystemMsgDetailActivity"
+        <activity
+            android:name=".ui.message.SystemMsgDetailActivity"
+            android:screenOrientation="portrait" />
+        <!--有效通话详单-->
+        <activity
+            android:name=".ui.call.EffectiveCallActivity"
             android:screenOrientation="portrait" />
 
 

@@ -84,6 +84,12 @@ public class DialFragment extends BaseFragment {
                 helper.setText(R.id.tv_phone, item.getPhone());
             }
         });
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            ContactBean bean = (ContactBean) adapter.getData().get(position);
+            startActivity(new Intent(mContext, CallActivity.class)
+                    .putExtra("comefrom", "dial")
+                    .putExtra("phonenum", bean.getPhone()));
+        });
         etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {

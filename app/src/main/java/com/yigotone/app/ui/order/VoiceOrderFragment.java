@@ -73,12 +73,12 @@ public class VoiceOrderFragment extends BaseFragment<OrderContract.Presenter> im
     @Override
     public void onFinish() {
         statusLayoutManager.showSuccessLayout();
-        dismissLoadingDialog();
+        dismissLoadingDialog();  refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onError(Throwable throwable) {
-
+        refreshLayout.setRefreshing(false);
     }
 
     @Override

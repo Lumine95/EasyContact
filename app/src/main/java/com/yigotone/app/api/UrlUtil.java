@@ -55,4 +55,6 @@ public class UrlUtil {
     public static String RECORD_CALL_IN = BASE_URL + "Call/callinrecord";
     // 提交订单
     public static String SUBMIT_ORDER = BASE_URL + "Personal/addOrder";
+    // 获取我的有效通话记录
+    public static String GET_EFFECTIVE_CALL_RECORD = BASE_URL + "Personal/getMyEffectiveCallRecord";
 }

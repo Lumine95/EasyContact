@@ -45,4 +45,18 @@ public class CallPresenter extends BasePresenterImpl<CallContract.View> implemen
                     view.onResult(bean, message);
                 }, throwable -> view.onError(throwable));
     }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void postCallParams(String url, HashMap<String, Object> map, String message) {
+        Api.getInstance().postCallParams(url, map)
+                .subscribeOn(Schedulers.io())
+                .map(bean -> bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bean -> {
+                    view.onFinish();
+                    view.onResult(bean, message);
+                }, throwable -> view.onError(throwable));
+
+    }
 }

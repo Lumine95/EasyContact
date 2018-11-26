@@ -1,4 +1,4 @@
-package com.yigotone.app.ui.home;
+package com.yigotone.app.ui.call;
 
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +15,6 @@ import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CallDetailBean;
-import com.yigotone.app.ui.call.CallActivity;
-import com.yigotone.app.ui.call.CallContract;
-import com.yigotone.app.ui.call.CallPresenter;
 import com.yigotone.app.ui.message.NewMessageActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
