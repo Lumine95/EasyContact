@@ -100,7 +100,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         tvBalance.setText(UserManager.getInstance().userData.getTalkTimeText());
 
         // 注册广播监听飞行模式改变
-      //  mContext.registerReceiver(airplaneModeOn, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED));
+        //  mContext.registerReceiver(airplaneModeOn, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED));
     }
 
     private void getCallRecord(boolean isLoadingLayout) {
@@ -367,7 +367,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
 
     @Override
     public void refreshMobileStatus(String mobileStatus) {
-        UserManager.getInstance().userData.setMobileStatus(mobileStatus);
+        UserManager.getInstance().userData.setMobileStatus(this.mobileStatus = mobileStatus);
         btnTakeOver.setVisibility(mobileStatus.equals("1") ? View.VISIBLE : View.GONE);
         llTakeOver.setVisibility(mobileStatus.equals("2") ? View.VISIBLE : View.GONE);
     }
