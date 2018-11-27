@@ -229,8 +229,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         Logger.d("eventBus: " + event);
         switch (event) {
             case "refreshMessageList":
-                pageIndex = 1;
-                getMessageList(true);
+                getMessageList(false);
                 break;
         }
     }
@@ -313,6 +312,6 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
             map.put("targetMobile", mobile);
         }
         Logger.d(map);
-     presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
+        presenter.sendMessage(UrlUtil.DELETE_MESSAGE, map, "delete");
     }
 }

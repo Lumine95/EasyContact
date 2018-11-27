@@ -1,6 +1,8 @@
 package com.yigotone.app.ui.home;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,9 +32,9 @@ import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.ui.activity.DialActivity;
 import com.yigotone.app.ui.activity.MainActivity;
+import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.ui.call.CallDetailActivity;
 import com.yigotone.app.ui.disturb.NoDisturbActivity;
-import com.yigotone.app.ui.call.CallActivity;
 import com.yigotone.app.ui.packages.PackageListActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
@@ -65,7 +67,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @BindView(R.id.iv_add) ImageView ivAdd;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.iv_dial) ImageView ivDial;
-    @BindView(R.id.iv_take_over) ImageView ivTakeOver;
+    @BindView(R.id.iv_disturb) ImageView ivDisturb;
     @BindView(R.id.ll_take_over) LinearLayout llTakeOver;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
@@ -97,7 +99,8 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         mobileStatus = UserManager.getInstance().userData.getMobileStatus();
         tvBalance.setText(UserManager.getInstance().userData.getTalkTimeText());
 
-
+        // 注册广播监听飞行模式改变
+      //  mContext.registerReceiver(airplaneModeOn, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED));
     }
 
     private void getCallRecord(boolean isLoadingLayout) {
@@ -347,6 +350,12 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     public void onResume() {
         super.onResume();
         refreshMobileStatus();
+        refreshDisturbStatus();
+    }
+
+    private void refreshDisturbStatus() {
+        int disturb = UserManager.getInstance().userData.getDisturb();
+        ivDisturb.setVisibility(disturb == 2 ? View.VISIBLE : View.GONE);
     }
 
     private void refreshMobileStatus() {
@@ -434,4 +443,14 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
             mAdapter.notifyDataSetChanged();
         });
     }
+
+    private BroadcastReceiver airplaneModeOn = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {//飞行模式状态改变
+                refreshMobileStatus();
+            }
+        }
+    };
 }

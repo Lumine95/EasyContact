@@ -72,7 +72,7 @@ final class ResponseBodyConverter<T> implements Converter<ResponseBody, T> {
                     break;
                 case ERROR_TOKEN:
                     U.showToast("账号异地登录,请重新登录");
-                    // TODO: 2018/10/31 Token Invalid
+                    EventBus.getDefault().post("tokenInvalid");
                     break;
                 case ERROR_USER_OPEN:
                     U.showToast("开户失败");

@@ -13,6 +13,8 @@ import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,5 +137,11 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
     @Override
     public void onLayoutError(Throwable throwable) {
         statusLayoutManager.showErrorLayout();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().post("refreshMessageList");
     }
 }

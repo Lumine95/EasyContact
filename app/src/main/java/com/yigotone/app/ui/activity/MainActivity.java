@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.library.utils.U;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.application.MyApplication;
 import com.yigotone.app.base.BaseActivity;
@@ -20,8 +23,13 @@ import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.fragment.DataFragment;
 import com.yigotone.app.ui.fragment.MineFragment;
 import com.yigotone.app.ui.home.HomeFragment;
+import com.yigotone.app.ui.login.LoginActivity;
 import com.yigotone.app.ui.message.MessageFragment;
 import com.yigotone.app.user.UserManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -62,6 +70,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        EventBus.getDefault().register(this);
         setBottomButton(llHomeBtn);
         switchContentFragment(homeFragment == null ? homeFragment = new HomeFragment() : homeFragment);
         homeFragment.setActivity(this);
@@ -160,4 +169,16 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);// 继续执行父类其他点击事件
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        Logger.d("eventBus: " + event);
+        switch (event) {
+            case "tokenInvalid":
+                U.savePreferences("uid", "");
+                U.savePreferences("token", "");
+                MyApplication.getInstance().exit();
+                startActivity(new Intent(this, LoginActivity.class));
+                break;
+        }
+    }
 }

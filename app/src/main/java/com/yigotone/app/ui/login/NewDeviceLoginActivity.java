@@ -80,7 +80,7 @@ public class NewDeviceLoginActivity extends BaseActivity implements SecurityCode
                 Logger.d("authcode " + authcode + deadline);
                 DataUtils.saveDeadline(phoneNumber, deadline, NewDeviceLoginActivity.this);
                 if (AuthUtils.isDeadlineAvailable(deadline)) {
-                    EbLoginDelegate.login(codeView.getEditContent(), "ebupt");
+                    EbLoginDelegate.login(phoneNumber, "ebupt");
                     Logger.d("login");
                 }
             }

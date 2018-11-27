@@ -28,7 +28,6 @@ import com.yigotone.app.base.BaseFragment;
 import com.yigotone.app.base.BasePresenter;
 import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.call.CallActivity;
-import com.yigotone.app.ui.contact.ContactActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
@@ -296,8 +295,14 @@ public class DialFragment extends BaseFragment {
     }
 
     private void addExistContact() {
-        startActivity(new Intent(mContext, ContactActivity.class)
-                .putExtra("phoneNumber", etPhone.getText().toString().trim()));
+        Intent intent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
+        intent.setType("vnd.android.cursor.item/person");
+        intent.setType("vnd.android.cursor.item/contact");
+        intent.setType("vnd.android.cursor.item/raw_contact");
+        //    intent.putExtra(android.provider.ContactsContract.Intents.Insert.NAME, name);
+        intent.putExtra(android.provider.ContactsContract.Intents.Insert.PHONE, etPhone.getText().toString());
+        intent.putExtra(android.provider.ContactsContract.Intents.Insert.PHONE_TYPE, 3);
+        startActivity(intent);
     }
 
     private void addContact() {
