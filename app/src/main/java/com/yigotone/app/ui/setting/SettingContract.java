@@ -18,5 +18,7 @@ public class SettingContract {
         void setDisturbStatus(String url, HashMap<String, Object> map, String message);
 
         void logout(String url, Map<String, Object> map, String message);
+
+        void getMyAccountInfo(String url, Map<String, Object> map, String message);
     }
 }

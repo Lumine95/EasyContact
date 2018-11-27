@@ -63,10 +63,10 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
             case R.id.tv_forget_pwd:
-                startActivity(new Intent(this, ForgetPwdActivity.class));
+                startActivity(new Intent(this, ForgetPwdActivity.class).putExtra("tag", "login"));
                 break;
             case R.id.iv_logo:
-              //  startActivity(new Intent(this, NewDeviceLoginActivity.class));
+                //  startActivity(new Intent(this, NewDeviceLoginActivity.class));
                 break;
         }
     }

@@ -28,10 +28,12 @@ import butterknife.OnClick;
 public class ForgetPwdActivity extends BaseActivity<RegisterContract.Presenter> implements RegisterContract.View {
     @BindView(R.id.et_phone) EditText etPhone;
     @BindView(R.id.btn_get_code) Button btnGetCode;
+    @BindView(R.id.btn_sure) Button btnSure;
     @BindView(R.id.et_code) EditText etCode;
     @BindView(R.id.et_new_pwd) EditText etNewPwd;
     @BindView(R.id.et_confirm_pwd) EditText etConfirmPwd;
     private CountDownTimer countDownTimer;
+    private String tag = "";
 
     @Override
     protected int getLayoutId() {
@@ -45,15 +47,17 @@ public class ForgetPwdActivity extends BaseActivity<RegisterContract.Presenter> 
 
     @Override
     public void initView() {
+        tag = getIntent().getStringExtra("tag");
         btnGetCode.setOnClickListener(v -> getRandomCode());
-        new BaseTitleBar(this).setTitleText("忘记密码").setLeftIcoListening(v -> finish());
+        new BaseTitleBar(this).setTitleText(tag.equals("modify") ? "修改密码" : "忘记密码").setLeftIcoListening(v -> finish());
+        btnSure.setText(tag.equals("modify") ? "确认修改" : "重置密码");
     }
 
     private void getRandomCode() {
         if (!Utils.isPhoneNumber(etPhone.getText().toString().trim())) {
             U.showToast("请输入正确的手机号");
         } else {
-            String url = UrlUtil.GET_RANDOM_CODE + "mobile/" + etPhone.getText().toString().trim() + "/type/3";
+            String url = UrlUtil.GET_RANDOM_CODE + "mobile/" + etPhone.getText().toString().trim() + "/type/" + (tag.equals("modify") ? 4 : 3);
             presenter.getRandomCode(url);
         }
     }
@@ -76,11 +80,18 @@ public class ForgetPwdActivity extends BaseActivity<RegisterContract.Presenter> 
             U.showToast("请输入验证码");
             return;
         }
+        if (TextUtils.isEmpty(pwd)) {
+            U.showToast("请输入新密码");
+            return;
+        }
         if (!Utils.isLetterDigit(pwd)) {
             U.showToast("请输入正确格式的密码");
             return;
         }
-
+        if (TextUtils.isEmpty(pwdConfirm)) {
+            U.showToast("请输入确认密码");
+            return;
+        }
         if (!TextUtils.equals(pwd, pwdConfirm)) {
             U.showToast("密码输入不一致，请重新输入");
             return;

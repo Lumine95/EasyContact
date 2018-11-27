@@ -9,6 +9,7 @@ import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.user.UserManager;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -180,5 +181,18 @@ public class Utils {
         else
             retStr = "" + i;
         return retStr;
+    }
+    /**
+     * 货币分转换为元
+     *
+     * @param cent
+     * @return
+     */
+    public static String cent2Yuan(String cent) {
+        if (TextUtils.isEmpty(cent)) {
+            cent = "0";
+        }
+        float yuan = Float.parseFloat(cent) / 100;
+        return new DecimalFormat("0.00").format(yuan);
     }
 }
