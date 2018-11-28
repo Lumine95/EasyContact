@@ -35,7 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="0"
                 android:textColor="@color/color_6DBFFA"
                 android:textSize="30sp" />
 
@@ -64,7 +63,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_size_14"
             android:layout_marginTop="@dimen/margin_size_20"
-            android:text="@string/app_name"
             android:textColor="#ff333333"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +85,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
-            android:text="0"
             android:textColor="@color/color_6DBFFA"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_title"
@@ -114,7 +111,7 @@
             android:layout_marginTop="@dimen/margin_size_15"
             android:layout_marginEnd="@dimen/margin_size_15"
             android:max="100"
-            android:progress="24"
+            android:progress="0"
             android:progressDrawable="@drawable/shape_progressbar_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -126,6 +123,7 @@
         android:layout_height="@dimen/margin_size_0.5" />
 
     <RelativeLayout
+        android:id="@+id/rl_date"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="@color/white">
@@ -136,7 +134,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/margin_size_15"
-            android:text="@string/app_name"
             android:textColor="#ff333333"
             android:textSize="13sp" />
 
@@ -160,7 +157,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_size_2"
-                android:text="0"
                 android:textColor="@color/color_6DBFFA"
                 android:textSize="@dimen/text_size_18" />
 

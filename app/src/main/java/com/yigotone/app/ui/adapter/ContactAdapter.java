@@ -45,7 +45,7 @@ public class ContactAdapter extends IndexableAdapter<ContactBean> {
     @Override
     public void onBindContentViewHolder(RecyclerView.ViewHolder holder, ContactBean entity) {
         ContentVH vh = (ContentVH) holder;
-        vh.tvName.setText(entity.getName()+entity.getId());
+        vh.tvName.setText(entity.getName());
         vh.tvMobile.setText(entity.getPhone());
         vh.ivSelect.setVisibility(isEdit ? View.VISIBLE : View.GONE);
         vh.ivSelect.setSelected(entity.isSelect);

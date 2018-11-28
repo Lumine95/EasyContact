@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class RegisterContract {
     public interface View extends BaseView {
-        void codeObtained(UserBean bean);
+        void codeObtained(CodeBean bean);
 
         void onRegisterResult(CodeBean bean);
 

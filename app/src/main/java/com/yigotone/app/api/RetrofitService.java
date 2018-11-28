@@ -1,7 +1,6 @@
 package com.yigotone.app.api;
 
 
-import com.yigotone.app.bean.AccountBean;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CallDetailBean;
 import com.yigotone.app.bean.CodeBean;
@@ -27,7 +26,7 @@ public interface RetrofitService {
     String BASE_URL = "http://yigoutong.1bu2bu.com/";
 
     @POST()
-    Observable<UserBean> getRandomCode(@Url String url);
+    Observable<CodeBean> getRandomCode(@Url String url);
 
     @POST()
     Observable<CodeBean> register(@Url String url, @QueryMap Map<String, Object> map);
@@ -59,8 +58,6 @@ public interface RetrofitService {
     @POST()
     Observable<UserBean> getUserBeanResult(@Url String url, @QueryMap Map<String, Object> map);
 
-    @POST()
-    Observable<AccountBean> postAccountBean(@Url String url, @QueryMap Map<String, Object> map);
 //
 //    @POST
 //    Observable<UserBean> registerUser(@Url String url, @Body Map map);

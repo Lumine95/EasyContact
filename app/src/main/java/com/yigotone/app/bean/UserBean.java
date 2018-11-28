@@ -17,7 +17,9 @@ public class UserBean {
         private String token;
         private String mobile;
         private String mobileStatus;
-        private int talkTime;
+        private long talkTime;
+        private long expirationTime;
+        private long allTalkTime;
         private int disturb;  // 是否免打扰 1否 2是
 
         private String starttime;
@@ -25,6 +27,14 @@ public class UserBean {
 
         public int getDisturb() {
             return disturb;
+        }
+
+        public long getExpirationTime() {
+            return expirationTime;
+        }
+
+        public long getAllTalkTime() {
+            return allTalkTime;
         }
 
         public String getStarttime() {
@@ -68,10 +78,10 @@ public class UserBean {
         }
 
         public String getTalkTimeText() {
-            return talkTime == 0 ? "0分钟" : talkTime + "分钟";
+            return talkTime == 0 ? "0分钟" : talkTime / 60 + "分钟";
         }
 
-        public int getTalkTime() {
+        public long getTalkTime() {
             return talkTime;
         }
 

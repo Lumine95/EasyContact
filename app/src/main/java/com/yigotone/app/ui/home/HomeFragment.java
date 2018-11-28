@@ -349,7 +349,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
     @Override
     public void onResume() {
         super.onResume();
-        refreshMobileStatus();
+        // refreshMobileStatus();
         refreshDisturbStatus();
     }
 
@@ -358,7 +358,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         ivDisturb.setVisibility(disturb == 2 ? View.VISIBLE : View.GONE);
     }
 
-    private void refreshMobileStatus() {
+    public void refreshMobileStatus() {
         // 实时刷手机托管状态
         Map<String, Object> map = new HashMap<>();
         map.put("mobile", UserManager.getInstance().userData.getMobile());

@@ -25,6 +25,7 @@ import com.yigotone.app.ui.fragment.MineFragment;
 import com.yigotone.app.ui.home.HomeFragment;
 import com.yigotone.app.ui.login.LoginActivity;
 import com.yigotone.app.ui.message.MessageFragment;
+import com.yigotone.app.user.Constant;
 import com.yigotone.app.user.UserManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
 
 public class MainActivity extends BaseActivity {
 
@@ -169,15 +171,75 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);// 继续执行父类其他点击事件
     }
 
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEvent(String event) {
+//        Logger.d("eventBus: " + event);
+//        switch (event) {
+//            case "tokenInvalid":
+//                U.savePreferences("uid", "");
+//                U.savePreferences("token", "");
+//                MyApplication.getInstance().exit();
+//                startActivity(new Intent(this, LoginActivity.class));
+//                break;
+//        }
+//    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (homeFragment != null) {
+            homeFragment.refreshMobileStatus();
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(String event) {
-        Logger.d("eventBus: " + event);
-        switch (event) {
-            case "tokenInvalid":
+    public void onCodeEvent(Integer statusCode) {
+        Logger.d("statusCode: " + statusCode);
+
+        switch (statusCode) {
+            case Constant.ERROR_PARAM:
+                U.showToast("参数验证失败");
+                break;
+            case Constant.ERROR_MYSQL:
+                   U.showToast("数据库操作失败");
+                break;
+            case Constant.ERROR_NO_USER:
+                U.showToast("用户不存在");
+                break;
+            case Constant.ERROR_REPEAT_REG:
+                U.showToast("重复注册");
+                break;
+            case Constant.ERROR_CODE:
+                U.showToast("验证码错误");
+                break;
+            case Constant.ERROR_PASSWORD:
+                U.showToast("密码错误");
+                break;
+            case Constant.ERROR_TOKEN:
+                U.showToast("账号异地登录,请重新登录");
+               // EventBus.getDefault().post("tokenInvalid");
                 U.savePreferences("uid", "");
                 U.savePreferences("token", "");
                 MyApplication.getInstance().exit();
                 startActivity(new Intent(this, LoginActivity.class));
+                break;
+            case Constant.ERROR_USER_OPEN:
+                U.showToast("开户失败");
+                break;
+            case Constant.ERROR_TRUSTEESHIP_AlREADY:
+                U.showToast("用户已被托管");
+                break;
+            case Constant.ERROR_TRUSTEESHIP_FAILURE:
+                EventBus.getDefault().post("mobileNotShutDown");
+                break;
+            case Constant.ERROR_TRUSTEESHIP_NONE:
+                U.showToast("用户未被托管");
+                break;
+            case Constant.ERROR_TRUSTEESHIP_CANCEL:
+                U.showToast("取消托管失败");
+                break;
+            case Constant.ERROR_SEND_MESSAGE:
+                U.showToast("短信发送失败");
                 break;
         }
     }

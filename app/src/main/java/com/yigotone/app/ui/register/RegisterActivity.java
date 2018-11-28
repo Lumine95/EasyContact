@@ -62,7 +62,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
     }
 
     @Override
-    public void codeObtained(UserBean bean) {
+    public void codeObtained(CodeBean bean) {
 //        if (bean.getStatus() == 0) {
 //            countDown();
 //        }
@@ -75,9 +75,10 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
             U.showToast("注册成功");
 //           finish();
             login();
-        } else {
-            U.showToast("注册失败");
         }
+//        else {
+//            U.showToast("注册失败");
+//        }
     }
 
     @Override

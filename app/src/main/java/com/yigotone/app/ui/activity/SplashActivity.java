@@ -3,6 +3,7 @@ package com.yigotone.app.ui.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.android.library.utils.U;
@@ -13,6 +14,7 @@ import com.orhanobut.logger.Logger;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yigotone.app.R;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.UserBean;
 import com.yigotone.app.ui.login.LoginActivity;
@@ -23,6 +25,8 @@ import com.yigotone.app.user.Constant;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
+
+import java.util.HashMap;
 
 /**
  * Created by ZMM on 2018/11/12 9:59.
@@ -60,7 +64,12 @@ public class SplashActivity extends BaseActivity<LoginContract.Presenter> implem
         String token = (String) U.getPreferences("token", "");
 
         if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(token)) {
-            presenter.autoLogin(uid, token);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("uid", uid);
+            map.put("token", token);
+            map.put("device_type", "2");
+            map.put("registration_id", Build.SERIAL);
+            presenter.autoLogin(UrlUtil.AUTO_LOGIN, map);
         } else {
             startActivity(new Intent(this, LoginActivity.class));
             finish();

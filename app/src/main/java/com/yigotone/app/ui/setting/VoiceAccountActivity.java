@@ -1,23 +1,24 @@
 package com.yigotone.app.ui.setting;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.library.utils.DateUtil;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
-import com.yigotone.app.bean.AccountBean;
+import com.yigotone.app.bean.UserBean;
 import com.yigotone.app.ui.packages.PackageListActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
 
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by ZMM on 2018/11/2 11:10.
@@ -29,6 +30,7 @@ public class VoiceAccountActivity extends BaseActivity<SettingContract.Presenter
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.tv_date) TextView tvDate;
     @BindView(R.id.tv_day) TextView tvDay;
+    @BindView(R.id.rl_date) RelativeLayout rlDate;
 
     @Override
     protected int getLayoutId() {
@@ -51,10 +53,10 @@ public class VoiceAccountActivity extends BaseActivity<SettingContract.Presenter
 
     private void getMyAccount() {
         showLoadingDialog("");
-        Map<String, Object> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("uid", UserManager.getInstance().userData.getUid());
         map.put("token", UserManager.getInstance().userData.getToken());
-        presenter.getMyAccountInfo(UrlUtil.GET_MY_ACCOUNT_INFO, map, "getMyAccountInfo");
+        presenter.setDisturbStatus(UrlUtil.GET_MY_ACCOUNT_INFO, map, "getMyAccountInfo");
     }
 
     @Override
@@ -71,13 +73,32 @@ public class VoiceAccountActivity extends BaseActivity<SettingContract.Presenter
     public void onResult(Object result, String message) {
         switch (message) {
             case "getMyAccountInfo":
-                AccountBean bean = (AccountBean) result;
-                setData(bean.getData());
+                UserBean.DataBean bean = (UserBean.DataBean) result;
+                setData(bean);
                 break;
         }
     }
 
-    private void setData(AccountBean.DataBean data) {
+    private void setData(UserBean.DataBean data) {
+        tvMinute.setText((int) (data.getTalkTime() / 60) + "");
+        tvMinuteNum.setText((int) (data.getTalkTime() / 60) + "");
+        tvTitle.setText("共" + (int) (data.getAllTalkTime() / 60) + "分钟，已用" + (int) ((data.getAllTalkTime() - data.getTalkTime()) / 60) + "分钟");
+        progressBar.setProgress((int) (((data.getTalkTime() * 100.00) / data.getAllTalkTime())));
 
+        if (data.getExpirationTime() > 0) {
+            rlDate.setVisibility(View.VISIBLE);
+            tvDate.setText(DateUtil.getDate(data.getExpirationTime(), "yyyy.MM.dd HH:mm") + " 到期");
+            int day = (int) ((data.getExpirationTime() - new Date().getTime() / 1000) / (60 * 60 * 24));
+            tvDay.setText(day + "");
+        } else {
+            rlDate.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showLoadingDialog("");
+        getMyAccount();
     }
 }

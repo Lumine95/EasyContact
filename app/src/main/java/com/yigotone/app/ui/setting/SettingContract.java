@@ -19,6 +19,5 @@ public class SettingContract {
 
         void logout(String url, Map<String, Object> map, String message);
 
-        void getMyAccountInfo(String url, Map<String, Object> map, String message);
     }
 }

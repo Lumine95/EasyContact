@@ -3,7 +3,6 @@ package com.yigotone.app.ui.login;
 import android.annotation.SuppressLint;
 
 import com.yigotone.app.api.Api;
-import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BasePresenterImpl;
 
 import java.util.HashMap;
@@ -22,11 +21,8 @@ public class LoginPresenter extends BasePresenterImpl<LoginContract.View> implem
 
     @SuppressLint("CheckResult")
     @Override
-    public void login(String mobile, String pwd) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("mobile", mobile);
-        map.put("password", pwd);
-        Api.getInstance().login(UrlUtil.LOGIN, map)
+    public void login(String url, HashMap<String, String> map) {
+        Api.getInstance().login(url, map)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                 })
@@ -43,11 +39,8 @@ public class LoginPresenter extends BasePresenterImpl<LoginContract.View> implem
 
     @SuppressLint("CheckResult")
     @Override
-    public void autoLogin(String uid, String token) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("uid", uid);
-        map.put("token", token);
-        Api.getInstance().login(UrlUtil.AUTO_LOGIN, map)
+    public void autoLogin(String url, HashMap<String, String> map) {
+        Api.getInstance().login(url, map)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                 })

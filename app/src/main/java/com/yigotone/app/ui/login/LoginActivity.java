@@ -1,6 +1,7 @@
 package com.yigotone.app.ui.login;
 
 import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.ebupt.ebauth.biz.auth.OnAuthLoginListener;
 import com.ebupt.ebjar.EbLoginDelegate;
 import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
+import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.UserBean;
 import com.yigotone.app.ui.activity.ForgetPwdActivity;
@@ -23,6 +25,8 @@ import com.yigotone.app.user.Constant;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -83,7 +87,13 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
             return;
         }
         showLoadingDialog("正在登录");
-        presenter.login(phoneNum, pwd);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("mobile", phoneNum);
+        map.put("password", pwd);
+        map.put("device_type", "2");
+        map.put("registration_id", Build.SERIAL);
+        presenter.login(UrlUtil.LOGIN, map);
     }
 
     @Override
@@ -132,6 +142,7 @@ public class LoginActivity extends BaseActivity<LoginContract.Presenter> impleme
     @Override
     public void loginFail(String errorMsg) {
         dismissLoadingDialog();
+        U.showToast("登录失败");
         Log.e("loginFail ", errorMsg);
     }
 

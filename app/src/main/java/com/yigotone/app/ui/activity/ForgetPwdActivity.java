@@ -104,12 +104,10 @@ public class ForgetPwdActivity extends BaseActivity<RegisterContract.Presenter> 
     }
 
     @Override
-    public void codeObtained(UserBean bean) {
+    public void codeObtained(CodeBean bean) {
         if (bean.getStatus() == 0) {
             countDown();
             U.showToast("验证码发送成功");
-        } else {
-            U.showToast("验证码发送失败");
         }
     }
 
