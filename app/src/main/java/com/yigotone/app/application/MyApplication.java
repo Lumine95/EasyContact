@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.call.CallActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,12 +37,21 @@ public class MyApplication extends MultiDexApplication {
     private BroadcastReceiver mOfflineReceiver;
     private List<Activity> activities = new LinkedList<>();
 
+    public static MyApplication getInstance() {
+        if (null == instance) {
+            instance = new MyApplication();
+        }
+        return instance;
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mAppContext = getApplicationContext();
         Logger.addLogAdapter(new AndroidLogAdapter());
         U.init(this);
+        activityLifecycleCallback();
 
         EbLoginDelegate.setMiPushParams(getString(R.string.MiPush_AppId), getString(R.string.MiPush_AppKey));
         if (EbDelegate.init(this, CallActivity.class) == EbDelegate.InitStat.Meb_INIT_SUCCESS &&
@@ -62,13 +74,47 @@ public class MyApplication extends MultiDexApplication {
             return;
         }
     }
-    public static MyApplication getInstance() {
-        if (null == instance) {
-            instance = new MyApplication();
-        }
-        return instance;
 
+    private void activityLifecycleCallback() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                EventBus.getDefault().post("activityDestroy");
+            }
+        });
     }
+
+
     public static Context getAppContext() {
         return mAppContext;
     }
@@ -83,6 +129,6 @@ public class MyApplication extends MultiDexApplication {
         for (Activity activity : activities) {
             activity.finish();
         }
-       // System.exit(0);
+        // System.exit(0);
     }
 }

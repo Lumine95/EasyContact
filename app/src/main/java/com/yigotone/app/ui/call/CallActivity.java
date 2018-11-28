@@ -39,6 +39,10 @@ import com.yigotone.app.util.AuthUtils;
 import com.yigotone.app.util.DataUtils;
 import com.yigotone.app.util.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -102,6 +106,7 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
     @SuppressLint("CheckResult")
     @Override
     public void initView() {
+        EventBus.getDefault().register(this);
         new RxPermissions(this).request(Manifest.permission.RECORD_AUDIO).subscribe(granted -> {
             if (!granted) {
                 U.showToast("权限申请失败");
@@ -517,5 +522,15 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         EbCallDelegate.dtmf(mCallId, playId);
         Log.d("", "playId=" + playId);
         tvInput.setText(inputStr.append(tag).toString());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String event) {
+        Logger.d("eventBus: " + event);
+        switch (event) {
+            case "activityDestroy":
+                hangUp();
+                break;
+        }
     }
 }
