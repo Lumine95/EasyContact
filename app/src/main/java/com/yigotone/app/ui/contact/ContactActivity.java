@@ -1,5 +1,6 @@
 package com.yigotone.app.ui.contact;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +10,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import com.android.library.utils.U;
 import com.yigotone.app.R;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.base.BasePresenter;
@@ -49,18 +49,21 @@ public class ContactActivity extends BaseActivity {
     @Override
     public void initView() {
         tag = getIntent().getBooleanExtra("tag", false);
-        new BaseTitleBar(this).setTitleText("通讯录").setLeftIcoListening(v -> finish()).setTitleRight("确定").setRightIcoListening(v -> {
-            submitSelectedContact();
-        });
+        new BaseTitleBar(this).setTitleText("通讯录").setLeftIcoListening(v -> finish());
         initRecyclerView();
         getPhoneContacts();
         indexableLayout.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new ContactAdapter(this, tag);
+        mAdapter = new ContactAdapter(this, false);
         indexableLayout.setAdapter(mAdapter);
         mAdapter.setDatas(contactList);
         indexableLayout.setOverlayStyle_Center();
         indexableLayout.setCompareMode(IndexableLayout.MODE_ALL_LETTERS);
         mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> {
+            Intent intent = new Intent();
+            intent.putExtra("number", entity.getPhone());
+            intent.putExtra("name", entity.getName());
+            setResult(9527, intent);
+            finish();
         });
 
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -84,20 +87,20 @@ public class ContactActivity extends BaseActivity {
         });
     }
 
-    private void submitSelectedContact() {
-        UserManager.getInstance().selectedList.clear();
-        for (ContactBean bean : contactList) {
-            if (bean.isSelect) {
-                UserManager.getInstance().selectedList.add(bean);
-            }
-        }
-        if (UserManager.getInstance().selectedList.size() == 0) {
-            U.showToast("还未选中任何联系人");
-            return;
-        }
-        setResult(9527);
-        finish();
-    }
+//    private void submitSelectedContact() {
+//        UserManager.getInstance().selectedList.clear();
+//        for (ContactBean bean : contactList) {
+//            if (bean.isSelect) {
+//                UserManager.getInstance().selectedList.add(bean);
+//            }
+//        }
+//        if (UserManager.getInstance().selectedList.size() == 0) {
+//            U.showToast("还未选中任何联系人");
+//            return;
+//        }
+//        setResult(9527);
+//        finish();
+//    }
 
     public void getPhoneContacts() {
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,

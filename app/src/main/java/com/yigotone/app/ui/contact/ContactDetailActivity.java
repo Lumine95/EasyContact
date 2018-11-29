@@ -41,6 +41,7 @@ public class ContactDetailActivity extends BaseActivity {
         tvPhone.setText(data.getPhone());
     }
 
+
     @Override
     public void onFinish() {
 

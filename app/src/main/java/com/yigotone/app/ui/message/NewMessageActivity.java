@@ -6,15 +6,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.library.utils.U;
-import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CodeBean;
-import com.yigotone.app.bean.ContactBean;
 import com.yigotone.app.ui.contact.ContactActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.view.BaseTitleBar;
@@ -31,10 +28,11 @@ import butterknife.OnClick;
  */
 public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> implements MessageContract.View {
     @BindView(R.id.et_message) EditText etMessage;
-    @BindView(R.id.tv_user) TextView tvUser;
+    @BindView(R.id.et_user) EditText etUser;
     @BindView(R.id.rl_people) RelativeLayout rlPeople;
     private String targetName;
     private String targetPhone;
+    private boolean isInput = true; // 是否手输
 
     @Override
     protected int getLayoutId() {
@@ -59,6 +57,22 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
             rlPeople.setVisibility(View.VISIBLE);
         }
         new BaseTitleBar(this).setTitleText(title).setLeftIcoListening(v -> finish());
+
+        etUser.setOnKeyListener((v, keyCode, event) -> {
+            if (!isInput) {
+                etUser.setText("");
+                isInput = true;
+            }
+            return false;
+        });
+
+        etUser.setOnTouchListener((view, motionEvent) -> {
+            if (!isInput) {
+                etUser.setText("");
+                isInput = true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -86,11 +100,15 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
     }
 
     private void sendMessage() {
-        String content = etMessage.getText().toString().trim();
-        if (targetPhone == null && targetName == null) {
-            U.showToast("请选择联系人");
+        if (isInput) {
+            targetPhone = targetName = etUser.getText().toString();
+        }
+
+        if (TextUtils.isEmpty(targetPhone) && TextUtils.isEmpty(targetName)) {
+            U.showToast("联系人不能为空");
             return;
         }
+        String content = etMessage.getText().toString().trim();
         if (TextUtils.isEmpty(content)) {
             U.showToast("请输入短信内容");
             return;
@@ -104,7 +122,7 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
         map.put("content", content);
         showLoadingDialog("正在发送");
         presenter.sendMessage(UrlUtil.SEND_MESSAGE, map, "sendMessage");
-        Logger.d(map);
+      //  Logger.d(map);
     }
 
     @Override
@@ -130,15 +148,21 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 9527) {
-            StringBuilder nameStr = new StringBuilder();
-            StringBuilder phoneStr = new StringBuilder();
-            for (ContactBean bean : UserManager.getInstance().selectedList) {
-                nameStr.append(bean.getName()).append(",");
-                phoneStr.append(bean.getPhone()).append(",");
+//            StringBuilder nameStr = new StringBuilder();
+//            StringBuilder phoneStr = new StringBuilder();
+//            for (ContactBean bean : UserManager.getInstance().selectedList) {
+//                nameStr.append(bean.getName()).append(",");
+//                phoneStr.append(bean.getPhone()).append(",");
+//            }
+//            targetName = nameStr.toString().substring(0, nameStr.toString().length() - 1);
+//            targetPhone = phoneStr.toString().substring(0, phoneStr.toString().length() - 1);
+//            etUser.setText(targetName);
+            if (data != null) {
+                targetPhone = data.getStringExtra("number");
+                etUser.setText(targetName = data.getStringExtra("name"));
+                etUser.setSelection(targetName.length());
+                isInput = false;
             }
-            targetName = nameStr.toString().substring(0, nameStr.toString().length() - 1);
-            targetPhone = phoneStr.toString().substring(0, phoneStr.toString().length() - 1);
-            tvUser.setText(targetName);
         }
     }
 }

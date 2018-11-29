@@ -66,14 +66,19 @@
             android:text="收件人: "
             android:textColor="@color/color_9" />
 
-        <TextView
-            android:id="@+id/tv_user"
+        <EditText
+            android:id="@+id/et_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/margin_size_5"
             android:layout_toStartOf="@id/iv_contact"
             android:layout_toEndOf="@id/tv_tag"
+            android:background="@null"
+            android:digits="1234567890"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:singleLine="true"
             android:textColor="@color/color_3"
             android:textSize="@dimen/text_size_14" />
     </RelativeLayout>

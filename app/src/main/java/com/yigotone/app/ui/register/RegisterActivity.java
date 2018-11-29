@@ -155,6 +155,10 @@ public class RegisterActivity extends BaseActivity<RegisterContract.Presenter> i
         String code = etCode.getText().toString().trim();
         String pwd = etPwd.getText().toString().trim();
         String confirm = etConfirmPwd.getText().toString().trim();
+        if (TextUtils.isEmpty(phoneNum)) {
+            U.showToast("请输入手机号");
+            return;
+        }
         if (!phoneNum.matches("0?(13|14|15|17|18)[0-9]{9}")) {
             U.showToast("请输入正确的手机号码");
             return;

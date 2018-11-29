@@ -427,7 +427,9 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         // 对方挂断
         stopAlarm();
         tvStatus.setText("通话结束");
+
         refreshCallStatus(2);
+
         U.showToast("对方已挂断");
         clearCallMode();
         finish();
