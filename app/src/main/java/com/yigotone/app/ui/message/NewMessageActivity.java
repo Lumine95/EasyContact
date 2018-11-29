@@ -118,7 +118,7 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
         map.put("token", UserManager.getInstance().userData.getToken());
         map.put("callingnumber", UserManager.getInstance().userData.getMobile());
         map.put("callednumber", targetPhone);
-        map.put("calledname", targetName);
+       // map.put("calledname", targetName);
         map.put("content", content);
         showLoadingDialog("正在发送");
         presenter.sendMessage(UrlUtil.SEND_MESSAGE, map, "sendMessage");

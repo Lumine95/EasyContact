@@ -98,7 +98,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
             protected void convert(BaseViewHolder helper, MessageBean.DataBean item) {
                 ((EasySwipeMenuLayout) helper.getView(R.id.swipe_menu)).setCanLeftSwipe(!isEdit);
                 helper.setText(R.id.tv_title, item.getContent());
-                helper.setText(R.id.tv_name, item.getName());
+                helper.setText(R.id.tv_name, Utils.getContactName(item.getMobile()));
                 helper.setGone(R.id.iv_red_dot, item.getIsread() == 0);
                 helper.getView(R.id.iv_select).setSelected(item.isSelect);
                 helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
