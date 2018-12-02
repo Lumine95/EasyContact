@@ -17,6 +17,7 @@ import com.ebupt.ebjar.EbDelegate;
 import com.ebupt.ebjar.EbLoginDelegate;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.yigotone.app.R;
 import com.yigotone.app.ui.activity.MainActivity;
 import com.yigotone.app.ui.call.CallActivity;
@@ -51,6 +52,7 @@ public class MyApplication extends MultiDexApplication {
         mAppContext = getApplicationContext();
         Logger.addLogAdapter(new AndroidLogAdapter());
         U.init(this);
+        CrashReport.initCrashReport(getApplicationContext(), "34ebaa8ff6", false);
         activityLifecycleCallback();
 
         EbLoginDelegate.setMiPushParams(getString(R.string.MiPush_AppId), getString(R.string.MiPush_AppKey));

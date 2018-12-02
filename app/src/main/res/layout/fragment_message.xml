@@ -74,6 +74,7 @@
             android:background="@mipmap/ic_search_box_bg"
             android:drawableStart="@mipmap/ic_search"
             android:drawablePadding="@dimen/margin_size_7"
+            android:editable="false"
             android:gravity="center_vertical"
             android:hint="@string/search_message"
             android:imeOptions="actionSearch"

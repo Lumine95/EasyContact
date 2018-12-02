@@ -59,4 +59,6 @@ public class UrlUtil {
     public static String GET_EFFECTIVE_CALL_RECORD = BASE_URL + "Personal/getMyEffectiveCallRecord";
     // 获取我的账户信息
     public static String GET_MY_ACCOUNT_INFO = BASE_URL + "Personal/getMyAccount";
+    // 搜索短信
+    public static String SEARCH_MESSAGE = BASE_URL + "Personal/searchMessage";
 }

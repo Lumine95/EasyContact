@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <uses-permission android:name="com.yigotone.app.permission.MIPUSH_RECEIVE" />
 
@@ -148,6 +149,10 @@
         <!--有效通话详单-->
         <activity
             android:name=".ui.call.EffectiveCallActivity"
+            android:screenOrientation="portrait" />
+        <!--信息搜索-->
+        <activity
+            android:name=".ui.message.SearchMessageActivity"
             android:screenOrientation="portrait" />
 
 

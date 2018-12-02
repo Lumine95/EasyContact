@@ -71,6 +71,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         initRecyclerView();
         EventBus.getDefault().register(this);
         getMessageList(true);
+        etSearch.setOnClickListener(v -> startActivity(new Intent(mContext, SearchMessageActivity.class)));
     }
 
     private void getMessageList(boolean isLoadingLayout) {
@@ -116,7 +117,7 @@ public class MessageFragment extends BaseFragment<MessageContract.Presenter> imp
         mAdapter.setOnItemClickListener((adapter, view1, position) -> {
             startActivity(new Intent(mContext, MessageDetailActivity.class));
         });
-        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        //  mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mAdapter.setOnLoadMoreListener(() -> {
             pageIndex++;
             getMessageList(false);
