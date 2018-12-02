@@ -69,8 +69,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_size_45"
-        android:drawablePadding="@dimen/margin_size_10"
         android:drawableTop="@mipmap/ic_hang_up"
+        android:drawablePadding="@dimen/margin_size_10"
         android:gravity="center"
         android:text="@string/hang_up"
         android:textColor="@color/white"
@@ -85,10 +85,10 @@
         android:id="@+id/tv_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_size_45"
         android:layout_marginStart="@dimen/margin_size_50"
-        android:drawablePadding="@dimen/margin_size_10"
+        android:layout_marginBottom="@dimen/margin_size_45"
         android:drawableTop="@mipmap/ic_answer"
+        android:drawablePadding="@dimen/margin_size_10"
         android:gravity="center"
         android:text="@string/answer"
         android:textColor="@color/white"
@@ -102,8 +102,8 @@
         android:id="@+id/iv_mini"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_size_15"
         android:layout_marginTop="@dimen/margin_size_5"
+        android:layout_marginEnd="@dimen/margin_size_15"
         android:src="@mipmap/ic_call_mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -124,11 +124,12 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_keyboard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_size_20"
         android:background="@color/color_6DBFFA"
         android:paddingBottom="@dimen/margin_size_90"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_input">
 
         <LinearLayout

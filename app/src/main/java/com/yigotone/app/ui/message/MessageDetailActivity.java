@@ -2,14 +2,19 @@ package com.yigotone.app.ui.message;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.widget.EditText;
 
+import com.android.library.utils.U;
+import com.orhanobut.logger.Logger;
 import com.yigotone.app.R;
 import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CallDetailBean;
+import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.ui.adapter.MessageAdapter;
 import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
 
@@ -48,7 +53,7 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
     public void initView() {
         messageId = getIntent().getStringExtra("messageId");
         targetMobile = getIntent().getStringExtra("targetMobile");
-        new BaseTitleBar(this).setTitleText("短信详情").setLeftIcoListening(v -> finish());
+        new BaseTitleBar(this).setTitleText(Utils.getContactName(targetMobile)).setLeftIcoListening(v -> finish());
         initRecyclerView();
         getMessageList();
         recyclerView.setAdapter(mAdapter = new MessageAdapter(new ArrayList<>()));
@@ -98,7 +103,26 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
 
     @OnClick(R.id.iv_send)
     public void onViewClicked() {
+        sendMessage();
     }
+
+    private void sendMessage() {
+        String content = etMessage.getText().toString().trim();
+        if (TextUtils.isEmpty(content)) {
+            U.showToast("请输入短信内容");
+            return;
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
+        map.put("callingnumber", UserManager.getInstance().userData.getMobile());
+        map.put("callednumber", targetMobile);
+        map.put("content", content);
+        showLoadingDialog("正在发送");
+        presenter.sendMessage(UrlUtil.SEND_MESSAGE, map, "sendMessage");
+    //    Logger.d(map);
+    }
+
 
     @Override
     public void onResult(Object result, String message) {
@@ -129,6 +153,13 @@ public class MessageDetailActivity extends BaseActivity<MessageContract.Presente
                             mAdapter.loadMoreEnd();
                         }
                     }
+                }
+                break;
+            case "sendMessage":
+                CodeBean code = (CodeBean) result;
+                if (code.getStatus() == 0) {
+                    U.showToast("短信发送成功");
+                    finish();
                 }
                 break;
         }

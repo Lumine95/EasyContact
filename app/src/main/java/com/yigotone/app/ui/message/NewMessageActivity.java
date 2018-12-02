@@ -14,6 +14,7 @@ import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CodeBean;
 import com.yigotone.app.ui.contact.ContactActivity;
 import com.yigotone.app.user.UserManager;
+import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.BaseTitleBar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,9 +31,10 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
     @BindView(R.id.et_message) EditText etMessage;
     @BindView(R.id.et_user) EditText etUser;
     @BindView(R.id.rl_people) RelativeLayout rlPeople;
-    private String targetName;
+    // private String targetName;
     private String targetPhone;
     private boolean isInput = true; // 是否手输
+    private String targetName;
 
     @Override
     protected int getLayoutId() {
@@ -47,17 +49,16 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
     @Override
     public void initView() {
         String title;
-        String targetName = getIntent().getStringExtra("targetName");
-        if (targetName != null) {
-            title = this.targetName = targetName;
-            targetPhone = getIntent().getStringExtra("targetPhone");
+        targetPhone = getIntent().getStringExtra("targetPhone");
+        if (!TextUtils.isEmpty(targetPhone)) {
+            title = Utils.getContactName(targetPhone);
             rlPeople.setVisibility(View.GONE);
+            isInput = false;
         } else {
             title = "新信息";
             rlPeople.setVisibility(View.VISIBLE);
         }
         new BaseTitleBar(this).setTitleText(title).setLeftIcoListening(v -> finish());
-
         etUser.setOnKeyListener((v, keyCode, event) -> {
             if (!isInput) {
                 etUser.setText("");
@@ -101,10 +102,9 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
 
     private void sendMessage() {
         if (isInput) {
-            targetPhone = targetName = etUser.getText().toString();
+            targetPhone = etUser.getText().toString();
         }
-
-        if (TextUtils.isEmpty(targetPhone) && TextUtils.isEmpty(targetName)) {
+        if (TextUtils.isEmpty(targetPhone)) {
             U.showToast("联系人不能为空");
             return;
         }
@@ -118,11 +118,11 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
         map.put("token", UserManager.getInstance().userData.getToken());
         map.put("callingnumber", UserManager.getInstance().userData.getMobile());
         map.put("callednumber", targetPhone);
-       // map.put("calledname", targetName);
+        // map.put("calledname", targetName);
         map.put("content", content);
         showLoadingDialog("正在发送");
         presenter.sendMessage(UrlUtil.SEND_MESSAGE, map, "sendMessage");
-      //  Logger.d(map);
+        //   Logger.d(map);
     }
 
     @Override
@@ -158,6 +158,7 @@ public class NewMessageActivity extends BaseActivity<MessageContract.Presenter> 
 //            targetPhone = phoneStr.toString().substring(0, phoneStr.toString().length() - 1);
 //            etUser.setText(targetName);
             if (data != null) {
+
                 targetPhone = data.getStringExtra("number");
                 etUser.setText(targetName = data.getStringExtra("name"));
                 etUser.setSelection(targetName.length());

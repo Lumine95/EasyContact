@@ -138,8 +138,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
                 helper.addOnClickListener(R.id.iv_detail);
             }
         });
-
-        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        //   mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mAdapter.setOnLoadMoreListener(() -> {
             pageIndex++;
             getCallRecord(false);

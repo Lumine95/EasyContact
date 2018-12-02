@@ -15,6 +15,7 @@ import com.yigotone.app.api.UrlUtil;
 import com.yigotone.app.base.BaseActivity;
 import com.yigotone.app.bean.CallBean;
 import com.yigotone.app.bean.CallDetailBean;
+import com.yigotone.app.ui.message.MessageDetailActivity;
 import com.yigotone.app.ui.message.NewMessageActivity;
 import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
@@ -161,6 +162,9 @@ public class CallDetailActivity extends BaseActivity<CallContract.Presenter> imp
                 startActivity(new Intent(this, NewMessageActivity.class)
                         .putExtra("targetName", data.getTargetName())
                         .putExtra("targetPhone", data.getMobile()));
+//                startActivity(new Intent(this, MessageDetailActivity.class)
+//                        .putExtra("targetMobile", data.getMobile())
+//                        .putExtra("messageId", data.getCallId()));
                 break;
             case R.id.iv_call:
                 startActivity(new Intent(this, CallActivity.class)

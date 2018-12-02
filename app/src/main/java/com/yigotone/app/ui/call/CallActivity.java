@@ -283,11 +283,13 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
 
     private void recordCallIn() {
         Map<String, Object> map = new HashMap<>();
+        map.put("uid", UserManager.getInstance().userData.getUid());
+        map.put("token", UserManager.getInstance().userData.getToken());
         map.put("callId", mCallId == 0 ? callId : mCallId);
         map.put("mobile", phoneNum);
         map.put("targetMobile", thisPhoneNum);
         map.put("targetName", Utils.getContactName(phoneNum));
-        presenter.postParams(UrlUtil.RECORD_CALL_IN, map, "recordCall");
+        presenter.postParams(UrlUtil.RECORD_CALL_IN, map, "recordCallIn");
     }
 
     private void refreshCallStatus(int status) { // 更新记录通话状态
@@ -296,11 +298,11 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
         map.put("token", UserManager.getInstance().userData.getToken());
         map.put("callId", mCallId == 0 ? callId : mCallId);
         map.put("status", status);
-        map.put("targetStatus", status);
+        //  map.put("targetStatus", status);
         presenter.postParams(UrlUtil.UPDATE_CALL_STATUS, map, "refreshCallStatus");
     }
 
-    @OnClick({R.id.iv_one, R.id.iv_two, R.id.iv_three, R.id.iv_four, R.id.iv_five, R.id.iv_six, R.id.iv_seven, R.id.iv_eight, R.id.iv_nine, R.id.iv_asterisk, R.id.iv_zero, R.id.iv_pound, R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini, R.id.tv_hide})
+    @OnClick({R.id.iv_one, R.id.iv_two, R.id.iv_three, R.id.iv_four, R.id.iv_five, R.id.iv_six, R.id.iv_seven, R.id.iv_eight, R.id.iv_nine, R.id.iv_asterisk, R.id.iv_zero, R.id.iv_pound, R.id.iv_keyboard, R.id.iv_speakerphone, R.id.iv_hangup, R.id.iv_hang_up, R.id.tv_hang_up, R.id.tv_answer, R.id.iv_mini, R.id.tv_hide})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_hide:
@@ -314,6 +316,7 @@ public class CallActivity extends BaseActivity<CallContract.Presenter> implement
                 break;
             case R.id.iv_hang_up:
             case R.id.tv_hang_up:
+            case R.id.iv_hangup:
                 hangUp();
                 break;
             case R.id.tv_answer:

@@ -52,11 +52,7 @@ public class SearchMessageActivity extends BaseActivity<MessageContract.Presente
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 keyword = etSearch.getText().toString().trim();
-                if (TextUtils.isEmpty(keyword)) {
-                    U.showToast("请输入关键字");
-                } else {
-                    getMessageList(true);
-                }
+                getMessageList(true);
                 return true;
             }
             return false;
@@ -93,6 +89,11 @@ public class SearchMessageActivity extends BaseActivity<MessageContract.Presente
     }
 
     private void getMessageList(boolean isLoadingLayout) {
+        if (TextUtils.isEmpty(keyword)) {
+            U.showToast("请输入关键字");
+            refreshLayout.setRefreshing(false);
+            return;
+        }
         if (isLoadingLayout) {
             statusLayoutManager.showLoadingLayout();
         }
@@ -122,6 +123,7 @@ public class SearchMessageActivity extends BaseActivity<MessageContract.Presente
     @Override
     public void onLayoutError(Throwable throwable) {
         dismissLoadingDialog();
+        refreshLayout.setRefreshing(false);
         U.hideSoftKeyboard(etSearch);
         statusLayoutManager.showErrorLayout();
     }
@@ -130,6 +132,7 @@ public class SearchMessageActivity extends BaseActivity<MessageContract.Presente
     public void onFinish() {
         U.hideSoftKeyboard(etSearch);
         dismissLoadingDialog();
+        refreshLayout.setRefreshing(false);
         statusLayoutManager.showSuccessLayout();
     }
 
