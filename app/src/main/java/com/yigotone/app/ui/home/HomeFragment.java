@@ -350,6 +350,7 @@ public class HomeFragment extends BaseFragment<HomeContract.Presenter> implement
         super.onResume();
         // refreshMobileStatus();
         refreshDisturbStatus();
+        getCallRecord(false);
     }
 
     private void refreshDisturbStatus() {

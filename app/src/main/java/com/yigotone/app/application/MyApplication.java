@@ -27,6 +27,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by ZMM on 2018/2/5.
  */
@@ -51,6 +53,8 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
         mAppContext = getApplicationContext();
         Logger.addLogAdapter(new AndroidLogAdapter());
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
         U.init(this);
         CrashReport.initCrashReport(getApplicationContext(), "34ebaa8ff6", false);
         activityLifecycleCallback();

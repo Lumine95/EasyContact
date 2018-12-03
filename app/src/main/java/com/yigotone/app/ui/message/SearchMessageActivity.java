@@ -19,6 +19,7 @@ import com.yigotone.app.user.UserManager;
 import com.yigotone.app.util.Utils;
 import com.yigotone.app.view.BaseTitleBar;
 import com.yigotone.app.view.statusLayoutView.StatusLayoutManager;
+import com.yigotone.app.view.swipeMenu.EasySwipeMenuLayout;
 
 import java.util.HashMap;
 
@@ -70,9 +71,10 @@ public class SearchMessageActivity extends BaseActivity<MessageContract.Presente
         recyclerView.setAdapter(mAdapter = new BaseQuickAdapter<MessageBean.DataBean, BaseViewHolder>(R.layout.item_message) {
             @Override
             protected void convert(BaseViewHolder helper, MessageBean.DataBean item) {
+                ((EasySwipeMenuLayout) helper.getView(R.id.swipe_menu)).setCanLeftSwipe(false);
                 helper.setText(R.id.tv_title, item.getContent());
                 helper.setText(R.id.tv_name, Utils.getContactName(item.getMobile()));
-                helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getCreateAt())));
+                helper.setText(R.id.tv_date, Utils.getShortTime(Long.parseLong(item.getMessagetime())));
                 helper.setOnClickListener(R.id.content, view -> startActivity(new Intent(mContext, MessageDetailActivity.class)
                         .putExtra("targetMobile", item.getMobile())
                         .putExtra("messageId", item.getMessageId())));
